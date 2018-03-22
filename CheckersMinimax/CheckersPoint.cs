@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CheckersMinimax.Pieces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace CheckersMinimax
 {
-    class CheckersPoint
+    /// <summary>
+    /// Consider removing this??
+    /// </summary>
+    public class CheckersPoint
     {
         public int X { get; set; }
         public int Y { get; set; }

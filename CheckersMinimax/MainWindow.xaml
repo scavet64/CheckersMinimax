@@ -26,33 +26,4 @@
     <Grid>
         <ItemsControl x:Name="lst" ItemTemplate="{DynamicResource DataTemplate_Level1}"/>
     </Grid>
-    <!--<Grid Name="CheckersGrid">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="60"/>
-            <ColumnDefinition Width="60"/>
-            <ColumnDefinition Width="60"/>
-            <ColumnDefinition Width="60"/>
-            <ColumnDefinition Width="60"/>
-            <ColumnDefinition Width="60"/>
-            <ColumnDefinition Width="60"/>
-            <ColumnDefinition Width="60"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="60"/>
-            <RowDefinition Height="60"/>
-            <RowDefinition Height="60"/>
-            <RowDefinition Height="60"/>
-            <RowDefinition Height="60"/>
-            <RowDefinition Height="60"/>
-            <RowDefinition Height="60"/>
-            <RowDefinition Height="60"/>
-        </Grid.RowDefinitions>
-        <Menu IsMainMenu="True" Grid.ColumnSpan="8">
-            <MenuItem Header="_File">
-                <MenuItem Header="_New Game" Click="newGame_Click"/>
-                <MenuItem Header="_Exit" Click="exit_Click"/>
-            </MenuItem>
-        </Menu>
-    </Grid>-->
 </Window>

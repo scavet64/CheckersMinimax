@@ -54,6 +54,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Pieces\BlackKingCheckerPiece.cs" />
+    <Compile Include="Pieces\BlackPawnCheckerPiece.cs" />
+    <Compile Include="Pieces\CheckerPieceFactory.cs" />
+    <Compile Include="Pieces\CheckerPieceType.cs" />
+    <Compile Include="Pieces\NullCheckerPiece.cs" />
+    <Compile Include="Pieces\RedKingCheckerPiece.cs" />
+    <Compile Include="Pieces\RedPawnCheckerPiece.cs" />
     <Page Include="CheckersSquareUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -67,7 +74,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CheckerBoard.cs" />
-    <Compile Include="CheckerPiece.cs" />
+    <Compile Include="Pieces\CheckerPiece.cs" />
     <Compile Include="CheckersMove.cs" />
     <Compile Include="CheckersPoint.cs" />
     <Compile Include="CheckersSquareUserControl.xaml.cs">

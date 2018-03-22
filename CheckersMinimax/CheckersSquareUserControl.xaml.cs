@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CheckersMinimax.Pieces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -21,11 +22,14 @@ namespace CheckersMinimax
     /// </summary>
     public partial class CheckersSquareUserControl : UserControl, INotifyPropertyChanged
     {
+        private CheckerPiece checker;
 
-        BitmapImage BLACK_CHECKER = new BitmapImage(new Uri("Resources/black60p.png", UriKind.Relative));
-        BitmapImage BLACK_KING_CHECKER = new BitmapImage(new Uri("Resources/black60p_king.png", UriKind.Relative));
-        BitmapImage RED_CHECKER = new BitmapImage(new Uri("Resources/red60p.png", UriKind.Relative));
-        BitmapImage RED_KING_CHECKER = new BitmapImage(new Uri("Resources/red60p_king.png", UriKind.Relative));
+        public CheckerPiece Checker
+        {
+            get { return checker; }
+            set { checker = value; }
+        }
+
 
         private Brush _background;
         public Brush BackgroundColor
@@ -34,7 +38,6 @@ namespace CheckersMinimax
             {
                 return _background;
             }
-
             set
             {
                 _background = value;
@@ -42,36 +45,60 @@ namespace CheckersMinimax
             }
         }
 
+        /// <summary>
+        /// Probably wont need this
+        /// </summary>
+        /// <param name="backgroundColor"></param>
+        /// <param name="row"></param>
+        /// <param name="col"></param>
+        /// <param name="checkerPieceType"></param>
+        //public CheckersSquareUserControl(Brush backgroundColor, int row, int col, CheckerPiece checker)
+        //{
+        //    InitializeComponent();
+        //    //BackgroundColor = backgroundColor;
+        //    this.Background = backgroundColor;
+        //    button.Content = "row: " + row + " , col: " + col;
+        //    this.checker = checker;
+        //    UpdateSquare();
+        //}
 
-        public CheckersSquareUserControl(Brush backgroundColor, int row, int col)
+        public CheckersSquareUserControl(Brush backgroundColor, int row, int col, CheckerPieceType checkerPieceType)
         {
             InitializeComponent();
             //BackgroundColor = backgroundColor;
             this.Background = backgroundColor;
+            this.checker = CheckerPieceFactory.GetCheckerPiece(checkerPieceType);
+            UpdateSquare();
+
+            //Debug TODO: Delete this when not needed anymore
             button.Content = "row: " + row + " , col: " + col;
         }
 
-        public void ShowRed()
+        public void UpdateSquare()
         {
-            checkerImage.Source = RED_CHECKER;
+            if(checker != null)
+            {
+                try
+                {
+                    checkerImage.Source = BuildCheckerImageSource(checker.ImageSource);
+                }
+                catch (Exception ex)
+                {
+                    //Show error message to user
+                }
+            }
+            else
+            {
+                HideChecker();
+            }
         }
 
-        public void ShowBlack()
+        private ImageSource BuildCheckerImageSource(string imageSource)
         {
-            checkerImage.Source = BLACK_CHECKER;
+            return new BitmapImage(new Uri(imageSource, UriKind.Relative));
         }
 
-        public void ShowBlackKing()
-        {
-            checkerImage.Source = BLACK_KING_CHECKER;
-        }
-
-        public void ShowRedKing()
-        {
-            checkerImage.Source = RED_KING_CHECKER;
-        }
-
-        public void hideChecker()
+        private void HideChecker()
         {
             checkerImage.Visibility = Visibility.Collapsed;
         }
