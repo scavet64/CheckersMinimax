@@ -1,0 +1,58 @@
+﻿<Window x:Class="CheckersMinimax.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CheckersMinimax"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="640" Width="620" ResizeMode="CanMinimize">
+    <Window.Resources>
+        <!--<DataTemplate x:Key="DataTemplate_Level2">
+            <Button Content="{Binding}" Height="40" Width="50" />
+        </DataTemplate>-->
+
+        <DataTemplate x:Key="DataTemplate_Level1">
+            <ItemsControl ItemsSource="{Binding}" ItemTemplate="{DynamicResource DataTemplate_Level2}">
+                <!--<ItemsControl ItemsSource="{Binding}" ItemTemplate="{DynamicResource DataTemplate_Level2}">-->
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </DataTemplate>
+
+    </Window.Resources>
+    <Grid>
+        <ItemsControl x:Name="lst" ItemTemplate="{DynamicResource DataTemplate_Level1}"/>
+    </Grid>
+    <!--<Grid Name="CheckersGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="60"/>
+            <ColumnDefinition Width="60"/>
+            <ColumnDefinition Width="60"/>
+            <ColumnDefinition Width="60"/>
+            <ColumnDefinition Width="60"/>
+            <ColumnDefinition Width="60"/>
+            <ColumnDefinition Width="60"/>
+            <ColumnDefinition Width="60"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+        <Menu IsMainMenu="True" Grid.ColumnSpan="8">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New Game" Click="newGame_Click"/>
+                <MenuItem Header="_Exit" Click="exit_Click"/>
+            </MenuItem>
+        </Menu>
+    </Grid>-->
+</Window>
