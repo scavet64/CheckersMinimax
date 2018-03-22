@@ -12,21 +12,22 @@ namespace CheckersMinimax
     /// </summary>
     public class CheckersPoint
     {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public CheckerPiece Piece { get; set; }
+        public int Row { get; set; }
+        public int Column { get; set; }
+        public CheckerPiece Checker { get; set; }
 
-        public CheckersPoint(int X, int Y, CheckerPiece Piece)
+        public CheckersPoint(int Row, int Column, CheckerPiece Checker)
         {
-            this.X = X;
-            this.Y = Y;
-            this.Piece = Piece;
+            this.Row = Row;
+            this.Column = Column;
+            this.Checker = Checker;
         }
 
-        public CheckersPoint(int X, int Y)
+        public CheckersPoint(int Row, int Column, CheckerPieceType checkerPieceType)
         {
-            this.X = X;
-            this.Y = Y;
+            this.Row = Row;
+            this.Column = Column;
+            this.Checker = CheckerPieceFactory.GetCheckerPiece(checkerPieceType);
         }
     }
 }

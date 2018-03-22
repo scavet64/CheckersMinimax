@@ -22,14 +22,14 @@ namespace CheckersMinimax
     /// </summary>
     public partial class CheckersSquareUserControl : UserControl, INotifyPropertyChanged
     {
-        private CheckerPiece checker;
 
-        public CheckerPiece Checker
+        private CheckersPoint checkersPoint;
+
+        public CheckersPoint CheckersPoint
         {
-            get { return checker; }
-            set { checker = value; }
+            get { return checkersPoint; }
+            set { checkersPoint = value; }
         }
-
 
         private Brush _background;
         public Brush BackgroundColor
@@ -45,42 +45,26 @@ namespace CheckersMinimax
             }
         }
 
-        /// <summary>
-        /// Probably wont need this
-        /// </summary>
-        /// <param name="backgroundColor"></param>
-        /// <param name="row"></param>
-        /// <param name="col"></param>
-        /// <param name="checkerPieceType"></param>
-        //public CheckersSquareUserControl(Brush backgroundColor, int row, int col, CheckerPiece checker)
-        //{
-        //    InitializeComponent();
-        //    //BackgroundColor = backgroundColor;
-        //    this.Background = backgroundColor;
-        //    button.Content = "row: " + row + " , col: " + col;
-        //    this.checker = checker;
-        //    UpdateSquare();
-        //}
-
-        public CheckersSquareUserControl(Brush backgroundColor, int row, int col, CheckerPieceType checkerPieceType)
+        public CheckersSquareUserControl(Brush backgroundColor, CheckersPoint checkersPoint)
         {
             InitializeComponent();
             //BackgroundColor = backgroundColor;
             this.Background = backgroundColor;
-            this.checker = CheckerPieceFactory.GetCheckerPiece(checkerPieceType);
+            this.checkersPoint = checkersPoint;
+
             UpdateSquare();
 
             //Debug TODO: Delete this when not needed anymore
-            button.Content = "row: " + row + " , col: " + col;
+            button.Content = "row: " + checkersPoint.Row + " , col: " + checkersPoint.Column;
         }
 
         public void UpdateSquare()
         {
-            if(checker != null)
+            if(checkersPoint != null)
             {
                 try
                 {
-                    checkerImage.Source = BuildCheckerImageSource(checker.ImageSource);
+                    checkerImage.Source = BuildCheckerImageSource(checkersPoint.Checker.ImageSource);
                 }
                 catch (Exception ex)
                 {
