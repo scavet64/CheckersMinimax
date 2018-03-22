@@ -45,12 +45,13 @@ namespace CheckersMinimax
             }
         }
 
-        public CheckersSquareUserControl(Brush backgroundColor, CheckersPoint checkersPoint)
+        public CheckersSquareUserControl(Brush backgroundColor, CheckersPoint checkersPoint, RoutedEventHandler routedEventHandler)
         {
             InitializeComponent();
             //BackgroundColor = backgroundColor;
             this.Background = backgroundColor;
             this.checkersPoint = checkersPoint;
+            this.button.Click += routedEventHandler;
 
             UpdateSquare();
 
@@ -60,11 +61,11 @@ namespace CheckersMinimax
 
         public void UpdateSquare()
         {
-            if(checkersPoint != null)
+            if(checkersPoint != null && checkersPoint.Checker != null)
             {
                 try
                 {
-                    checkerImage.Source = BuildCheckerImageSource(checkersPoint.Checker.ImageSource);
+                    checkerImage.Source = checkersPoint.Checker.BuildCheckerImageSource();
                 }
                 catch (Exception ex)
                 {
@@ -75,11 +76,6 @@ namespace CheckersMinimax
             {
                 HideChecker();
             }
-        }
-
-        private ImageSource BuildCheckerImageSource(string imageSource)
-        {
-            return new BitmapImage(new Uri(imageSource, UriKind.Relative));
         }
 
         private void HideChecker()

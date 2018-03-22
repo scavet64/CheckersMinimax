@@ -10,7 +10,7 @@ namespace CheckersMinimax.Pieces
     {
         public RedKingCheckerPiece()
         {
-            ImageSource = "Resources/red60p_king.png";
+            imageSource = "Resources/red60p_king.png";
         }
     }
 }

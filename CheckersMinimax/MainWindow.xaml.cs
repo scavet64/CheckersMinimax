@@ -53,21 +53,21 @@ namespace CheckersMinimax
                     {
                         if (Column % 2 == 0)
                         {
-                            checkerSquareUC = new CheckersSquareUserControl(Brushes.White, new CheckersPoint(Row, Column, CheckerPieceType.nullp));
+                            checkerSquareUC = new CheckersSquareUserControl(Brushes.White, new CheckersPoint(Row, Column, CheckerPieceType.nullp), new RoutedEventHandler(Button_Click));
                         }
                         else
                         {
                             if (Row < 3)
                             {
-                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.BlackPawn));
+                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.BlackPawn), new RoutedEventHandler(Button_Click));
                             }
                             else if (Row > 4)
                             {
-                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.RedPawn));
+                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.RedPawn), new RoutedEventHandler(Button_Click));
                             }
                             else
                             {
-                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.nullp));
+                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.nullp), new RoutedEventHandler(Button_Click));
                             }
                         }
                     }
@@ -77,21 +77,21 @@ namespace CheckersMinimax
                         {
                             if (Row < 3)
                             {
-                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.BlackPawn));
+                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.BlackPawn), new RoutedEventHandler(Button_Click));
                             }
                             else if (Row > 4)
                             {
-                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.RedPawn));
+                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.RedPawn), new RoutedEventHandler(Button_Click));
                             }
                             else
                             {
                                 //empty middle spot
-                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.nullp));
+                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.nullp), new RoutedEventHandler(Button_Click));
                             }
                         }
                         else
                         {
-                            checkerSquareUC = new CheckersSquareUserControl(Brushes.White, new CheckersPoint(Row, Column, CheckerPieceType.nullp));
+                            checkerSquareUC = new CheckersSquareUserControl(Brushes.White, new CheckersPoint(Row, Column, CheckerPieceType.nullp), new RoutedEventHandler(Button_Click));
                         }
 
                     }
@@ -102,77 +102,65 @@ namespace CheckersMinimax
             lst.ItemsSource = boardArray;
         }
 
-
-
-        UIElement GetGridElement(Grid g, int r, int c)
+        public void Button_Click(Object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i < g.Children.Count; i++)
+            Button button = (Button)sender;
+            CheckersSquareUserControl checkerSquareUC = (CheckersSquareUserControl)((Grid)button.Parent).Parent;
+            Console.WriteLine("Row: " + checkerSquareUC.CheckersPoint.Row + " Column: " + checkerSquareUC.CheckersPoint.Column);
+            if (currentMove == null)
             {
-                UIElement e = g.Children[i];
-                if (Grid.GetRow(e) == r && Grid.GetColumn(e) == c)
-                    return e;
+                currentMove = new CheckersMove();
             }
-            return null;
+            if (currentMove.Source == null)
+            {
+                currentMove.Source = checkerSquareUC;
+                checkerSquareUC.Background = Brushes.Green;
+            }
+            else
+            {
+                currentMove.Destination = checkerSquareUC;
+                checkerSquareUC.Background = Brushes.Green;
+            }
+            if ((currentMove.Source != null) && (currentMove.Destination != null))
+            {
+                MakeMove();
+                //if (CheckMove())
+                //{
+                //    MakeMove();
+                //    //aiMakeMove();
+                //}
+            }
         }
 
-        //public void button_Click(Object sender, RoutedEventArgs e)
-        //{
-        //    Button button = (Button)sender;
-        //    CheckersSquareUserControl checkerSquareUC = (CheckersSquareUserControl)button.Parent;
-        //    Console.WriteLine("Row: " + checkerSquareUC.Row + " Column: " + checkerSquareUC.Col);
-        //    if (currentMove == null)
-        //    {
-        //        currentMove = new CheckersMove();
-        //    }
-        //    if (currentMove.PieceMoving == null)
-        //    {
-        //        currentMove.Source = checkerSquareUC.check
-        //        currentMove.PieceMoving = checkerSquareUC.Checker;
-        //        checkerSquareUC.Background = Brushes.Green;
-        //    }
-        //    else
-        //    {
-        //        currentMove.Destination = new CheckersPoint(checkerSquareUC.Row, checkerSquareUC.Col);
-        //        checkerSquareUC.Background = Brushes.Green;
-        //    }
-        //    if ((currentMove.PieceMoving != null) && (currentMove.Destination != null))
-        //    {
-        //        MakeMove();
-        //        //if (CheckMove())
-        //        //{
-        //        //    MakeMove();
-        //        //    //aiMakeMove();
-        //        //}
-        //    }
-        //}
+        private void MakeMove()
+        {
+            CheckersSquareUserControl source = currentMove.Source;
+            CheckersSquareUserControl destination = currentMove.Destination;
 
-        //private void MakeMove()
-        //{
-        //    Console.WriteLine("Piece1 " + currentMove + ", " + currentMove.piece1.Column);
-        //    Console.WriteLine("Piece2 " + currentMove.piece2.Row + ", " + currentMove.piece2.Column);
-        //    StackPanel stackPanel1 = (StackPanel)GetGridElement(CheckersGrid, currentMove.piece1.Row, currentMove.piece1.Column);
-        //    StackPanel stackPanel2 = (StackPanel)GetGridElement(CheckersGrid, currentMove.piece2.Row, currentMove.piece2.Column);
-        //    CheckersGrid.Children.Remove(stackPanel1);
-        //    CheckersGrid.Children.Remove(stackPanel2);
-        //    Grid.SetRow(stackPanel1, currentMove.piece2.Row);
-        //    Grid.SetColumn(stackPanel1, currentMove.piece2.Column);
-        //    CheckersGrid.Children.Add(stackPanel1);
-        //    Grid.SetRow(stackPanel2, currentMove.piece1.Row);
-        //    Grid.SetColumn(stackPanel2, currentMove.piece1.Column);
-        //    CheckersGrid.Children.Add(stackPanel2);
-        //    checkKing(currentMove.piece2);
-        //    currentMove = null;
-        //    if (turn == "Black")
-        //    {
-        //        this.Title = "Checkers! Reds turn!";
-        //        turn = "Red";
-        //    }
-        //    else if (turn == "Red")
-        //    {
-        //        this.Title = "Checkers! Blacks turn!";
-        //        turn = "Black";
-        //    }
-        //    checkWin();
-        //}
+            Console.WriteLine("Piece1 " + source.CheckersPoint.Row + ", " + source.CheckersPoint.Column);
+            Console.WriteLine("Piece2 " + destination.CheckersPoint.Row + ", " + destination.CheckersPoint.Column);
+
+            destination.CheckersPoint.Checker = currentMove.Source.CheckersPoint.Checker;
+            source.CheckersPoint.Checker = CheckerPieceFactory.GetCheckerPiece(CheckerPieceType.nullp);
+
+            source.UpdateSquare();
+            destination.UpdateSquare();
+
+            source.Background = Brushes.Black;
+            destination.Background = Brushes.Black;
+
+            currentMove = null;
+        }
+
+        private void UpdateSquares()
+        {
+            foreach(List<CheckersSquareUserControl> list in boardArray)
+            {
+                foreach(CheckersSquareUserControl squareUC in list)
+                {
+                    squareUC.UpdateSquare();
+                }
+            }
+        }
     }
 }
