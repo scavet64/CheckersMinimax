@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace CheckersMinimax.Pieces
 {
-    class RedKingCheckerPiece : CheckerPiece
+    class RedKingCheckerPiece : KingCheckerPiece
     {
         public RedKingCheckerPiece()
         {
             imageSource = "Resources/red60p_king.png";
         }
+
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CheckersMinimax.Pieces
 {
-    class BlackKingCheckerPiece : CheckerPiece
+    class BlackKingCheckerPiece : KingCheckerPiece
     {
         public BlackKingCheckerPiece()
         {

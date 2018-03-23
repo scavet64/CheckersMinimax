@@ -22,7 +22,7 @@ namespace CheckersMinimax
     public partial class MainWindow : Window
     {
         private CheckersMove currentMove;
-        private List<List<CheckersSquareUserControl>> boardArray = new List<List<CheckersSquareUserControl>>();
+        private CheckerBoard checkerBoard = new CheckerBoard();
 
         public MainWindow()
         {
@@ -31,76 +31,22 @@ namespace CheckersMinimax
             currentMove = null;
             //winner = null;
             //turn = "Black";
-            MakeBoard();
+            checkerBoard.MakeBoard(new RoutedEventHandler(Button_Click));
+
+            //todo try to use databinding here
+            lst.ItemsSource = checkerBoard.BoardArray;
         }
 
         private void ClearBoard()
         {
             List<List<CheckersSquareUserControl>> boardArray = new List<List<CheckersSquareUserControl>>();
-            MakeBoard();
+            checkerBoard.MakeBoard(new RoutedEventHandler(Button_Click));
+
+            //todo try to use databinding here
+            lst.ItemsSource = checkerBoard.BoardArray;
         }
 
-        private void MakeBoard()
-        {
-            int count = 0;
-            for (int Row = 0; Row < 8; Row++)
-            {
-                boardArray.Add(new List<CheckersSquareUserControl>());
-                for (int Column = 0; Column < 8; Column++)
-                {
-                    CheckersSquareUserControl checkerSquareUC;
-                    if (Row % 2 == 0)
-                    {
-                        if (Column % 2 == 0)
-                        {
-                            checkerSquareUC = new CheckersSquareUserControl(Brushes.White, new CheckersPoint(Row, Column, CheckerPieceType.nullp), new RoutedEventHandler(Button_Click));
-                        }
-                        else
-                        {
-                            if (Row < 3)
-                            {
-                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.BlackPawn), new RoutedEventHandler(Button_Click));
-                            }
-                            else if (Row > 4)
-                            {
-                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.RedPawn), new RoutedEventHandler(Button_Click));
-                            }
-                            else
-                            {
-                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.nullp), new RoutedEventHandler(Button_Click));
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (Column % 2 == 0)
-                        {
-                            if (Row < 3)
-                            {
-                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.BlackPawn), new RoutedEventHandler(Button_Click));
-                            }
-                            else if (Row > 4)
-                            {
-                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.RedPawn), new RoutedEventHandler(Button_Click));
-                            }
-                            else
-                            {
-                                //empty middle spot
-                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.nullp), new RoutedEventHandler(Button_Click));
-                            }
-                        }
-                        else
-                        {
-                            checkerSquareUC = new CheckersSquareUserControl(Brushes.White, new CheckersPoint(Row, Column, CheckerPieceType.nullp), new RoutedEventHandler(Button_Click));
-                        }
-
-                    }
-                    count++;
-                    boardArray[Row].Add(checkerSquareUC);
-                }
-            }
-            lst.ItemsSource = boardArray;
-        }
+        
 
         public void Button_Click(Object sender, RoutedEventArgs e)
         {
@@ -115,6 +61,12 @@ namespace CheckersMinimax
             {
                 currentMove.Source = checkerSquareUC;
                 checkerSquareUC.Background = Brushes.Green;
+
+                //starting a move, enable spaces where a valid move is present
+                List<CheckersPoint> possiblePointsToMove = checkerSquareUC.CheckersPoint.GetPotentialPointsForMove();
+                ColorBackgroundOfPoints(possiblePointsToMove, Brushes.Aqua);
+                DisableAllButtons();
+                EnableButtons(possiblePointsToMove);
             }
             else
             {
@@ -140,21 +92,65 @@ namespace CheckersMinimax
             Console.WriteLine("Piece1 " + source.CheckersPoint.Row + ", " + source.CheckersPoint.Column);
             Console.WriteLine("Piece2 " + destination.CheckersPoint.Row + ", " + destination.CheckersPoint.Column);
 
-            destination.CheckersPoint.Checker = currentMove.Source.CheckersPoint.Checker;
-            source.CheckersPoint.Checker = CheckerPieceFactory.GetCheckerPiece(CheckerPieceType.nullp);
+            List<CheckersPoint> possiblePointsToMove = source.CheckersPoint.GetPotentialPointsForMove();
+            ColorBackgroundOfPoints(possiblePointsToMove, Brushes.Black);
 
-            source.UpdateSquare();
-            destination.UpdateSquare();
+            EnableAllButtons();
 
             source.Background = Brushes.Black;
             destination.Background = Brushes.Black;
 
+            destination.CheckersPoint.Checker = currentMove.Source.CheckersPoint.Checker;
+            source.CheckersPoint.Checker = CheckerPieceFactory.GetCheckerPiece(CheckerPieceType.nullp);
+
+
+            source.UpdateSquare();
+            destination.UpdateSquare();
+
             currentMove = null;
+        }
+
+        private void DisableAllButtons()
+        {
+            foreach (List<CheckersSquareUserControl> list in checkerBoard.BoardArray)
+            {
+                foreach (CheckersSquareUserControl squareUC in list)
+                {
+                    squareUC.button.IsEnabled = false;
+                }
+            }
+        }
+
+        private void EnableAllButtons()
+        {
+            foreach (List<CheckersSquareUserControl> list in checkerBoard.BoardArray)
+            {
+                foreach (CheckersSquareUserControl squareUC in list)
+                {
+                    squareUC.button.IsEnabled = true;
+                }
+            }
+        }
+
+        private void ColorBackgroundOfPoints(List<CheckersPoint> list, Brush backgroundColor)
+        {
+            foreach (CheckersPoint checkerPoint in list)
+            {
+                checkerBoard.BoardArray[checkerPoint.Row][checkerPoint.Column].Background = backgroundColor;
+            }
+        }
+
+        private void EnableButtons(List<CheckersPoint> list)
+        {
+            foreach (CheckersPoint checkerPoint in list)
+            {
+                checkerBoard.BoardArray[checkerPoint.Row][checkerPoint.Column].button.IsEnabled = true;
+            }
         }
 
         private void UpdateSquares()
         {
-            foreach(List<CheckersSquareUserControl> list in boardArray)
+            foreach(List<CheckersSquareUserControl> list in checkerBoard.BoardArray)
             {
                 foreach(CheckersSquareUserControl squareUC in list)
                 {

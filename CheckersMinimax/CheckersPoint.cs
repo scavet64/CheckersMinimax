@@ -29,5 +29,17 @@ namespace CheckersMinimax
             this.Column = Column;
             this.Checker = CheckerPieceFactory.GetCheckerPiece(checkerPieceType);
         }
+
+        public CheckersPoint(int Row, int Column)
+        {
+            this.Row = Row;
+            this.Column = Column;
+            this.Checker = CheckerPieceFactory.GetCheckerPiece(CheckerPieceType.nullp);
+        }
+
+        public List<CheckersPoint> GetPotentialPointsForMove()
+        {
+            return this.Checker.GetPossiblePoints(this);
+        }
     }
 }

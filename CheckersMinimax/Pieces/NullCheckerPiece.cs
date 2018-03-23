@@ -8,7 +8,7 @@ using System.Windows.Media.Imaging;
 
 namespace CheckersMinimax.Pieces
 {
-    class NullCheckerPiece : CheckerPiece
+    public class NullCheckerPiece : CheckerPiece
     {
         public NullCheckerPiece()
         {
@@ -18,6 +18,11 @@ namespace CheckersMinimax.Pieces
         public override ImageSource BuildCheckerImageSource()
         {
             return null;
+        }
+
+        public override List<CheckersPoint> GetPossiblePoints(CheckersPoint currentLocation)
+        {
+            return new List<CheckersPoint>();
         }
     }
 }
