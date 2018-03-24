@@ -15,7 +15,7 @@ namespace CheckersMinimax.Pieces
 
         public override List<CheckersPoint> GetPossiblePoints(CheckersPoint currentLocation, CheckerBoard checkerBoard)
         {
-            return ProcessDownMoves(currentLocation, checkerBoard);
+            return base.ProcessDownMoves(currentLocation, checkerBoard);
         }
     }
 }

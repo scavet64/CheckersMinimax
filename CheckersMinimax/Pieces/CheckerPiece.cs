@@ -25,12 +25,12 @@ namespace CheckersMinimax.Pieces
             //this.Location = location;
         }
 
+        public abstract List<CheckersPoint> GetPossiblePoints(CheckersPoint currentLocation, CheckerBoard checkerBoard);
+
         public virtual ImageSource BuildCheckerImageSource()
         {
             return new BitmapImage(new Uri(imageSource, UriKind.Relative));
         }
-
-        public abstract List<CheckersPoint> GetPossiblePoints(CheckersPoint currentLocation, CheckerBoard checkerBoard);
 
         protected List<CheckersPoint> ProcessUpMoves(CheckersPoint currentLocation, CheckerBoard checkerBoard)
         {
