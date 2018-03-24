@@ -25,17 +25,17 @@ namespace CheckersMinimax.Pieces
             //this.Location = location;
         }
 
-        public abstract List<CheckersPoint> GetPossiblePoints(CheckersPoint currentLocation, CheckerBoard checkerBoard);
+        public abstract List<CheckersMove> GetPossiblePoints(CheckersPoint currentLocation, CheckerBoard checkerBoard);
 
         public virtual ImageSource BuildCheckerImageSource()
         {
             return new BitmapImage(new Uri(imageSource, UriKind.Relative));
         }
 
-        protected List<CheckersPoint> ProcessUpMoves(CheckersPoint currentLocation, CheckerBoard checkerBoard)
+        protected List<CheckersMove> ProcessUpMoves(CheckersPoint currentLocation, CheckerBoard checkerBoard)
         {
 
-            List<CheckersPoint> list = new List<CheckersPoint>();
+            List<CheckersMove> list = new List<CheckersMove>();
             //Can we go up the board?
             int rowAbove = currentLocation.Row - 1;
             if (rowAbove >= 0)
@@ -50,10 +50,10 @@ namespace CheckersMinimax.Pieces
             return list;
         }
 
-        protected List<CheckersPoint> ProcessDownMoves(CheckersPoint currentLocation, CheckerBoard checkerBoard)
+        protected List<CheckersMove> ProcessDownMoves(CheckersPoint currentLocation, CheckerBoard checkerBoard)
         {
 
-            List<CheckersPoint> list = new List<CheckersPoint>();
+            List<CheckersMove> list = new List<CheckersMove>();
             //Can we go up the board?
             int rowBelow = currentLocation.Row + 1;
             if (rowBelow < 9)
@@ -68,9 +68,9 @@ namespace CheckersMinimax.Pieces
             return list;
         }
 
-        private List<CheckersPoint> ProcessMoveRight(CheckersPoint currentLocation, CheckerBoard checkerBoard, int oneAdjacentRow, bool isUp)
+        private List<CheckersMove> ProcessMoveRight(CheckersPoint currentLocation, CheckerBoard checkerBoard, int oneAdjacentRow, bool isUp)
         {
-            List<CheckersPoint> list = new List<CheckersPoint>();
+            List<CheckersMove> list = new List<CheckersMove>();
             if (oneAdjacentRow >= 0)
             {
                 //can we move to the right?
@@ -81,7 +81,7 @@ namespace CheckersMinimax.Pieces
                     if (possibleCheckerOnPossiblePoint == null || possibleCheckerOnPossiblePoint is NullCheckerPiece)
                     {
                         //we can go here
-                        list.Add(new CheckersPoint(oneAdjacentRow, rightCol));
+                        list.Add(new CheckersMove(currentLocation, new CheckersPoint(oneAdjacentRow, rightCol), false));
                     }
                     else
                     {
@@ -112,7 +112,7 @@ namespace CheckersMinimax.Pieces
                                 if (possibleCheckerOnPossibleJumpPoint == null || possibleCheckerOnPossibleJumpPoint is NullCheckerPiece)
                                 {
                                     //we can go here
-                                    list.Add(new CheckersPoint(twoAdjacentRow, twoColsRight));
+                                    list.Add(new CheckersMove(currentLocation, new CheckersPoint(twoAdjacentRow, twoColsRight), true));
                                 }
                             }
                         }
@@ -122,9 +122,9 @@ namespace CheckersMinimax.Pieces
             return list;
         }
 
-        private List<CheckersPoint> ProcessBoardLeft(CheckersPoint currentLocation, CheckerBoard checkerBoard, int oneAdjacentRow, bool isUp)
+        private List<CheckersMove> ProcessBoardLeft(CheckersPoint currentLocation, CheckerBoard checkerBoard, int oneAdjacentRow, bool isUp)
         {
-            List<CheckersPoint> list = new List<CheckersPoint>();
+            List<CheckersMove> list = new List<CheckersMove>();
             int leftCol = currentLocation.Column - 1;
             if (leftCol >= 0)
             {
@@ -132,7 +132,7 @@ namespace CheckersMinimax.Pieces
                 if (possibleCheckerOnPossiblePoint == null || possibleCheckerOnPossiblePoint is NullCheckerPiece)
                 {
                     //we can go here
-                    list.Add(new CheckersPoint(oneAdjacentRow, leftCol));
+                    list.Add(new CheckersMove(currentLocation, new CheckersPoint(oneAdjacentRow, leftCol), false));
                 }
                 else
                 {
@@ -161,7 +161,7 @@ namespace CheckersMinimax.Pieces
                             if (possibleCheckerOnPossibleJumpPoint == null || possibleCheckerOnPossibleJumpPoint is NullCheckerPiece)
                             {
                                 //we can go here
-                                list.Add(new CheckersPoint(twoAdjacentRow, twoColLeft));
+                                list.Add(new CheckersMove(currentLocation, new CheckersPoint(twoAdjacentRow, twoColLeft), true));
                             }
                         }
                     }

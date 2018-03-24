@@ -12,9 +12,21 @@ namespace CheckersMinimax
         public CheckersSquareUserControl Source { get; set; }
         public CheckersSquareUserControl Destination { get; set; }
 
+        public CheckersPoint SourcePoint { get; set; }
+        public CheckersPoint DestinationPoint { get; set; }
+
+        public bool IsJumpMove { get; set; }
+
         public CheckersMove()
         {
 
+        }
+
+        public CheckersMove(CheckersPoint SourcePoint, CheckersPoint DestinationPoint, bool IsJumpMove)
+        {
+            this.SourcePoint = SourcePoint;
+            this.DestinationPoint = DestinationPoint;
+            this.IsJumpMove = IsJumpMove;
         }
     }
 }

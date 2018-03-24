@@ -102,7 +102,7 @@ namespace CheckersMinimax
         //    }
         //}
 
-        public List<CheckersPoint> getAvailablePointsForSquare(CheckersPoint checkersPoint)
+        public List<CheckersMove> getAvailablePointsForSquare(CheckersPoint checkersPoint)
         {
             if (checkersPoint.Checker == null)
             {

@@ -24,7 +24,7 @@ namespace CheckersMinimax
         private CheckersMove currentMove;
         private CheckerBoard checkerBoard = new CheckerBoard();
 
-        private List<CheckersPoint> CurrentAvailableMoves;
+        private List<CheckersMove> CurrentAvailableMoves;
 
         public MainWindow()
         {
@@ -66,7 +66,10 @@ namespace CheckersMinimax
 
                 //starting a move, enable spaces where a valid move is present
                 CurrentAvailableMoves = checkerSquareUC.CheckersPoint.GetPotentialPointsForMove(checkerBoard);
-                CurrentAvailableMoves.Add(checkerSquareUC.CheckersPoint); //add the source point to the list of moves as a cancel for the player
+
+                //Add self move to act as cancel
+                CurrentAvailableMoves.Add(new CheckersMove(checkerSquareUC.CheckersPoint, checkerSquareUC.CheckersPoint, false));
+
                 ColorBackgroundOfPoints(CurrentAvailableMoves, Brushes.Aqua);
                 DisableAllButtons();
                 EnableButtons(CurrentAvailableMoves);
@@ -95,10 +98,19 @@ namespace CheckersMinimax
             Console.WriteLine("Piece1 " + source.CheckersPoint.Row + ", " + source.CheckersPoint.Column);
             Console.WriteLine("Piece2 " + destination.CheckersPoint.Row + ", " + destination.CheckersPoint.Column);
 
+            //was this a cancel?
             if (source != destination)
             {
                 destination.CheckersPoint.Checker = currentMove.Source.CheckersPoint.Checker;
                 source.CheckersPoint.Checker = CheckerPieceFactory.GetCheckerPiece(CheckerPieceType.nullp);
+
+                //was this a jump move?
+                if (currentMove.IsJumpMove)
+                {
+                    //delete the checker piece that was jumped
+                }
+
+                //Check for win
 
                 source.UpdateSquare();
                 destination.UpdateSquare();
@@ -131,19 +143,19 @@ namespace CheckersMinimax
             }
         }
 
-        private void ColorBackgroundOfPoints(List<CheckersPoint> list, Brush backgroundColor)
+        private void ColorBackgroundOfPoints(List<CheckersMove> list, Brush backgroundColor)
         {
-            foreach (CheckersPoint checkerPoint in list)
+            foreach (CheckersMove checkerPoint in list)
             {
-                checkerBoard.BoardArray[checkerPoint.Row][checkerPoint.Column].Background = backgroundColor;
+                checkerBoard.BoardArray[checkerPoint.DestinationPoint.Row][checkerPoint.DestinationPoint.Column].Background = backgroundColor;
             }
         }
 
-        private void EnableButtons(List<CheckersPoint> list)
+        private void EnableButtons(List<CheckersMove> list)
         {
-            foreach (CheckersPoint checkerPoint in list)
+            foreach (CheckersMove checkerPoint in list)
             {
-                checkerBoard.BoardArray[checkerPoint.Row][checkerPoint.Column].button.IsEnabled = true;
+                checkerBoard.BoardArray[checkerPoint.DestinationPoint.Row][checkerPoint.DestinationPoint.Column].button.IsEnabled = true;
             }
         }
 

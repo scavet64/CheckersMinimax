@@ -37,7 +37,7 @@ namespace CheckersMinimax
             this.Checker = CheckerPieceFactory.GetCheckerPiece(CheckerPieceType.nullp);
         }
 
-        public List<CheckersPoint> GetPotentialPointsForMove(CheckerBoard checkerBoard)
+        public List<CheckersMove> GetPotentialPointsForMove(CheckerBoard checkerBoard)
         {
             return this.Checker.GetPossiblePoints(this, checkerBoard);
         }

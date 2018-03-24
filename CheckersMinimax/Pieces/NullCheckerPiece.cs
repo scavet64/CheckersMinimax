@@ -20,9 +20,9 @@ namespace CheckersMinimax.Pieces
             return null;
         }
 
-        public override List<CheckersPoint> GetPossiblePoints(CheckersPoint currentLocation, CheckerBoard checkerBoard)
+        public override List<CheckersMove> GetPossiblePoints(CheckersPoint currentLocation, CheckerBoard checkerBoard)
         {
-            return new List<CheckersPoint>();
+            return new List<CheckersMove>();
         }
     }
 }

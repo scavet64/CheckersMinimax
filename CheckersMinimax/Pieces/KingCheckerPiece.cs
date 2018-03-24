@@ -8,9 +8,9 @@ namespace CheckersMinimax.Pieces
 {
     class KingCheckerPiece : CheckerPiece, IJumpable
     {
-        public override List<CheckersPoint> GetPossiblePoints(CheckersPoint currentLocation, CheckerBoard checkerBoard)
+        public override List<CheckersMove> GetPossiblePoints(CheckersPoint currentLocation, CheckerBoard checkerBoard)
         {
-            List<CheckersPoint> list = new List<CheckersPoint>();
+            List<CheckersMove> list = new List<CheckersMove>();
 
             //Can we go down the board?
             list.AddRange(base.ProcessDownMoves(currentLocation, checkerBoard));

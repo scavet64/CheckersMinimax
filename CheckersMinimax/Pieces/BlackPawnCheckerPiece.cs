@@ -13,7 +13,7 @@ namespace CheckersMinimax.Pieces
             imageSource = "Resources/black60p.png";
         }
 
-        public override List<CheckersPoint> GetPossiblePoints(CheckersPoint currentLocation, CheckerBoard checkerBoard)
+        public override List<CheckersMove> GetPossiblePoints(CheckersPoint currentLocation, CheckerBoard checkerBoard)
         {
             return base.ProcessDownMoves(currentLocation, checkerBoard);
         }
