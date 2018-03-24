@@ -30,6 +30,6 @@ namespace CheckersMinimax.Pieces
             return new BitmapImage(new Uri(imageSource, UriKind.Relative));
         }
 
-        public abstract List<CheckersPoint> GetPossiblePoints(CheckersPoint currentLocation);
+        public abstract List<CheckersPoint> GetPossiblePoints(CheckersPoint currentLocation, CheckerBoard checkerBoard);
     }
 }

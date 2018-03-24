@@ -24,6 +24,8 @@ namespace CheckersMinimax
         private CheckersMove currentMove;
         private CheckerBoard checkerBoard = new CheckerBoard();
 
+        private List<CheckersPoint> CurrentAvailableMoves;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -63,10 +65,11 @@ namespace CheckersMinimax
                 checkerSquareUC.Background = Brushes.Green;
 
                 //starting a move, enable spaces where a valid move is present
-                List<CheckersPoint> possiblePointsToMove = checkerSquareUC.CheckersPoint.GetPotentialPointsForMove();
-                ColorBackgroundOfPoints(possiblePointsToMove, Brushes.Aqua);
+                CurrentAvailableMoves = checkerSquareUC.CheckersPoint.GetPotentialPointsForMove(checkerBoard);
+                CurrentAvailableMoves.Add(checkerSquareUC.CheckersPoint); //add the source point to the list of moves as a cancel for the player
+                ColorBackgroundOfPoints(CurrentAvailableMoves, Brushes.Aqua);
                 DisableAllButtons();
-                EnableButtons(possiblePointsToMove);
+                EnableButtons(CurrentAvailableMoves);
             }
             else
             {
@@ -92,21 +95,17 @@ namespace CheckersMinimax
             Console.WriteLine("Piece1 " + source.CheckersPoint.Row + ", " + source.CheckersPoint.Column);
             Console.WriteLine("Piece2 " + destination.CheckersPoint.Row + ", " + destination.CheckersPoint.Column);
 
-            List<CheckersPoint> possiblePointsToMove = source.CheckersPoint.GetPotentialPointsForMove();
-            ColorBackgroundOfPoints(possiblePointsToMove, Brushes.Black);
+            if (source != destination)
+            {
+                destination.CheckersPoint.Checker = currentMove.Source.CheckersPoint.Checker;
+                source.CheckersPoint.Checker = CheckerPieceFactory.GetCheckerPiece(CheckerPieceType.nullp);
 
+                source.UpdateSquare();
+                destination.UpdateSquare();
+            }
+
+            ColorBackgroundOfPoints(CurrentAvailableMoves, Brushes.Black);
             EnableAllButtons();
-
-            source.Background = Brushes.Black;
-            destination.Background = Brushes.Black;
-
-            destination.CheckersPoint.Checker = currentMove.Source.CheckersPoint.Checker;
-            source.CheckersPoint.Checker = CheckerPieceFactory.GetCheckerPiece(CheckerPieceType.nullp);
-
-
-            source.UpdateSquare();
-            destination.UpdateSquare();
-
             currentMove = null;
         }
 

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CheckersMinimax.Pieces
 {
-    class KingCheckerPiece : CheckerPiece
+    class KingCheckerPiece : CheckerPiece, IJumpable
     {
-        public override List<CheckersPoint> GetPossiblePoints(CheckersPoint currentLocation)
+        public override List<CheckersPoint> GetPossiblePoints(CheckersPoint currentLocation, CheckerBoard checkerBoard)
         {
             List<CheckersPoint> list = new List<CheckersPoint>();
 
@@ -16,7 +16,7 @@ namespace CheckersMinimax.Pieces
             if(currentLocation.Row + 1 < 9)
             {
                 //Can we move to the right?
-                if(currentLocation.Column + 1 < 9)
+                if(currentLocation.Column + 1 < 8)
                 {
                     list.Add(new CheckersPoint(currentLocation.Column + 1, currentLocation.Row + 1));
                 }
@@ -32,7 +32,7 @@ namespace CheckersMinimax.Pieces
             if(currentLocation.Row - 1 >= 0)
             {
                 //can we move to the right?
-                if(currentLocation.Column + 1 < 9)
+                if(currentLocation.Column + 1 < 8)
                 {
                     list.Add(new CheckersPoint(currentLocation.Column + 1, currentLocation.Row - 1));
                 }

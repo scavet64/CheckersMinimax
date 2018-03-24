@@ -58,6 +58,8 @@
     <Compile Include="Pieces\BlackPawnCheckerPiece.cs" />
     <Compile Include="Pieces\CheckerPieceFactory.cs" />
     <Compile Include="Pieces\CheckerPieceType.cs" />
+    <Compile Include="Pieces\IBlackPiece.cs" />
+    <Compile Include="Pieces\IJumpable.cs" />
     <Compile Include="Pieces\KingCheckerPiece.cs" />
     <Compile Include="Pieces\NullCheckerPiece.cs" />
     <Compile Include="Pieces\RedKingCheckerPiece.cs" />
@@ -87,6 +89,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Pieces\IRedPiece.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

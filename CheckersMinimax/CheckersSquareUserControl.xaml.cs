@@ -83,6 +83,11 @@ namespace CheckersMinimax
             checkerImage.Visibility = Visibility.Collapsed;
         }
 
+        public bool HasChecker()
+        {
+            return (CheckersPoint.Checker != null && !(checkersPoint.Checker is NullCheckerPiece));
+        }
+
         #region INotifiedProperty Block
         public event PropertyChangedEventHandler PropertyChanged;
 

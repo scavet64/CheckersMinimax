@@ -9,10 +9,19 @@ using System.Windows.Media;
 
 namespace CheckersMinimax
 {
+    /// <summary>
+    /// [Row][Column]
+    /// </summary>
     public class CheckerBoard
     {
         private List<List<CheckersSquareUserControl>> boardArray = new List<List<CheckersSquareUserControl>>();
 
+        /// <summary>
+        /// [Row][Column]
+        /// </summary>
+        /// <value>
+        /// The board array.
+        /// </value>
         public List<List<CheckersSquareUserControl>> BoardArray
         {
             get { return boardArray; }
@@ -100,7 +109,7 @@ namespace CheckersMinimax
                 return null;
             }
 
-            return checkersPoint.GetPotentialPointsForMove();
+            return checkersPoint.GetPotentialPointsForMove(this);
         }
     }
 }
