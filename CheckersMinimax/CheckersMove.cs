@@ -11,19 +11,22 @@ namespace CheckersMinimax
     {
         public CheckersPoint SourcePoint { get; set; }
         public CheckersPoint DestinationPoint { get; set; }
+        public CheckersPoint JumpedPoint { get; set; }
 
-        public bool IsJumpMove { get; set; }
+        public CheckersMove() { }
 
-        public CheckersMove()
-        {
-
-        }
-
-        public CheckersMove(CheckersPoint SourcePoint, CheckersPoint DestinationPoint, bool IsJumpMove)
+        public CheckersMove(CheckersPoint SourcePoint, CheckersPoint DestinationPoint)
         {
             this.SourcePoint = SourcePoint;
             this.DestinationPoint = DestinationPoint;
-            this.IsJumpMove = IsJumpMove;
+            this.JumpedPoint = null;
+        }
+
+        public CheckersMove(CheckersPoint SourcePoint, CheckersPoint DestinationPoint, CheckersPoint JumpedPoint)
+        {
+            this.SourcePoint = SourcePoint;
+            this.DestinationPoint = DestinationPoint;
+            this.JumpedPoint = JumpedPoint;
         }
     }
 }

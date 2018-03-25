@@ -68,7 +68,7 @@ namespace CheckersMinimax
                 CurrentAvailableMoves = checkerSquareUC.CheckersPoint.GetPotentialPointsForMove(checkerBoard);
 
                 //Add self move to act as cancel
-                CurrentAvailableMoves.Add(new CheckersMove(checkerSquareUC.CheckersPoint, checkerSquareUC.CheckersPoint, false));
+                CurrentAvailableMoves.Add(new CheckersMove(checkerSquareUC.CheckersPoint, checkerSquareUC.CheckersPoint));
 
                 ColorBackgroundOfPoints(CurrentAvailableMoves, Brushes.Aqua);
                 DisableAllButtons();
@@ -105,7 +105,7 @@ namespace CheckersMinimax
                 source.Checker = CheckerPieceFactory.GetCheckerPiece(CheckerPieceType.nullp);
 
                 //was this a jump move?
-                if (currentMove.IsJumpMove)
+                if (currentMove.JumpedPoint != null)
                 {
                     //delete the checker piece that was jumped
 

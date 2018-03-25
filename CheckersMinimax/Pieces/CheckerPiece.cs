@@ -81,7 +81,7 @@ namespace CheckersMinimax.Pieces
                     if (possibleCheckerOnPossiblePoint == null || possibleCheckerOnPossiblePoint is NullCheckerPiece)
                     {
                         //we can go here
-                        list.Add(new CheckersMove(currentLocation, new CheckersPoint(oneAdjacentRow, rightCol), false));
+                        list.Add(new CheckersMove(currentLocation, new CheckersPoint(oneAdjacentRow, rightCol)));
                     }
                     else
                     {
@@ -112,7 +112,7 @@ namespace CheckersMinimax.Pieces
                                 if (possibleCheckerOnPossibleJumpPoint == null || possibleCheckerOnPossibleJumpPoint is NullCheckerPiece)
                                 {
                                     //we can go here
-                                    list.Add(new CheckersMove(currentLocation, new CheckersPoint(twoAdjacentRow, twoColsRight), true));
+                                    list.Add(new CheckersMove(currentLocation, new CheckersPoint(twoAdjacentRow, twoColsRight), new CheckersPoint(oneAdjacentRow, rightCol)));
                                 }
                             }
                         }
@@ -132,7 +132,7 @@ namespace CheckersMinimax.Pieces
                 if (possibleCheckerOnPossiblePoint == null || possibleCheckerOnPossiblePoint is NullCheckerPiece)
                 {
                     //we can go here
-                    list.Add(new CheckersMove(currentLocation, new CheckersPoint(oneAdjacentRow, leftCol), false));
+                    list.Add(new CheckersMove(currentLocation, new CheckersPoint(oneAdjacentRow, leftCol)));
                 }
                 else
                 {
@@ -161,7 +161,7 @@ namespace CheckersMinimax.Pieces
                             if (possibleCheckerOnPossibleJumpPoint == null || possibleCheckerOnPossibleJumpPoint is NullCheckerPiece)
                             {
                                 //we can go here
-                                list.Add(new CheckersMove(currentLocation, new CheckersPoint(twoAdjacentRow, twoColLeft), true));
+                                list.Add(new CheckersMove(currentLocation, new CheckersPoint(twoAdjacentRow, twoColLeft), new CheckersPoint(oneAdjacentRow, leftCol)));
                             }
                         }
                     }
