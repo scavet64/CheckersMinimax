@@ -9,9 +9,6 @@ namespace CheckersMinimax
 {
     public class CheckersMove
     {
-        public CheckersSquareUserControl Source { get; set; }
-        public CheckersSquareUserControl Destination { get; set; }
-
         public CheckersPoint SourcePoint { get; set; }
         public CheckersPoint DestinationPoint { get; set; }
 

@@ -59,9 +59,9 @@ namespace CheckersMinimax
             {
                 currentMove = new CheckersMove();
             }
-            if (currentMove.Source == null)
+            if (currentMove.SourcePoint == null)
             {
-                currentMove.Source = checkerSquareUC;
+                currentMove.SourcePoint = checkerSquareUC.CheckersPoint;
                 checkerSquareUC.Background = Brushes.Green;
 
                 //starting a move, enable spaces where a valid move is present
@@ -72,14 +72,14 @@ namespace CheckersMinimax
 
                 ColorBackgroundOfPoints(CurrentAvailableMoves, Brushes.Aqua);
                 DisableAllButtons();
-                EnableButtons(CurrentAvailableMoves);
+                EnableButtonsWithPossibleMove(CurrentAvailableMoves);
             }
             else
             {
-                currentMove.Destination = checkerSquareUC;
+                currentMove.DestinationPoint = checkerSquareUC.CheckersPoint;
                 checkerSquareUC.Background = Brushes.Green;
             }
-            if ((currentMove.Source != null) && (currentMove.Destination != null))
+            if ((currentMove.SourcePoint != null) && (currentMove.DestinationPoint != null))
             {
                 MakeMove();
                 //if (CheckMove())
@@ -92,28 +92,50 @@ namespace CheckersMinimax
 
         private void MakeMove()
         {
-            CheckersSquareUserControl source = currentMove.Source;
-            CheckersSquareUserControl destination = currentMove.Destination;
+            CheckersPoint source = currentMove.SourcePoint;
+            CheckersPoint destination = currentMove.DestinationPoint;
 
-            Console.WriteLine("Piece1 " + source.CheckersPoint.Row + ", " + source.CheckersPoint.Column);
-            Console.WriteLine("Piece2 " + destination.CheckersPoint.Row + ", " + destination.CheckersPoint.Column);
+            Console.WriteLine("Piece1 " + source.Row + ", " + source.Column);
+            Console.WriteLine("Piece2 " + destination.Row + ", " + destination.Column);
 
             //was this a cancel?
             if (source != destination)
             {
-                destination.CheckersPoint.Checker = currentMove.Source.CheckersPoint.Checker;
-                source.CheckersPoint.Checker = CheckerPieceFactory.GetCheckerPiece(CheckerPieceType.nullp);
+                destination.Checker = source.Checker;
+                source.Checker = CheckerPieceFactory.GetCheckerPiece(CheckerPieceType.nullp);
 
                 //was this a jump move?
                 if (currentMove.IsJumpMove)
                 {
                     //delete the checker piece that was jumped
+
                 }
 
                 //Check for win
 
-                source.UpdateSquare();
-                destination.UpdateSquare();
+                //Is this piece a king now?
+                if(!(destination.Checker is KingCheckerPiece))
+                {
+                    if (destination.Row == 7 || destination.Row == 0)
+                    {
+                        //Should be a king now
+                        if(destination.Checker is IRedPiece)
+                        {
+                            destination.Checker = new RedKingCheckerPiece();
+                        }
+                        else
+                        {
+                            destination.Checker = new BlackKingCheckerPiece();
+                        }
+                        
+                    }
+                }
+
+
+                CheckersSquareUserControl sourceUC = checkerBoard.BoardArray[source.Row][source.Column];
+                CheckersSquareUserControl destUC = checkerBoard.BoardArray[destination.Row][destination.Column];
+                sourceUC.UpdateSquare();
+                destUC.UpdateSquare();
             }
 
             ColorBackgroundOfPoints(CurrentAvailableMoves, Brushes.Black);
@@ -151,7 +173,7 @@ namespace CheckersMinimax
             }
         }
 
-        private void EnableButtons(List<CheckersMove> list)
+        private void EnableButtonsWithPossibleMove(List<CheckersMove> list)
         {
             foreach (CheckersMove checkerPoint in list)
             {
