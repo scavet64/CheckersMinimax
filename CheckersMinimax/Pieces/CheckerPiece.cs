@@ -47,7 +47,7 @@ namespace CheckersMinimax.Pieces
                 list.AddRange(ProcessBoardLeft(currentLocation, checkerBoard, rowAbove, true));
             }
 
-            return list;
+            return ProcessJumpMoves(list);
         }
 
         protected List<CheckersMove> ProcessDownMoves(CheckersPoint currentLocation, CheckerBoard checkerBoard)
@@ -65,7 +65,7 @@ namespace CheckersMinimax.Pieces
                 list.AddRange(ProcessBoardLeft(currentLocation, checkerBoard, rowBelow, false));
             }
 
-            return list;
+            return ProcessJumpMoves(list);
         }
 
         private List<CheckersMove> ProcessMoveRight(CheckersPoint currentLocation, CheckerBoard checkerBoard, int oneAdjacentRow, bool isUp)
@@ -169,6 +169,29 @@ namespace CheckersMinimax.Pieces
             }
 
             return list;
+        }
+
+        private  List<CheckersMove> ProcessJumpMoves(List<CheckersMove> listToProcess)
+        {
+            List<CheckersMove> processedList = new List<CheckersMove>();
+
+            foreach(CheckersMove move in listToProcess)
+            {
+                if(move.JumpedPoint != null)
+                {
+                    processedList.Add(move);
+                }
+            }
+
+            if(processedList.Count == 0)
+            {
+                //no jump moves were found so return the unaltered list
+                return listToProcess;
+            }
+            else
+            {
+                return processedList;
+            }
         }
     }
 }
