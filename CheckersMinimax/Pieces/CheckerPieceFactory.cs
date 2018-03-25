@@ -20,7 +20,7 @@ namespace CheckersMinimax.Pieces
                     return new BlackPawnCheckerPiece();
                 case CheckerPieceType.BlackKing:
                     return new BlackKingCheckerPiece();
-                case CheckerPieceType.nullp:
+                case CheckerPieceType.nullPiece:
                     return new NullCheckerPiece();
                 default:
                     throw new ArgumentException("Enum to Checker Piece not defined");

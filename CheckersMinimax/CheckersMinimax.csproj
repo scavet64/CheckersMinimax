@@ -91,6 +91,7 @@
   <ItemGroup>
     <Compile Include="Pieces\IRedPiece.cs" />
     <Compile Include="Player.cs" />
+    <Compile Include="PlayerColor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -121,6 +122,9 @@
     <Resource Include="Resources\black60p_king.png" />
     <Resource Include="Resources\red60p.png" />
     <Resource Include="Resources\red60p_king.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="AI\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -23,6 +23,7 @@ namespace CheckersMinimax
     {
         private CheckersMove currentMove;
         private CheckerBoard checkerBoard = new CheckerBoard();
+        private PlayerColor currentPlayersTurn = PlayerColor.Red;
 
         private List<CheckersMove> CurrentAvailableMoves;
 
@@ -55,6 +56,7 @@ namespace CheckersMinimax
             Button button = (Button)sender;
             CheckersSquareUserControl checkerSquareUC = (CheckersSquareUserControl)((Grid)button.Parent).Parent;
             Console.WriteLine("Row: " + checkerSquareUC.CheckersPoint.Row + " Column: " + checkerSquareUC.CheckersPoint.Column);
+            DisableAllButtons();
             if (currentMove == null)
             {
                 currentMove = new CheckersMove();
@@ -71,29 +73,45 @@ namespace CheckersMinimax
                 CurrentAvailableMoves.Add(new CheckersMove(checkerSquareUC.CheckersPoint, checkerSquareUC.CheckersPoint));
 
                 ColorBackgroundOfPoints(CurrentAvailableMoves, Brushes.Aqua);
-                DisableAllButtons();
+                
                 EnableButtonsWithPossibleMove(CurrentAvailableMoves);
             }
             else
             {
                 currentMove.DestinationPoint = checkerSquareUC.CheckersPoint;
                 checkerSquareUC.Background = Brushes.Green;
+
+                //get move from the list that has this point as its destination
+                MakeMove(GetMoveFromList(checkerSquareUC.CheckersPoint));
+
             }
-            if ((currentMove.SourcePoint != null) && (currentMove.DestinationPoint != null))
-            {
-                MakeMove();
-                //if (CheckMove())
-                //{
-                //    MakeMove();
-                //    //aiMakeMove();
-                //}
-            }
+            //if ((currentMove.SourcePoint != null) && (currentMove.DestinationPoint != null))
+            //{
+            //    MakeMove(currentMove);
+            //    //if (CheckMove())
+            //    //{
+            //    //    MakeMove();
+            //    //    //aiMakeMove();
+            //    //}
+            //}
         }
 
-        private void MakeMove()
+        private CheckersMove GetMoveFromList(CheckersPoint checkersPoint)
         {
-            CheckersPoint source = currentMove.SourcePoint;
-            CheckersPoint destination = currentMove.DestinationPoint;
+            foreach(CheckersMove move in CurrentAvailableMoves)
+            {
+                if (move.DestinationPoint.Equals(checkersPoint))
+                {
+                    return move;
+                }
+            }
+            return null;
+        }
+
+        private void MakeMove(CheckersMove moveToMake)
+        {
+            CheckersPoint source = moveToMake.SourcePoint;
+            CheckersPoint destination = moveToMake.DestinationPoint;
 
             Console.WriteLine("Piece1 " + source.Row + ", " + source.Column);
             Console.WriteLine("Piece2 " + destination.Row + ", " + destination.Column);
@@ -102,13 +120,16 @@ namespace CheckersMinimax
             if (source != destination)
             {
                 destination.Checker = source.Checker;
-                source.Checker = CheckerPieceFactory.GetCheckerPiece(CheckerPieceType.nullp);
+                source.Checker = CheckerPieceFactory.GetCheckerPiece(CheckerPieceType.nullPiece);
 
                 //was this a jump move?
-                if (currentMove.JumpedPoint != null)
+                CheckersPoint jumpedPoint = moveToMake.JumpedPoint;
+                if (jumpedPoint != null)
                 {
                     //delete the checker piece that was jumped
-
+                    CheckersSquareUserControl jumpedSquareUserControl = checkerBoard.BoardArray[jumpedPoint.Row][jumpedPoint.Column];
+                    jumpedSquareUserControl.CheckersPoint.Checker = CheckerPieceFactory.GetCheckerPiece(CheckerPieceType.nullPiece);
+                    jumpedSquareUserControl.UpdateSquare();
                 }
 
                 //Check for win
@@ -131,16 +152,54 @@ namespace CheckersMinimax
                     }
                 }
 
-
                 CheckersSquareUserControl sourceUC = checkerBoard.BoardArray[source.Row][source.Column];
                 CheckersSquareUserControl destUC = checkerBoard.BoardArray[destination.Row][destination.Column];
+                sourceUC.CheckersPoint = source;
+                destUC.CheckersPoint = destination;
                 sourceUC.UpdateSquare();
                 destUC.UpdateSquare();
+
+                //swap player turn
+                SwapTurns();
             }
 
             ColorBackgroundOfPoints(CurrentAvailableMoves, Brushes.Black);
-            EnableAllButtons();
+            if(currentPlayersTurn == PlayerColor.Red)
+            {
+                EnableButtons<IRedPiece>();
+            }
+            else
+            {
+                EnableButtons<IBlackPiece>();
+            }
+            //EnableAllButtons();
             currentMove = null;
+        }
+
+        private void SwapTurns()
+        {
+            if (currentPlayersTurn == PlayerColor.Red)
+            {
+                currentPlayersTurn = PlayerColor.Black;
+            }
+            else
+            {
+                currentPlayersTurn = PlayerColor.Red;
+            }
+        }
+
+        private void EnableButtons<T>()
+        {
+            foreach (List<CheckersSquareUserControl> list in checkerBoard.BoardArray)
+            {
+                foreach (CheckersSquareUserControl squareUC in list)
+                {
+                    if (squareUC.CheckersPoint.Checker != null && squareUC.CheckersPoint.Checker is T)
+                    {
+                        squareUC.button.IsEnabled = true;
+                    }
+                }
+            }
         }
 
         private void DisableAllButtons()

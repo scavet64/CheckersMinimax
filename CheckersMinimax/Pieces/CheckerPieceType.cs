@@ -12,6 +12,6 @@ namespace CheckersMinimax.Pieces
         RedKing,
         BlackPawn,
         BlackKing,
-        nullp
+        nullPiece
     }
 }

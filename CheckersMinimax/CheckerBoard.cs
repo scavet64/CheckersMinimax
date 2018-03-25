@@ -42,7 +42,7 @@ namespace CheckersMinimax
                     {
                         if (Column % 2 == 0)
                         {
-                            checkerSquareUC = new CheckersSquareUserControl(Brushes.White, new CheckersPoint(Row, Column, CheckerPieceType.nullp), routedEventHandler);
+                            checkerSquareUC = new CheckersSquareUserControl(Brushes.White, new CheckersPoint(Row, Column, CheckerPieceType.nullPiece), routedEventHandler);
                         }
                         else
                         {
@@ -56,7 +56,7 @@ namespace CheckersMinimax
                             }
                             else
                             {
-                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.nullp), routedEventHandler);
+                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.nullPiece), routedEventHandler);
                             }
                         }
                     }
@@ -75,12 +75,12 @@ namespace CheckersMinimax
                             else
                             {
                                 //empty middle spot
-                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.nullp), routedEventHandler);
+                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.nullPiece), routedEventHandler);
                             }
                         }
                         else
                         {
-                            checkerSquareUC = new CheckersSquareUserControl(Brushes.White, new CheckersPoint(Row, Column, CheckerPieceType.nullp), routedEventHandler);
+                            checkerSquareUC = new CheckersSquareUserControl(Brushes.White, new CheckersPoint(Row, Column, CheckerPieceType.nullPiece), routedEventHandler);
                         }
 
                     }

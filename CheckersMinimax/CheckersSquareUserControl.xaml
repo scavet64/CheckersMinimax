@@ -8,7 +8,7 @@
              d:DesignHeight="75" d:DesignWidth="75">
     <Grid Width="75" Height="75">
         <Image x:Name="checkerImage" ></Image>
-        <Button x:Name="button" Background="Transparent"></Button>
+        <Button x:Name="button" Background="Transparent" Template="{DynamicResource CheckerButtonTemplate}"></Button>
         
     </Grid>
 </UserControl>

@@ -34,12 +34,35 @@ namespace CheckersMinimax
         {
             this.Row = Row;
             this.Column = Column;
-            this.Checker = CheckerPieceFactory.GetCheckerPiece(CheckerPieceType.nullp);
+            this.Checker = CheckerPieceFactory.GetCheckerPiece(CheckerPieceType.nullPiece);
         }
 
         public List<CheckersMove> GetPotentialPointsForMove(CheckerBoard checkerBoard)
         {
             return this.Checker.GetPossiblePoints(this, checkerBoard);
+        }
+
+        // override object.Equals
+        public override bool Equals(object obj)
+        {
+
+            if ((obj != null) && (obj is CheckersPoint otherPoint))
+            {
+                return this.Column == otherPoint.Column && this.Row == otherPoint.Row;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        // override object.GetHashCode
+        public override int GetHashCode()
+        {
+            int hashCode = 13;
+            hashCode += Row.GetHashCode();
+            hashCode += Column.GetHashCode();
+            return hashCode;
         }
     }
 }
