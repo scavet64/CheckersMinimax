@@ -42,16 +42,16 @@ namespace CheckersMinimax.AI
         /// <returns>The AI's best move</returns>
         public CheckersMove BestMove()
         {
-            if (root.nodeList.Count == 0)
+            if (root.NodeList.Count == 0)
             {
                 return null;
             }
-            MinimaxNode max = root.nodeList[0];
-            if (root.board.CurrentPlayerTurn == PlayerColor.Red)
+            MinimaxNode max = root.NodeList[0];
+            if (root.Board.CurrentPlayerTurn == PlayerColor.Red)
             {
-                foreach (MinimaxNode node in root.nodeList)
+                foreach (MinimaxNode node in root.NodeList)
                 {
-                    if (max.score < node.score)
+                    if (max.Score < node.Score)
                     {
                         max = node;
                     }
@@ -59,20 +59,20 @@ namespace CheckersMinimax.AI
             }
             else
             {
-                foreach (MinimaxNode node in root.nodeList)
+                foreach (MinimaxNode node in root.NodeList)
                 {
-                    if (max.score > node.score)
+                    if (max.Score > node.Score)
                     {
                         max = node;
                     }
                 }
             }
 
-            Console.WriteLine("Move to use: " + max.moveUsed);
+            Console.WriteLine("Move to use: " + max.MoveUsed);
 
             root = max;
-            populate(AI_DEPTH, root, root.board.CurrentPlayerTurn == PlayerColor.Red ? int.MaxValue : int.MinValue);
-            return max.moveUsed;
+            populate(AI_DEPTH, root, root.Board.CurrentPlayerTurn == PlayerColor.Red ? int.MaxValue : int.MinValue);
+            return max.MoveUsed;
         }
 
         /// <summary>
@@ -83,42 +83,42 @@ namespace CheckersMinimax.AI
         /// <param name="parentValue">The parent nodes value</param>
         public void populate(int layersDeep, MinimaxNode node, int parentValue)
         {
-            if (node.board.GetWinner() == null && layersDeep != 0)
+            if (node.Board.GetWinner() == null && layersDeep != 0)
             {
-                if (node.nodeList.Count == 0)
+                if (node.NodeList.Count == 0)
                 {
-                    foreach (CheckersMove move in node.board.getMovesForPlayer(node.board.CurrentPlayerTurn))
+                    foreach (CheckersMove move in node.Board.getMovesForPlayer(node.Board.CurrentPlayerTurn))
                     {
-                        CheckerBoard board = node.board.Copy();
+                        CheckerBoard board = node.Board.Copy();
                         board.MakeMoveOnBoard(move);
 
                         MinimaxNode newNode = new MinimaxNode(board, move);
-                        node.nodeList.Add(newNode);
+                        node.NodeList.Add(newNode);
                     }
-                    foreach (MinimaxNode newNode in node.nodeList)
+                    foreach (MinimaxNode newNode in node.NodeList)
                     {
-                        if ((node.board.CurrentPlayerTurn != PlayerColor.Red && parentValue <= node.score) ||
-                                (node.board.CurrentPlayerTurn == PlayerColor.Red && parentValue >= node.score))
+                        if ((node.Board.CurrentPlayerTurn != PlayerColor.Red && parentValue <= node.Score) ||
+                                (node.Board.CurrentPlayerTurn == PlayerColor.Red && parentValue >= node.Score))
                         {
-                            populate(layersDeep - 1, newNode, node.score);
+                            populate(layersDeep - 1, newNode, node.Score);
                         }
 
                         Console.WriteLine("PRUNED: " + node);
 
 
 
-                        if (node.board.CurrentPlayerTurn == PlayerColor.Red)
+                        if (node.Board.CurrentPlayerTurn == PlayerColor.Red)
                         {
-                            if (node.score < newNode.score)
+                            if (node.Score < newNode.Score)
                             {
-                                node.score = newNode.score;
+                                node.Score = newNode.Score;
                             }
                         }
                         else
                         {
-                            if (node.score > newNode.score)
+                            if (node.Score > newNode.Score)
                             {
-                                node.score = newNode.score;
+                                node.Score = newNode.Score;
                             }
                         }
                     }
@@ -126,7 +126,7 @@ namespace CheckersMinimax.AI
             }
             else
             {
-                node.score = score(node.board);
+                node.Score = score(node.Board);
             }
         }
 
@@ -134,7 +134,7 @@ namespace CheckersMinimax.AI
         /// Return true of false depending on if the AI is currently working
         /// </summary>
         /// <returns></returns>
-        public bool isThinking()
+        public bool IsThinking()
         {
             return thinking;
         }

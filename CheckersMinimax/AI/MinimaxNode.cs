@@ -8,10 +8,10 @@ namespace CheckersMinimax.AI
 {
     public class MinimaxNode
     {
-        public List<MinimaxNode> nodeList { get; set; }
-        public CheckerBoard board { get; set; }
-        public CheckersMove moveUsed { get; set; }
-        public int score { get; set; }
+        public List<MinimaxNode> NodeList { get; set; }
+        public CheckerBoard Board { get; set; }
+        public CheckersMove MoveUsed { get; set; }
+        public int Score { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MinimaxNode"/> class.
@@ -19,10 +19,10 @@ namespace CheckersMinimax.AI
         /// <param name="board">The board.</param>
         public MinimaxNode(CheckerBoard board)
         {
-            this.board = board;
-            nodeList = new List<MinimaxNode>();
-            moveUsed = null;
-            score = board.CurrentPlayerTurn == PlayerColor.Red ? int.MinValue : int.MaxValue;
+            this.Board = board;
+            NodeList = new List<MinimaxNode>();
+            MoveUsed = null;
+            Score = board.CurrentPlayerTurn == PlayerColor.Red ? int.MinValue : int.MaxValue;
         }
 
         /// <summary>
@@ -32,10 +32,10 @@ namespace CheckersMinimax.AI
         /// <param name="move">The move.</param>
         public MinimaxNode(CheckerBoard board, CheckersMove move)
         {
-            this.board = board;
-            nodeList = new List<MinimaxNode>();
-            moveUsed = move;
-            score = board.CurrentPlayerTurn == PlayerColor.Red ? int.MinValue : int.MaxValue;
+            this.Board = board;
+            NodeList = new List<MinimaxNode>();
+            MoveUsed = move;
+            Score = board.CurrentPlayerTurn == PlayerColor.Red ? int.MinValue : int.MaxValue;
 
         }
     }
