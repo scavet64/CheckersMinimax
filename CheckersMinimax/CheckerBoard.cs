@@ -189,9 +189,30 @@ namespace CheckersMinimax
             }
         }
 
-        internal IEnumerable<CheckersMove> getMovesForPlayer(PlayerColor currentPlayerTurn)
+        public List<CheckersMove> GetMovesForPlayer(PlayerColor currentPlayerTurn)
         {
-            throw new NotImplementedException();
+            List<CheckersMove> availableMoves = new List<CheckersMove>();
+            List<CheckersPoint> playersPoints = null;
+
+            if (currentPlayerTurn == PlayerColor.Red)
+            {
+                playersPoints = GetPointsForColor<IRedPiece>();
+            }
+            else if(currentPlayerTurn == PlayerColor.Black)
+            {
+                playersPoints = GetPointsForColor<IBlackPiece>();
+            }
+            else
+            {
+                throw new ArgumentException("Unknown Player Color");
+            }
+
+            foreach(CheckersPoint checkerPoint in playersPoints)
+            {
+                availableMoves.AddRange(checkerPoint.GetPotentialPointsForMove(this));
+            }
+
+            return availableMoves;
         }
 
         public void MakeMoveOnBoard(CheckersMove moveToMake)

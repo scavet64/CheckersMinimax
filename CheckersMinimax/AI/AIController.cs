@@ -87,7 +87,7 @@ namespace CheckersMinimax.AI
             {
                 if (node.NodeList.Count == 0)
                 {
-                    foreach (CheckersMove move in node.Board.getMovesForPlayer(node.Board.CurrentPlayerTurn))
+                    foreach (CheckersMove move in node.Board.GetMovesForPlayer(node.Board.CurrentPlayerTurn))
                     {
                         CheckerBoard board = node.Board.Copy();
                         board.MakeMoveOnBoard(move);
