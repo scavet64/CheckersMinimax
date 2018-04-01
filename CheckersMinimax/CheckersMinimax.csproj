@@ -54,6 +54,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AI\AIController.cs" />
+    <Compile Include="AI\MinimaxNode.cs" />
+    <Compile Include="CheckersGame.cs" />
+    <Compile Include="ObjectExtensions.cs" />
     <Compile Include="Pieces\BlackKingCheckerPiece.cs" />
     <Compile Include="Pieces\BlackPawnCheckerPiece.cs" />
     <Compile Include="Pieces\CheckerPieceFactory.cs" />
@@ -123,8 +127,6 @@
     <Resource Include="Resources\red60p.png" />
     <Resource Include="Resources\red60p_king.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="AI\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

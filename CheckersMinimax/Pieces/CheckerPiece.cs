@@ -155,7 +155,7 @@ namespace CheckersMinimax.Pieces
                         int twoColLeft = leftCol - 1;
 
                         //Check bounds
-                        if (twoColLeft < 8 && twoAdjacentRow >= 0)
+                        if (twoColLeft >= 0 && twoAdjacentRow >= 0 && twoAdjacentRow < 8)
                         {
                             CheckerPiece possibleCheckerOnPossibleJumpPoint = checkerBoard.BoardArray[twoAdjacentRow][twoColLeft].CheckersPoint.Checker;
                             if (possibleCheckerOnPossibleJumpPoint == null || possibleCheckerOnPossibleJumpPoint is NullCheckerPiece)

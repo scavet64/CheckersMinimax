@@ -7,9 +7,6 @@ using System.Threading.Tasks;
 
 namespace CheckersMinimax
 {
-    /// <summary>
-    /// Consider removing this??
-    /// </summary>
     public class CheckersPoint
     {
         public int Row { get; set; }

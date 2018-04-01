@@ -23,7 +23,6 @@ namespace CheckersMinimax
     {
         private CheckersMove currentMove;
         private CheckerBoard checkerBoard = new CheckerBoard();
-        private PlayerColor currentPlayersTurn = PlayerColor.Red;
 
         private List<CheckersMove> CurrentAvailableMoves;
 
@@ -119,38 +118,7 @@ namespace CheckersMinimax
             //was this a cancel?
             if (source != destination)
             {
-                destination.Checker = source.Checker;
-                source.Checker = CheckerPieceFactory.GetCheckerPiece(CheckerPieceType.nullPiece);
-
-                //was this a jump move?
-                CheckersPoint jumpedPoint = moveToMake.JumpedPoint;
-                if (jumpedPoint != null)
-                {
-                    //delete the checker piece that was jumped
-                    CheckersSquareUserControl jumpedSquareUserControl = checkerBoard.BoardArray[jumpedPoint.Row][jumpedPoint.Column];
-                    jumpedSquareUserControl.CheckersPoint.Checker = CheckerPieceFactory.GetCheckerPiece(CheckerPieceType.nullPiece);
-                    jumpedSquareUserControl.UpdateSquare();
-                }
-
-                //Check for win
-
-                //Is this piece a king now?
-                if(!(destination.Checker is KingCheckerPiece))
-                {
-                    if (destination.Row == 7 || destination.Row == 0)
-                    {
-                        //Should be a king now
-                        if(destination.Checker is IRedPiece)
-                        {
-                            destination.Checker = new RedKingCheckerPiece();
-                        }
-                        else
-                        {
-                            destination.Checker = new BlackKingCheckerPiece();
-                        }
-                        
-                    }
-                }
+                checkerBoard.MakeMoveOnBoard(moveToMake);
 
                 CheckersSquareUserControl sourceUC = checkerBoard.BoardArray[source.Row][source.Column];
                 CheckersSquareUserControl destUC = checkerBoard.BoardArray[destination.Row][destination.Column];
@@ -158,13 +126,10 @@ namespace CheckersMinimax
                 destUC.CheckersPoint = destination;
                 sourceUC.UpdateSquare();
                 destUC.UpdateSquare();
-
-                //swap player turn
-                SwapTurns();
             }
 
             ColorBackgroundOfPoints(CurrentAvailableMoves, Brushes.Black);
-            if(currentPlayersTurn == PlayerColor.Red)
+            if(checkerBoard.CurrentPlayerTurn == PlayerColor.Red)
             {
                 EnableButtons<IRedPiece>();
             }
@@ -174,18 +139,6 @@ namespace CheckersMinimax
             }
             //EnableAllButtons();
             currentMove = null;
-        }
-
-        private void SwapTurns()
-        {
-            if (currentPlayersTurn == PlayerColor.Red)
-            {
-                currentPlayersTurn = PlayerColor.Black;
-            }
-            else
-            {
-                currentPlayersTurn = PlayerColor.Red;
-            }
         }
 
         private void EnableButtons<T>()
