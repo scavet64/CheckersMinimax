@@ -37,6 +37,9 @@ namespace CheckersMinimax
 
             //todo try to use databinding here
             lst.ItemsSource = checkerBoard.BoardArray;
+
+            DisableAllButtons();
+            EnableButtonsWithMove();
         }
 
         private void ClearBoard()
@@ -129,16 +132,24 @@ namespace CheckersMinimax
             }
 
             ColorBackgroundOfPoints(CurrentAvailableMoves, Brushes.Black);
-            if(checkerBoard.CurrentPlayerTurn == PlayerColor.Red)
-            {
-                EnableButtons<IRedPiece>();
-            }
-            else
-            {
-                EnableButtons<IBlackPiece>();
-            }
-            //EnableAllButtons();
+
+            EnableButtonsWithMove();
             currentMove = null;
+        }
+
+        private void EnableButtonsWithMove()
+        {
+            List<CheckersMove> totalPossibleMoves = checkerBoard.GetMovesForPlayer(checkerBoard.CurrentPlayerTurn);
+
+            foreach (CheckersMove move in totalPossibleMoves)
+            {
+                CheckersPoint source = move.SourcePoint;
+                int col = source.Column;
+                int row = source.Row;
+
+                CheckersSquareUserControl sourceUserControl = checkerBoard.BoardArray[row][col];
+                sourceUserControl.button.IsEnabled = true;
+            }
         }
 
         private void EnableButtons<T>()
