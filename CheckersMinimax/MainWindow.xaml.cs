@@ -50,11 +50,11 @@ namespace CheckersMinimax
 
         private void runAIGame()
         {
-            while (true)
+            while (checkerBoard.GetWinner() == null)
             {
                 //AI vs AI
                 AIController AI = new AIController(checkerBoard);
-                CheckersMove aiMove = AI.MinimaxStart(checkerBoard, 3, true);
+                CheckersMove aiMove = AI.MinimaxStart(checkerBoard, 20, true);
                 if (aiMove != null)
                 {
                     Application.Current.Dispatcher.Invoke((Action)delegate {
@@ -69,7 +69,7 @@ namespace CheckersMinimax
                     //AI could not find a valid move. Is the game over? are we in a dead lock?
                     //Show error to user
                 }
-                Thread.Sleep(2000);
+                Thread.Sleep(500);
             }
         }
 
