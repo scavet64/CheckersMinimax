@@ -55,8 +55,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AI\AIController.cs" />
+    <Compile Include="AI\Minimax.cs" />
     <Compile Include="AI\MinimaxNode.cs" />
     <Compile Include="CheckersGame.cs" />
+    <Compile Include="Clone\IMinimaxClonable.cs" />
     <Compile Include="ObjectExtensions.cs" />
     <Compile Include="Pieces\BlackKingCheckerPiece.cs" />
     <Compile Include="Pieces\BlackPawnCheckerPiece.cs" />

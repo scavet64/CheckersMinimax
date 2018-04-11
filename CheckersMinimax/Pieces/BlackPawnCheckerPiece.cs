@@ -13,6 +13,11 @@ namespace CheckersMinimax.Pieces
             imageSource = "Resources/black60p.png";
         }
 
+        public override object GetMinimaxClone()
+        {
+            return new BlackPawnCheckerPiece();
+        }
+
         public override List<CheckersMove> GetPossiblePoints(CheckersPoint currentLocation, CheckerBoard checkerBoard)
         {
             return base.ProcessDownMoves(currentLocation, checkerBoard);

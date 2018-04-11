@@ -1,4 +1,5 @@
-﻿using CheckersMinimax.Pieces;
+﻿using CheckersMinimax.AI;
+using CheckersMinimax.Pieces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -84,18 +85,24 @@ namespace CheckersMinimax
                 checkerSquareUC.Background = Brushes.Green;
 
                 //get move from the list that has this point as its destination
-                MakeMove(GetMoveFromList(checkerSquareUC.CheckersPoint));
+                bool wasMoveMade = MakeMove(GetMoveFromList(checkerSquareUC.CheckersPoint));
+                if (wasMoveMade)
+                {
+                    //AI needs to make a move now
+                    AIController AI = new AIController(checkerBoard);
+                    CheckersMove aiMove = AI.MinimaxStart(checkerBoard, 3, true);
+                    if (aiMove != null)
+                    {
+                        MakeMove(aiMove);
+                    }
+                    else
+                    {
+                        //AI could not find a valid move. Is the game over? are we in a dead lock?
+                        //Show error to user
+                    }
 
+                }
             }
-            //if ((currentMove.SourcePoint != null) && (currentMove.DestinationPoint != null))
-            //{
-            //    MakeMove(currentMove);
-            //    //if (CheckMove())
-            //    //{
-            //    //    MakeMove();
-            //    //    //aiMakeMove();
-            //    //}
-            //}
         }
 
         private CheckersMove GetMoveFromList(CheckersPoint checkersPoint)
@@ -110,8 +117,9 @@ namespace CheckersMinimax
             return null;
         }
 
-        private void MakeMove(CheckersMove moveToMake)
+        private bool MakeMove(CheckersMove moveToMake)
         {
+            bool moveWasMade = false;
             CheckersPoint source = moveToMake.SourcePoint;
             CheckersPoint destination = moveToMake.DestinationPoint;
 
@@ -129,12 +137,24 @@ namespace CheckersMinimax
                 destUC.CheckersPoint = destination;
                 sourceUC.UpdateSquare();
                 destUC.UpdateSquare();
+                moveWasMade = true;
+
+                //check for a winner
+                object winner = checkerBoard.GetWinner();
+                if(winner != null)
+                {
+                    if(winner is PlayerColor winnerColor)
+                    {
+                        MessageBox.Show("Winner Winner Chicken Dinner: " + winnerColor);
+                    }
+                }
             }
 
             ColorBackgroundOfPoints(CurrentAvailableMoves, Brushes.Black);
 
             EnableButtonsWithMove();
             currentMove = null;
+            return moveWasMade;
         }
 
         private void EnableButtonsWithMove()

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CheckersMinimax.Clone;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ using System.Windows.Media.Imaging;
 
 namespace CheckersMinimax.Pieces
 {
-    public abstract class CheckerPiece
+    public abstract class CheckerPiece: IMinimaxClonable
     {
         //CheckersPoint Location { get; set; }
 
@@ -56,7 +57,7 @@ namespace CheckersMinimax.Pieces
             List<CheckersMove> list = new List<CheckersMove>();
             //Can we go up the board?
             int rowBelow = currentLocation.Row + 1;
-            if (rowBelow < 9)
+            if (rowBelow < 8)
             {
                 //can we move to the right?
                 list.AddRange(ProcessMoveRight(currentLocation, checkerBoard, rowBelow, false));
@@ -71,7 +72,8 @@ namespace CheckersMinimax.Pieces
         private List<CheckersMove> ProcessMoveRight(CheckersPoint currentLocation, CheckerBoard checkerBoard, int oneAdjacentRow, bool isUp)
         {
             List<CheckersMove> list = new List<CheckersMove>();
-            if (oneAdjacentRow >= 0)
+            //Check our bounds
+            if (oneAdjacentRow >= 0 && oneAdjacentRow < 8)
             {
                 //can we move to the right?
                 int rightCol = currentLocation.Column + 1;
@@ -126,7 +128,8 @@ namespace CheckersMinimax.Pieces
         {
             List<CheckersMove> list = new List<CheckersMove>();
             int leftCol = currentLocation.Column - 1;
-            if (leftCol >= 0)
+            //Check our bounds
+            if (leftCol >= 0 && leftCol < 8)
             {
                 CheckerPiece possibleCheckerOnPossiblePoint = checkerBoard.BoardArray[oneAdjacentRow][leftCol].CheckersPoint.Checker;
                 if (possibleCheckerOnPossiblePoint == null || possibleCheckerOnPossiblePoint is NullCheckerPiece)
@@ -193,5 +196,7 @@ namespace CheckersMinimax.Pieces
                 return processedList;
             }
         }
+
+        public abstract object GetMinimaxClone();
     }
 }

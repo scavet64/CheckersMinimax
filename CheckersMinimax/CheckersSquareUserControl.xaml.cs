@@ -1,4 +1,5 @@
-﻿using CheckersMinimax.Pieces;
+﻿using CheckersMinimax.Clone;
+using CheckersMinimax.Pieces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,7 +21,7 @@ namespace CheckersMinimax
     /// <summary>
     /// Interaction logic for CheckersSquareUserControl.xaml
     /// </summary>
-    public partial class CheckersSquareUserControl : UserControl, INotifyPropertyChanged
+    public partial class CheckersSquareUserControl : UserControl, INotifyPropertyChanged, IMinimaxClonable
     {
 
         private CheckersPoint checkersPoint;
@@ -44,6 +45,8 @@ namespace CheckersMinimax
                 OnPropertyChanged("BackgroundColor");
             }
         }
+
+        public CheckersSquareUserControl() { }
 
         public CheckersSquareUserControl(Brush backgroundColor, CheckersPoint checkersPoint, RoutedEventHandler routedEventHandler)
         {
@@ -86,6 +89,14 @@ namespace CheckersMinimax
         public bool HasChecker()
         {
             return (CheckersPoint.Checker != null && !(checkersPoint.Checker is NullCheckerPiece));
+        }
+
+        public object GetMinimaxClone()
+        {
+            CheckersSquareUserControl clone = new CheckersSquareUserControl();
+            clone.CheckersPoint = (CheckersPoint) this.checkersPoint.GetMinimaxClone();
+
+            return clone;
         }
 
         #region INotifiedProperty Block

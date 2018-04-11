@@ -1,4 +1,5 @@
 ﻿using CheckersMinimax.AI;
+using CheckersMinimax.Clone;
 using CheckersMinimax.Pieces;
 using System;
 using System.Collections.Generic;
@@ -10,13 +11,21 @@ using System.Windows.Media;
 
 namespace CheckersMinimax
 {
+    [Serializable]
     /// <summary>
     /// [Row][Column]
     /// </summary>
-    public class CheckerBoard
+    public class CheckerBoard: IMinimaxClonable
     {
+        public static int idCounter = 0;
+        public int id;
         private List<List<CheckersSquareUserControl>> boardArray = new List<List<CheckersSquareUserControl>>();
         public PlayerColor CurrentPlayerTurn { get; set; } = PlayerColor.Red;
+
+        public CheckerBoard()
+        {
+            id = idCounter++;
+        }
 
         /// <summary>
         /// [Row][Column]
@@ -191,7 +200,6 @@ namespace CheckersMinimax
 
         public List<CheckersMove> GetMovesForPlayer(PlayerColor currentPlayerTurn)
         {
-            List<CheckersMove> availableMoves = new List<CheckersMove>();
             List<CheckersPoint> playersPoints = null;
 
             if (currentPlayerTurn == PlayerColor.Red)
@@ -207,12 +215,30 @@ namespace CheckersMinimax
                 throw new ArgumentException("Unknown Player Color");
             }
 
-            foreach(CheckersPoint checkerPoint in playersPoints)
+            List<CheckersMove> allAvailableMoves = new List<CheckersMove>();
+            foreach (CheckersPoint checkerPoint in playersPoints)
             {
-                availableMoves.AddRange(checkerPoint.GetPotentialPointsForMove(this));
+                allAvailableMoves.AddRange(checkerPoint.GetPotentialPointsForMove(this));
             }
 
-            return availableMoves;
+            //If we have jump moves, filter out non jumps
+            List<CheckersMove> jumpMoves = new List<CheckersMove>();
+            foreach (CheckersMove move in allAvailableMoves)
+            {
+                if(move.JumpedPoint != null)
+                {
+                    jumpMoves.Add(move);
+                }
+            }
+
+            if(jumpMoves.Count > 0)
+            {
+                return jumpMoves;
+            }
+            else
+            {
+                return allAvailableMoves;
+            }
         }
 
         public void MakeMoveOnBoard(CheckersMove moveToMake)
@@ -263,5 +289,43 @@ namespace CheckersMinimax
                 SwapTurns();
             }
         }
+
+        public object GetMinimaxClone()
+        {
+            CheckerBoard clonedBoard = new CheckerBoard();
+            clonedBoard.CurrentPlayerTurn = this.CurrentPlayerTurn;
+            List<List<CheckersSquareUserControl>> rows = new List<List<CheckersSquareUserControl>>();
+
+            for(int row = 0; row < this.boardArray.Count; row++)
+            {
+                List<CheckersSquareUserControl> columns = new List<CheckersSquareUserControl>();
+                for (int col = 0; col < this.boardArray[row].Count; col++){
+                    columns.Add((CheckersSquareUserControl)this.boardArray[row][col].GetMinimaxClone());
+                }
+                rows.Add(columns);
+            }
+
+            clonedBoard.boardArray = rows;
+
+            return clonedBoard;
+        }
+
+        //public CheckerBoard GetCloneOfThisObject()
+        //{
+        //    CheckerBoard clonedBoard =  new CheckerBoard();
+        //    clonedBoard.CurrentPlayerTurn = this.CurrentPlayerTurn.Copy();
+        //    clonedBoard.boardArray = new List<List<CheckersSquareUserControl>>();
+
+        //    foreach(List<CheckersSquareUserControl> list in this.boardArray)
+        //    {
+        //        clonedBoard.boardArray.Add(new List<CheckersSquareUserControl>());
+        //        foreach (CheckersSquareUserControl csuc in list)
+        //        {
+        //            CheckersPoint newPoint = csuc.CheckersPoint.Copy();
+        //            new CheckersSquareUserControl(csuc.BackgroundColor, newPoint, null);
+        //            clonedBoard.boardArray[]
+        //        }
+        //    }
+        //}
     }
 }

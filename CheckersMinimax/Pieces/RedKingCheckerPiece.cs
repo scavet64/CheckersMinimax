@@ -13,5 +13,9 @@ namespace CheckersMinimax.Pieces
             imageSource = "Resources/red60p_king.png";
         }
 
+        public override object GetMinimaxClone()
+        {
+            return new RedKingCheckerPiece();
+        }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CheckersMinimax.Pieces
 {
-    class KingCheckerPiece : CheckerPiece, IJumpable
+    public abstract class KingCheckerPiece : CheckerPiece, IJumpable
     {
         public override List<CheckersMove> GetPossiblePoints(CheckersPoint currentLocation, CheckerBoard checkerBoard)
         {

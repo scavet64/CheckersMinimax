@@ -13,6 +13,11 @@ namespace CheckersMinimax.Pieces
             imageSource = "Resources/red60p.png";
         }
 
+        public override object GetMinimaxClone()
+        {
+            return new RedPawnCheckerPiece();
+        }
+
         /// <summary>
         /// Gets the possible points for a red pawn checker.
         /// Red pawn checkers can only move up diagnally left or right. This method calls the base class ProcessUpMoves
