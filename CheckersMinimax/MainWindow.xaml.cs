@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -41,6 +42,35 @@ namespace CheckersMinimax
 
             DisableAllButtons();
             EnableButtonsWithMove();
+
+            Thread aiThread = new Thread(new ThreadStart(runAIGame));
+            aiThread.SetApartmentState(ApartmentState.STA);
+            aiThread.Start();
+        }
+
+        private void runAIGame()
+        {
+            while (true)
+            {
+                //AI vs AI
+                AIController AI = new AIController(checkerBoard);
+                CheckersMove aiMove = AI.MinimaxStart(checkerBoard, 3, true);
+                if (aiMove != null)
+                {
+                    Application.Current.Dispatcher.Invoke((Action)delegate {
+
+                        MakeMove(aiMove);
+
+                    });
+                    
+                }
+                else
+                {
+                    //AI could not find a valid move. Is the game over? are we in a dead lock?
+                    //Show error to user
+                }
+                Thread.Sleep(2000);
+            }
         }
 
         private void ClearBoard()
@@ -210,9 +240,12 @@ namespace CheckersMinimax
 
         private void ColorBackgroundOfPoints(List<CheckersMove> list, Brush backgroundColor)
         {
-            foreach (CheckersMove checkerPoint in list)
+            if (list != null)
             {
-                checkerBoard.BoardArray[checkerPoint.DestinationPoint.Row][checkerPoint.DestinationPoint.Column].Background = backgroundColor;
+                foreach (CheckersMove checkerPoint in list)
+                {
+                    checkerBoard.BoardArray[checkerPoint.DestinationPoint.Row][checkerPoint.DestinationPoint.Column].Background = backgroundColor;
+                }
             }
         }
 
