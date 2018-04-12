@@ -174,11 +174,11 @@ namespace CheckersMinimax
             }
             else
             {
-                foreach (CheckersPoint point in GetPointsForColor<IRedPiece>())
+                foreach (CheckersPoint point in GetPointsForColor<IBlackPiece>())
                 {
                     score += point.Checker is KingCheckerPiece ? AIController.KING_WORTH : AIController.PAWN_WORTH;
                 }
-                foreach (CheckersPoint point in GetPointsForColor<IBlackPiece>())
+                foreach (CheckersPoint point in GetPointsForColor<IRedPiece>())
                 {
                     score -= point.Checker is KingCheckerPiece ? AIController.KING_WORTH : AIController.PAWN_WORTH;
                 }
