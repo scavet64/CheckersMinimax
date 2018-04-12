@@ -120,7 +120,7 @@ namespace CheckersMinimax
                 return null;
             }
 
-            return checkersPoint.GetPotentialPointsForMove(this);
+            return checkersPoint.GetPossibleMoves(this);
         }
 
         public object GetWinner()
@@ -218,7 +218,7 @@ namespace CheckersMinimax
             List<CheckersMove> allAvailableMoves = new List<CheckersMove>();
             foreach (CheckersPoint checkerPoint in playersPoints)
             {
-                allAvailableMoves.AddRange(checkerPoint.GetPotentialPointsForMove(this));
+                allAvailableMoves.AddRange(checkerPoint.GetPossibleMoves(this));
             }
 
             //If we have jump moves, filter out non jumps

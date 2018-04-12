@@ -8,7 +8,7 @@ namespace CheckersMinimax.Pieces
 {
     public abstract class KingCheckerPiece : CheckerPiece, IJumpable
     {
-        public override List<CheckersMove> GetPossiblePoints(CheckersPoint currentLocation, CheckerBoard checkerBoard)
+        public override List<CheckersMove> GetPossibleMoves(CheckersPoint currentLocation, CheckerBoard checkerBoard)
         {
             List<CheckersMove> list = new List<CheckersMove>();
 

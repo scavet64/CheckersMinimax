@@ -26,7 +26,7 @@ namespace CheckersMinimax.Pieces
             //this.Location = location;
         }
 
-        public abstract List<CheckersMove> GetPossiblePoints(CheckersPoint currentLocation, CheckerBoard checkerBoard);
+        public abstract List<CheckersMove> GetPossibleMoves(CheckersPoint currentLocation, CheckerBoard checkerBoard);
 
         public virtual ImageSource BuildCheckerImageSource()
         {
@@ -174,7 +174,7 @@ namespace CheckersMinimax.Pieces
             return list;
         }
 
-        private  List<CheckersMove> ProcessJumpMoves(List<CheckersMove> listToProcess)
+        private List<CheckersMove> ProcessJumpMoves(List<CheckersMove> listToProcess)
         {
             List<CheckersMove> processedList = new List<CheckersMove>();
 

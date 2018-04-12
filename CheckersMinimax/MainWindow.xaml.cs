@@ -43,9 +43,9 @@ namespace CheckersMinimax
             DisableAllButtons();
             EnableButtonsWithMove();
 
-            Thread aiThread = new Thread(new ThreadStart(runAIGame));
-            aiThread.SetApartmentState(ApartmentState.STA);
-            aiThread.Start();
+            //Thread aiThread = new Thread(new ThreadStart(runAIGame));
+            //aiThread.SetApartmentState(ApartmentState.STA);
+            //aiThread.Start();
         }
 
         private void runAIGame()
@@ -100,7 +100,7 @@ namespace CheckersMinimax
                 checkerSquareUC.Background = Brushes.Green;
 
                 //starting a move, enable spaces where a valid move is present
-                CurrentAvailableMoves = checkerSquareUC.CheckersPoint.GetPotentialPointsForMove(checkerBoard);
+                CurrentAvailableMoves = checkerSquareUC.CheckersPoint.GetPossibleMoves(checkerBoard);
 
                 //Add self move to act as cancel
                 CurrentAvailableMoves.Add(new CheckersMove(checkerSquareUC.CheckersPoint, checkerSquareUC.CheckersPoint));

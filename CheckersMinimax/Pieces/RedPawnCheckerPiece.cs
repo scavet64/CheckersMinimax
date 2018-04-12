@@ -26,7 +26,7 @@ namespace CheckersMinimax.Pieces
         /// <param name="currentLocation">The current location.</param>
         /// <param name="checkerBoard">The checker board.</param>
         /// <returns></returns>
-        public override List<CheckersMove> GetPossiblePoints(CheckersPoint currentLocation, CheckerBoard checkerBoard)
+        public override List<CheckersMove> GetPossibleMoves(CheckersPoint currentLocation, CheckerBoard checkerBoard)
         {
             return base.ProcessUpMoves(currentLocation, checkerBoard);
         }

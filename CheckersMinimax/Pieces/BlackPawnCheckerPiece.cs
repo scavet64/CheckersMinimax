@@ -18,7 +18,7 @@ namespace CheckersMinimax.Pieces
             return new BlackPawnCheckerPiece();
         }
 
-        public override List<CheckersMove> GetPossiblePoints(CheckersPoint currentLocation, CheckerBoard checkerBoard)
+        public override List<CheckersMove> GetPossibleMoves(CheckersPoint currentLocation, CheckerBoard checkerBoard)
         {
             return base.ProcessDownMoves(currentLocation, checkerBoard);
         }

@@ -25,7 +25,7 @@ namespace CheckersMinimax.Pieces
             return new NullCheckerPiece();
         }
 
-        public override List<CheckersMove> GetPossiblePoints(CheckersPoint currentLocation, CheckerBoard checkerBoard)
+        public override List<CheckersMove> GetPossibleMoves(CheckersPoint currentLocation, CheckerBoard checkerBoard)
         {
             return new List<CheckersMove>();
         }
