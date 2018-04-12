@@ -59,6 +59,7 @@
     <Compile Include="AI\MinimaxNode.cs" />
     <Compile Include="CheckersGame.cs" />
     <Compile Include="Clone\IMinimaxClonable.cs" />
+    <Compile Include="MakeMoveReturnModel.cs" />
     <Compile Include="ObjectExtensions.cs" />
     <Compile Include="Pieces\BlackKingCheckerPiece.cs" />
     <Compile Include="Pieces\BlackPawnCheckerPiece.cs" />

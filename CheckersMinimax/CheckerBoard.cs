@@ -241,7 +241,12 @@ namespace CheckersMinimax
             }
         }
 
-        public void MakeMoveOnBoard(CheckersMove moveToMake)
+        public bool MakeMoveOnBoard(CheckersMove moveToMake)
+        {
+            return MakeMoveOnBoard(moveToMake, true);
+        }
+
+        public bool MakeMoveOnBoard(CheckersMove moveToMake, bool swapTurn)
         {
             CheckersPoint source = moveToMake.SourcePoint;
             CheckersPoint destination = moveToMake.DestinationPoint;
@@ -285,9 +290,19 @@ namespace CheckersMinimax
                     }
                 }
 
-                //Swap the current players turn
-                SwapTurns();
+                //Is this players turn over?
+                if (moveToMake.NextMove == null && swapTurn)
+                {
+                    //Swap the current players turn
+                    SwapTurns();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
+            return false;
         }
 
         public object GetMinimaxClone()

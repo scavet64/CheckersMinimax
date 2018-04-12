@@ -25,6 +25,7 @@ namespace CheckersMinimax
     {
         private CheckersMove currentMove;
         private CheckerBoard checkerBoard = new CheckerBoard();
+        private bool isAIGame = true;
 
         private List<CheckersMove> CurrentAvailableMoves;
 
@@ -115,22 +116,28 @@ namespace CheckersMinimax
                 checkerSquareUC.Background = Brushes.Green;
 
                 //get move from the list that has this point as its destination
-                bool wasMoveMade = MakeMove(GetMoveFromList(checkerSquareUC.CheckersPoint));
-                if (wasMoveMade)
+                MakeMoveReturnModel returnModel = MakeMove(GetMoveFromList(checkerSquareUC.CheckersPoint));
+                if (returnModel.WasMoveMade)
                 {
-                    //AI needs to make a move now
-                    AIController AI = new AIController(checkerBoard);
-                    CheckersMove aiMove = AI.MinimaxStart(checkerBoard, 3, true);
-                    if (aiMove != null)
+                    if (returnModel.IsTurnOver && isAIGame)
                     {
-                        MakeMove(aiMove);
+                        //AI needs to make a move now
+                        AIController AI = new AIController(checkerBoard);
+                        CheckersMove aiMove = AI.MinimaxStart(checkerBoard, 3, true);
+                        if (aiMove != null)
+                        {
+                            MakeMoveReturnModel aiReturnModel = MakeMove(aiMove);
+                            while (!aiReturnModel.IsTurnOver)
+                            {
+                                MakeMove(aiMove.NextMove);
+                            }
+                        }
+                        else
+                        {
+                            //AI could not find a valid move. Is the game over? are we in a dead lock?
+                            //Show error to user
+                        }
                     }
-                    else
-                    {
-                        //AI could not find a valid move. Is the game over? are we in a dead lock?
-                        //Show error to user
-                    }
-
                 }
             }
         }
@@ -147,9 +154,10 @@ namespace CheckersMinimax
             return null;
         }
 
-        private bool MakeMove(CheckersMove moveToMake)
+        private MakeMoveReturnModel MakeMove(CheckersMove moveToMake)
         {
             bool moveWasMade = false;
+            bool isTurnOver = false;
             CheckersPoint source = moveToMake.SourcePoint;
             CheckersPoint destination = moveToMake.DestinationPoint;
 
@@ -159,7 +167,7 @@ namespace CheckersMinimax
             //was this a cancel?
             if (source != destination)
             {
-                checkerBoard.MakeMoveOnBoard(moveToMake);
+                isTurnOver = checkerBoard.MakeMoveOnBoard(moveToMake);
 
                 CheckersSquareUserControl sourceUC = checkerBoard.BoardArray[source.Row][source.Column];
                 CheckersSquareUserControl destUC = checkerBoard.BoardArray[destination.Row][destination.Column];
@@ -184,7 +192,11 @@ namespace CheckersMinimax
 
             EnableButtonsWithMove();
             currentMove = null;
-            return moveWasMade;
+            return new MakeMoveReturnModel()
+            {
+                IsTurnOver = isTurnOver,
+                WasMoveMade = moveWasMade
+            };
         }
 
         private void EnableButtonsWithMove()

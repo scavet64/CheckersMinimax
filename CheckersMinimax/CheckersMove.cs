@@ -13,6 +13,8 @@ namespace CheckersMinimax
         public CheckersPoint SourcePoint { get; set; }
         public CheckersPoint DestinationPoint { get; set; }
         public CheckersPoint JumpedPoint { get; set; }
+        public CheckersMove NextMove { get; set; }
+         
 
         public CheckersMove() { }
 
@@ -21,6 +23,7 @@ namespace CheckersMinimax
             this.SourcePoint = SourcePoint;
             this.DestinationPoint = DestinationPoint;
             this.JumpedPoint = null;
+            this.NextMove = null;
         }
 
         public CheckersMove(CheckersPoint SourcePoint, CheckersPoint DestinationPoint, CheckersPoint JumpedPoint)
@@ -28,6 +31,15 @@ namespace CheckersMinimax
             this.SourcePoint = SourcePoint;
             this.DestinationPoint = DestinationPoint;
             this.JumpedPoint = JumpedPoint;
+            this.NextMove = null;
+        }
+
+        public CheckersMove(CheckersPoint SourcePoint, CheckersPoint DestinationPoint, CheckersPoint JumpedPoint, CheckersMove NextMove)
+        {
+            this.SourcePoint = SourcePoint;
+            this.DestinationPoint = DestinationPoint;
+            this.JumpedPoint = JumpedPoint;
+            this.NextMove = NextMove;
         }
 
         public object GetMinimaxClone()
@@ -47,6 +59,11 @@ namespace CheckersMinimax
             if (this.JumpedPoint != null)
             {
                 clone.JumpedPoint = (CheckersPoint)this.JumpedPoint.GetMinimaxClone();
+            }
+
+            if (this.NextMove != null)
+            {
+                clone.NextMove = (CheckersMove)this.NextMove.GetMinimaxClone();
             }
 
             return clone;

@@ -104,7 +104,35 @@ namespace CheckersMinimax.Pieces
                             if (possibleCheckerOnPossibleJumpPoint == null || possibleCheckerOnPossibleJumpPoint is NullCheckerPiece)
                             {
                                 //we can go here
-                                list.Add(new CheckersMove(currentLocation, new CheckersPoint(twoAdjacentRow, twoColAdjacent), new CheckersPoint(oneAdjacentRow, adjacentCol)));
+                                CheckersMove jumpMove = new CheckersMove(currentLocation, new CheckersPoint(twoAdjacentRow, twoColAdjacent), new CheckersPoint(oneAdjacentRow, adjacentCol));
+
+
+                                //This is a jump move
+                                //Get all possible moves for destination point
+                                //For each possible move that is a jump move, make a new move and link it
+
+                                //make the move on a temp clone of the board and pass that to find any more multimoves
+
+                                CheckerBoard clonedBoard = (CheckerBoard)checkerBoard.GetMinimaxClone();
+                                clonedBoard.MakeMoveOnBoard((CheckersMove)jumpMove.GetMinimaxClone(), false);
+
+                                List<CheckersMove> movesAfterJump = this.GetPossibleMoves(jumpMove.DestinationPoint, clonedBoard);
+
+                                List<CheckersMove> processedList = GetJumpMoves(movesAfterJump);
+
+                                if (processedList.Count > 0)
+                                {
+                                    foreach(CheckersMove move in processedList)
+                                    {
+                                        CheckersMove clonedMove = (CheckersMove)jumpMove.GetMinimaxClone();
+                                        clonedMove.NextMove = move;
+                                        list.Add(clonedMove);
+                                    }
+                                }
+                                else
+                                {
+                                    list.Add(jumpMove);
+                                }
                             }
                         }
                     }
@@ -114,19 +142,26 @@ namespace CheckersMinimax.Pieces
             return list;
         }
 
-        private List<CheckersMove> ProcessJumpMoves(List<CheckersMove> listToProcess)
+        private List<CheckersMove> GetJumpMoves(List<CheckersMove> listToProcess)
         {
             List<CheckersMove> processedList = new List<CheckersMove>();
 
-            foreach(CheckersMove move in listToProcess)
+            foreach (CheckersMove move in listToProcess)
             {
-                if(move.JumpedPoint != null)
+                if (move.JumpedPoint != null)
                 {
                     processedList.Add(move);
                 }
             }
 
-            if(processedList.Count == 0)
+            return processedList;
+        }
+
+        private List<CheckersMove> ProcessJumpMoves(List<CheckersMove> listToProcess)
+        {
+            List<CheckersMove> processedList = GetJumpMoves(listToProcess);
+
+            if (processedList.Count == 0)
             {
                 //no jump moves were found so return the unaltered list
                 return listToProcess;
