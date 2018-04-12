@@ -11,8 +11,10 @@ namespace CheckersMinimax.Pieces
 {
     public abstract class CheckerPiece: IMinimaxClonable
     {
-        public static readonly bool MoveLeft = true;
-        public static readonly bool MoveRight = false;
+        public static readonly int MoveLeft = -1;
+        public static readonly int MoveRight = 1;
+        public static readonly int MoveUp = -1;
+        public static readonly int MoveDown = 1;
 
         //CheckersPoint Location { get; set; }
 
@@ -45,10 +47,10 @@ namespace CheckersMinimax.Pieces
             if (rowAbove >= 0)
             {
                 //can we move to the right?
-                list.AddRange(ProcessBoardHorizontal(currentLocation, checkerBoard, rowAbove, true, MoveRight));
+                list.AddRange(ProcessBoardHorizontal(currentLocation, checkerBoard, rowAbove, MoveUp, MoveRight));
 
                 // can we move to the left?
-                list.AddRange(ProcessBoardHorizontal(currentLocation, checkerBoard, rowAbove, true, MoveLeft));
+                list.AddRange(ProcessBoardHorizontal(currentLocation, checkerBoard, rowAbove, MoveUp, MoveLeft));
             }
 
             return ProcessJumpMoves(list);
@@ -63,27 +65,19 @@ namespace CheckersMinimax.Pieces
             if (rowBelow < 8)
             {
                 //can we move to the right?
-                list.AddRange(ProcessBoardHorizontal(currentLocation, checkerBoard, rowBelow, false, MoveRight));
+                list.AddRange(ProcessBoardHorizontal(currentLocation, checkerBoard, rowBelow, MoveDown, MoveRight));
 
                 // can we move to the left?
-                list.AddRange(ProcessBoardHorizontal(currentLocation, checkerBoard, rowBelow, false, MoveLeft));
+                list.AddRange(ProcessBoardHorizontal(currentLocation, checkerBoard, rowBelow, MoveDown, MoveLeft));
             }
 
             return ProcessJumpMoves(list);
         }
 
-        private List<CheckersMove> ProcessBoardHorizontal(CheckersPoint currentLocation, CheckerBoard checkerBoard, int oneAdjacentRow, bool isUp, bool isLeft)
+        private List<CheckersMove> ProcessBoardHorizontal(CheckersPoint currentLocation, CheckerBoard checkerBoard, int oneAdjacentRow, int verticalModifier, int horizontalModifier)
         {
             List<CheckersMove> list = new List<CheckersMove>();
-            int adjacentCol = -1;
-            if (isLeft)
-            {
-                adjacentCol = currentLocation.Column - 1;
-            }
-            else
-            {
-                adjacentCol = currentLocation.Column + 1;
-            }
+            int adjacentCol = currentLocation.Column + (1 * horizontalModifier);
             //Check our bounds
             if (adjacentCol >= 0 && adjacentCol < 8)
             {
@@ -100,27 +94,8 @@ namespace CheckersMinimax.Pieces
                             possibleCheckerOnPossiblePoint is IBlackPiece && this is IRedPiece)
                     {
                         //go another row up and another column to the right
-                        int twoAdjacentRow;
-                        if (isUp)
-                        {
-                            //go another row up 
-                            twoAdjacentRow = oneAdjacentRow - 1;
-                        }
-                        else
-                        {
-                            //go another row down
-                            twoAdjacentRow = oneAdjacentRow + 1;
-                        }
-
-                        int twoColAdjacent = -1;
-                        if (isLeft)
-                        {
-                            twoColAdjacent = adjacentCol - 1;
-                        }
-                        else
-                        {
-                            twoColAdjacent = adjacentCol + 1;
-                        }
+                        int twoAdjacentRow = oneAdjacentRow + (1 * verticalModifier);
+                        int twoColAdjacent = adjacentCol + (1 * horizontalModifier);
 
                         //Check bounds
                         if (twoColAdjacent >= 0 && twoColAdjacent < 8 && twoAdjacentRow >= 0 && twoAdjacentRow < 8)
