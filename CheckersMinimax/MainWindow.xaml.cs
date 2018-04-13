@@ -58,12 +58,13 @@ namespace CheckersMinimax
                 CheckersMove aiMove = AI.MinimaxStart(checkerBoard, 20, true);
                 if (aiMove != null)
                 {
-                    Application.Current.Dispatcher.Invoke((Action)delegate {
+                    Application.Current.Dispatcher.Invoke((Action)delegate
+                    {
 
                         MakeMove(aiMove);
 
                     });
-                    
+
                 }
                 else
                 {
@@ -83,7 +84,7 @@ namespace CheckersMinimax
             lst.ItemsSource = checkerBoard.BoardArray;
         }
 
-        
+
 
         public void Button_Click(Object sender, RoutedEventArgs e)
         {
@@ -107,7 +108,7 @@ namespace CheckersMinimax
                 CurrentAvailableMoves.Add(new CheckersMove(checkerSquareUC.CheckersPoint, checkerSquareUC.CheckersPoint));
 
                 ColorBackgroundOfPoints(CurrentAvailableMoves, Brushes.Aqua);
-                
+
                 EnableButtonsWithPossibleMove(CurrentAvailableMoves);
             }
             else
@@ -117,26 +118,23 @@ namespace CheckersMinimax
 
                 //get move from the list that has this point as its destination
                 MakeMoveReturnModel returnModel = MakeMove(GetMoveFromList(checkerSquareUC.CheckersPoint));
-                if (returnModel.WasMoveMade)
+                if (returnModel.WasMoveMade && returnModel.IsTurnOver && isAIGame)
                 {
-                    if (returnModel.IsTurnOver && isAIGame)
+                    //AI needs to make a move now
+                    AIController AI = new AIController(checkerBoard);
+                    CheckersMove aiMove = AI.MinimaxStart(checkerBoard, 5, true);
+                    if (aiMove != null)
                     {
-                        //AI needs to make a move now
-                        AIController AI = new AIController(checkerBoard);
-                        CheckersMove aiMove = AI.MinimaxStart(checkerBoard, 3, true);
-                        if (aiMove != null)
+                        MakeMoveReturnModel aiReturnModel = MakeMove(aiMove);
+                        while (!aiReturnModel.IsTurnOver)
                         {
-                            MakeMoveReturnModel aiReturnModel = MakeMove(aiMove);
-                            while (!aiReturnModel.IsTurnOver)
-                            {
-                                MakeMove(aiMove.NextMove);
-                            }
+                            MakeMove(aiMove.NextMove);
                         }
-                        else
-                        {
-                            //AI could not find a valid move. Is the game over? are we in a dead lock?
-                            //Show error to user
-                        }
+                    }
+                    else
+                    {
+                        //AI could not find a valid move. Is the game over? are we in a dead lock?
+                        //Show error to user
                     }
                 }
             }
@@ -144,7 +142,7 @@ namespace CheckersMinimax
 
         private CheckersMove GetMoveFromList(CheckersPoint checkersPoint)
         {
-            foreach(CheckersMove move in CurrentAvailableMoves)
+            foreach (CheckersMove move in CurrentAvailableMoves)
             {
                 if (move.DestinationPoint.Equals(checkersPoint))
                 {
@@ -179,12 +177,9 @@ namespace CheckersMinimax
 
                 //check for a winner
                 object winner = checkerBoard.GetWinner();
-                if(winner != null)
+                if (winner != null && winner is PlayerColor winnerColor)
                 {
-                    if(winner is PlayerColor winnerColor)
-                    {
-                        MessageBox.Show("Winner Winner Chicken Dinner: " + winnerColor);
-                    }
+                    MessageBox.Show("Winner Winner Chicken Dinner: " + winnerColor);
                 }
             }
 
@@ -271,9 +266,9 @@ namespace CheckersMinimax
 
         private void UpdateSquares()
         {
-            foreach(List<CheckersSquareUserControl> list in checkerBoard.BoardArray)
+            foreach (List<CheckersSquareUserControl> list in checkerBoard.BoardArray)
             {
-                foreach(CheckersSquareUserControl squareUC in list)
+                foreach (CheckersSquareUserControl squareUC in list)
                 {
                     squareUC.UpdateSquare();
                 }

@@ -23,7 +23,5 @@ namespace CheckersMinimax
             get { return isTurnOver; }
             set { isTurnOver = value; }
         }
-
-
     }
 }

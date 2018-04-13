@@ -36,12 +36,12 @@ namespace CheckersMinimax.AI
 
         public CheckersMove MinimaxStart(CheckerBoard board, int depth, bool isMax)
         {
-            double alpha = Double.NegativeInfinity;
-            double beta = Double.PositiveInfinity;
+            int alpha = int.MinValue;
+            int beta = int.MaxValue;
 
             List<CheckersMove> possibleMoves = board.GetMovesForPlayer(board.CurrentPlayerTurn);
             CheckerBoard tempBoard = null;
-            List<double> values = new List<double>();
+            List<int> values = new List<int>();
 
             if (possibleMoves.IsNullOrEmpty())
             {
@@ -50,15 +50,23 @@ namespace CheckersMinimax.AI
             int temp = 0;
             foreach(CheckersMove move in possibleMoves)
             {
-                temp++;
-                Console.WriteLine("Evaluating Move : " + temp);
-                tempBoard = (CheckerBoard) board.GetMinimaxClone();
-                tempBoard.MakeMoveOnBoard((CheckersMove) move.GetMinimaxClone());
-                values.Add(Minimax(tempBoard, depth - 1, alpha, beta, !isMax));
+                //tempBoard = (CheckerBoard) board.GetMinimaxClone();
+                //tempBoard.MakeMoveOnBoard((CheckersMove) move.GetMinimaxClone());
+
+                CheckersMove moveToMake = move;
+                CheckerBoard boardToMakeMoveOn = board;
+                do
+                {
+                    boardToMakeMoveOn = (CheckerBoard)boardToMakeMoveOn.GetMinimaxClone();
+                    boardToMakeMoveOn.MakeMoveOnBoard((CheckersMove)moveToMake.GetMinimaxClone());
+                    moveToMake = moveToMake.NextMove;
+                } while (moveToMake != null);
+
+                values.Add(Minimax(boardToMakeMoveOn, depth - 1, alpha, beta, false));
             }
 
-            double maxHeuristics = Double.NegativeInfinity;
-            foreach (double value in values)
+            int maxHeuristics = int.MinValue;
+            foreach (int value in values)
             {
                 if(value >= maxHeuristics)
                 {
@@ -67,40 +75,50 @@ namespace CheckersMinimax.AI
             }
 
             //filter the list of moves based on max value
-            foreach (double value in values)
-            {
-                if (value < maxHeuristics)
+            List<CheckersMove> bestMoves = new List<CheckersMove>();
+            for (int i = 0; i < values.Count; i++) {
+                if (values[i] == maxHeuristics)
                 {
-                    possibleMoves.RemoveAt((int)value);
+                    bestMoves.Add(possibleMoves[i]);
                 }
             }
 
+            Console.WriteLine("Node Values: " + string.Join(",", values.Select(x => x.ToString()).ToArray()));
+
             Random random = new Random();
-            return possibleMoves[random.Next(possibleMoves.Count)];
+            return bestMoves[random.Next(bestMoves.Count)];
         }
 
-        public double Minimax(CheckerBoard board, int depth, double alpha, double beta, bool isMax)
+        public int Minimax(CheckerBoard board, int depth, int alpha, int beta, bool isMax)
         {
-            if (depth == 0)
-            {
-                return score(board);
-            }
             List<CheckersMove> possibleMoves = board.GetMovesForPlayer(board.CurrentPlayerTurn);
 
-            double initial = 0;
+            if (depth == 0 || possibleMoves.Count == 0)
+            {
+                //return board.ScoreB();
+                return score(board);
+            }
+            
+
+            int value = 0;
             CheckerBoard tempBoard = null;
             if (isMax)
             {
-                initial = Double.NegativeInfinity;
+                value = int.MinValue;
                 foreach (CheckersMove move in possibleMoves)
                 {
-                    tempBoard = (CheckerBoard)board.GetMinimaxClone();
-                    tempBoard.MakeMoveOnBoard((CheckersMove)move.GetMinimaxClone());
+                    CheckersMove moveToMake = move;
+                    CheckerBoard boardToMakeMoveOn = board;
+                    do
+                    {
+                        boardToMakeMoveOn = (CheckerBoard)boardToMakeMoveOn.GetMinimaxClone();
+                        boardToMakeMoveOn.MakeMoveOnBoard((CheckersMove)moveToMake.GetMinimaxClone());
+                        moveToMake = moveToMake.NextMove;
+                    } while (moveToMake != null);
+                    int result = Minimax(boardToMakeMoveOn, depth - 1, alpha, beta, false);
 
-                    double result = Minimax(tempBoard, depth - 1, alpha, beta, !isMax);
-
-                    initial = Math.Max(result, initial);
-                    alpha = Math.Max(alpha, initial);
+                    value = Math.Max(result, value);
+                    alpha = Math.Max(alpha, value);
 
                     if (alpha >= beta)
                     {
@@ -110,16 +128,22 @@ namespace CheckersMinimax.AI
             }
             else
             {
-                initial = Double.PositiveInfinity;
+                value = int.MaxValue;
                 foreach (CheckersMove move in possibleMoves)
                 {
-                    tempBoard = (CheckerBoard)board.GetMinimaxClone();
-                    tempBoard.MakeMoveOnBoard((CheckersMove)move.GetMinimaxClone());
+                    CheckersMove moveToMake = move;
+                    CheckerBoard boardToMakeMoveOn = board;
+                    do
+                    {
+                        boardToMakeMoveOn = (CheckerBoard)boardToMakeMoveOn.GetMinimaxClone();
+                        boardToMakeMoveOn.MakeMoveOnBoard((CheckersMove)moveToMake.GetMinimaxClone());
+                        moveToMake = moveToMake.NextMove;
+                    } while (moveToMake != null);
 
-                    double result = Minimax(tempBoard, depth - 1, alpha, beta, !isMax);
+                    int result = Minimax(boardToMakeMoveOn, depth - 1, alpha, beta, true);
 
-                    initial = Math.Max(result, initial);
-                    alpha = Math.Max(alpha, initial);
+                    value = Math.Min(result, value);
+                    alpha = Math.Min(alpha, value);
 
                     if (alpha >= beta)
                     {
@@ -128,7 +152,7 @@ namespace CheckersMinimax.AI
                 }
             }
 
-            return initial;
+            return value;
         }
 
         /// <summary>

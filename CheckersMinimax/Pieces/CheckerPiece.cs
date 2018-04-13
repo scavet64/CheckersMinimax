@@ -26,7 +26,7 @@ namespace CheckersMinimax.Pieces
         //    set { imageSource = value; }
         //}
 
-        public CheckerPiece()
+        protected CheckerPiece()
         {
             //this.Location = location;
         }
