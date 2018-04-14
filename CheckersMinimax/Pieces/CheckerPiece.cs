@@ -33,6 +33,8 @@ namespace CheckersMinimax.Pieces
 
         public abstract List<CheckersMove> GetPossibleMoves(CheckersPoint currentLocation, CheckerBoard checkerBoard);
 
+        public abstract string GetStringRep();
+
         public virtual ImageSource BuildCheckerImageSource()
         {
             return new BitmapImage(new Uri(imageSource, UriKind.Relative));

@@ -30,5 +30,10 @@ namespace CheckersMinimax.Pieces
         {
             return base.ProcessUpMoves(currentLocation, checkerBoard);
         }
+
+        public override string GetStringRep()
+        {
+            return "| r |";
+        }
     }
 }

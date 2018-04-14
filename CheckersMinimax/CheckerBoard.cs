@@ -101,10 +101,24 @@ namespace CheckersMinimax
             }
         }
 
-        internal int ScoreB()
+        public override string ToString()
         {
-            Random random = new Random();
-            return random.Next();
+            StringBuilder boardString = new StringBuilder();
+            foreach (List<CheckersSquareUserControl> list in BoardArray)
+            {
+                StringBuilder rowBuilder = new StringBuilder();
+                foreach (CheckersSquareUserControl squareUC in list)
+                {
+                    if (squareUC.CheckersPoint.Checker != null)
+                    {
+                        //There is a piece here
+                        rowBuilder.Append(squareUC.CheckersPoint.Checker.GetStringRep());
+                    }
+                }
+                boardString.AppendLine(rowBuilder.ToString());
+            }
+
+            return boardString.ToString();
         }
 
         //public List<CheckersMove> getAvaliableMoves()
@@ -197,6 +211,87 @@ namespace CheckersMinimax
             return score;
         }
 
+        internal int ScoreB()
+        {
+            int score = 0;
+
+            foreach (List<CheckersSquareUserControl> list in BoardArray)
+            {
+                foreach (CheckersSquareUserControl squareUC in list)
+                {
+                    if (squareUC.CheckersPoint.Checker != null && !(squareUC.CheckersPoint.Checker is KingCheckerPiece))
+                    {
+                        if (CurrentPlayerTurn == PlayerColor.Black)
+                        {
+                            if (squareUC.CheckersPoint.Checker is IRedPiece)
+                            {
+                                //Closer to top means red is closer to being king
+                                score -= ((squareUC.CheckersPoint.Row - 7) * 1);
+                            }
+
+                            if (squareUC.CheckersPoint.Checker is IBlackPiece)
+                            {
+                                //Closer to bottom means that black is closer to being a king
+                                score += (squareUC.CheckersPoint.Row);
+                            }
+                        }
+                        else
+                        {
+                            if (squareUC.CheckersPoint.Checker is IRedPiece)
+                            {
+                                //Closer to top means red is closer to being king
+                                score += ((squareUC.CheckersPoint.Row - 7) * 1);
+                            }
+
+                            if (squareUC.CheckersPoint.Checker is IBlackPiece)
+                            {
+                                //Closer to bottom means that black is closer to being a king
+                                score -= (squareUC.CheckersPoint.Row);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return score;
+        }
+
+        internal int ScoreC()
+        {
+            int score = 0;
+
+            List<CheckersMove> movesForOtherPlayer = GetMovesForPlayer(CurrentPlayerTurn);
+
+            foreach(CheckersMove move in movesForOtherPlayer)
+            {
+                CheckersMove moveToCheck = move;
+                do
+                {
+                    if (moveToCheck.JumpedPoint != null)
+                    {
+                        //A piece is in danger
+                        if(moveToCheck.JumpedPoint.Checker is KingCheckerPiece)
+                        {
+                            score -= AIController.KING_DANGER_VALUE;
+                        }
+                        else
+                        {
+                            score -= AIController.PAWN_DANGER_VALUE;
+                        }
+                    }
+                    moveToCheck = moveToCheck.NextMove;
+                } while (moveToCheck != null);
+            }
+
+            if(CurrentPlayerTurn == PlayerColor.Black)
+            {
+                //invert score for other player
+                score *= -1;
+            } 
+
+            return score;
+        }
+
         public void SwapTurns()
         {
             if (CurrentPlayerTurn == PlayerColor.Red)
@@ -264,17 +359,20 @@ namespace CheckersMinimax
 
         public bool MakeMoveOnBoard(CheckersMove moveToMake, bool swapTurn)
         {
-            CheckersPoint source = moveToMake.SourcePoint;
-            CheckersPoint destination = moveToMake.DestinationPoint;
+            CheckersPoint moveSource = moveToMake.SourcePoint;
+            CheckersPoint moveDestination = moveToMake.DestinationPoint;
 
             //Console.WriteLine("Piece1 " + source.Row + ", " + source.Column);
             //Console.WriteLine("Piece2 " + destination.Row + ", " + destination.Column);
 
             //was this a cancel?
-            if (source != destination)
+            if (moveSource != moveDestination)
             {
-                destination.Checker = source.Checker;
-                source.Checker = CheckerPieceFactory.GetCheckerPiece(CheckerPieceType.nullPiece);
+                CheckersPoint realDestination = this.BoardArray[moveDestination.Row][moveDestination.Column].CheckersPoint;
+                CheckersPoint realSource = this.BoardArray[moveSource.Row][moveSource.Column].CheckersPoint;
+
+                realDestination.Checker = (CheckerPiece) realSource.Checker.GetMinimaxClone();
+                realSource.Checker = CheckerPieceFactory.GetCheckerPiece(CheckerPieceType.nullPiece);
 
                 //was this a jump move?
                 CheckersPoint jumpedPoint = moveToMake.JumpedPoint;
@@ -287,16 +385,17 @@ namespace CheckersMinimax
                 }
 
                 //Is this piece a king now?
-                if (!(destination.Checker is KingCheckerPiece) && (destination.Row == 7 || destination.Row == 0))
+                if (!(realDestination.Checker is KingCheckerPiece) 
+                    && (realDestination.Row == 7 || realDestination.Row == 0))
                 {
                     //Should be a king now
-                    if (destination.Checker is IRedPiece)
+                    if (realDestination.Checker is IRedPiece)
                     {
-                        destination.Checker = new RedKingCheckerPiece();
+                        realDestination.Checker = new RedKingCheckerPiece();
                     }
                     else
                     {
-                        destination.Checker = new BlackKingCheckerPiece();
+                        realDestination.Checker = new BlackKingCheckerPiece();
                     }
                 }
 

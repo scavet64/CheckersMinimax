@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace CheckersMinimax
 {
@@ -68,7 +69,12 @@ namespace CheckersMinimax
             {
                 try
                 {
-                    checkerImage.Source = checkersPoint.Checker.BuildCheckerImageSource();
+                    if(checkerImage != null)
+                    {
+                        Application.Current.Dispatcher.BeginInvoke(
+                          DispatcherPriority.Background,
+                          new Action(() => checkerImage.Source = checkersPoint.Checker.BuildCheckerImageSource()));
+                    }
                 }
                 catch (Exception ex)
                 {

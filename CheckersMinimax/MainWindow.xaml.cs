@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace CheckersMinimax
 {
@@ -26,6 +27,7 @@ namespace CheckersMinimax
         private CheckersMove currentMove;
         private CheckerBoard checkerBoard = new CheckerBoard();
         private bool isAIGame = true;
+        private bool isTwoAI = false;
 
         private List<CheckersMove> CurrentAvailableMoves;
 
@@ -44,18 +46,20 @@ namespace CheckersMinimax
             DisableAllButtons();
             EnableButtonsWithMove();
 
-            //Thread aiThread = new Thread(new ThreadStart(runAIGame));
-            //aiThread.SetApartmentState(ApartmentState.STA);
-            //aiThread.Start();
+            if (isTwoAI)
+            {
+                Thread aiThread = new Thread(new ThreadStart(RunAIGame));
+                aiThread.SetApartmentState(ApartmentState.STA);
+                aiThread.Start();
+            }
         }
 
-        private void runAIGame()
+        private void RunAIGame()
         {
             while (checkerBoard.GetWinner() == null)
             {
                 //AI vs AI
-                AIController AI = new AIController(checkerBoard);
-                CheckersMove aiMove = AI.MinimaxStart(checkerBoard, 20, true);
+                CheckersMove aiMove = AIController.MinimaxStart(checkerBoard);
                 if (aiMove != null)
                 {
                     Application.Current.Dispatcher.Invoke((Action)delegate
@@ -88,6 +92,13 @@ namespace CheckersMinimax
 
         public void Button_Click(Object sender, RoutedEventArgs e)
         {
+            Thread myNewThread = new Thread(() => ButtonClickWork(sender));
+            myNewThread.SetApartmentState(ApartmentState.STA);
+            myNewThread.Start();
+        }
+
+        private void ButtonClickWork(Object sender)
+        {
             Button button = (Button)sender;
             CheckersSquareUserControl checkerSquareUC = (CheckersSquareUserControl)((Grid)button.Parent).Parent;
             Console.WriteLine("Row: " + checkerSquareUC.CheckersPoint.Row + " Column: " + checkerSquareUC.CheckersPoint.Column);
@@ -99,7 +110,7 @@ namespace CheckersMinimax
             if (currentMove.SourcePoint == null)
             {
                 currentMove.SourcePoint = checkerSquareUC.CheckersPoint;
-                checkerSquareUC.Background = Brushes.Green;
+                SetBackgroundColor(checkerSquareUC, Brushes.Green);
 
                 //starting a move, enable spaces where a valid move is present
                 CurrentAvailableMoves = checkerSquareUC.CheckersPoint.GetPossibleMoves(checkerBoard);
@@ -114,21 +125,24 @@ namespace CheckersMinimax
             else
             {
                 currentMove.DestinationPoint = checkerSquareUC.CheckersPoint;
-                checkerSquareUC.Background = Brushes.Green;
+                SetBackgroundColor(checkerSquareUC, Brushes.Green);
 
                 //get move from the list that has this point as its destination
                 MakeMoveReturnModel returnModel = MakeMove(GetMoveFromList(checkerSquareUC.CheckersPoint));
                 if (returnModel.WasMoveMade && returnModel.IsTurnOver && isAIGame)
                 {
+                    //Disable buttons so the user cant click anything while the AI is thinking
+                    DisableAllButtons();
+
                     //AI needs to make a move now
-                    AIController AI = new AIController(checkerBoard);
-                    CheckersMove aiMove = AI.MinimaxStart(checkerBoard, 5, true);
+                    CheckersMove aiMove = AIController.MinimaxStart(checkerBoard);
                     if (aiMove != null)
                     {
-                        MakeMoveReturnModel aiReturnModel = MakeMove(aiMove);
-                        while (!aiReturnModel.IsTurnOver)
+                        while (aiMove != null)
                         {
-                            MakeMove(aiMove.NextMove);
+                            MakeMove(aiMove);
+                            aiMove = aiMove.NextMove;
+                            //Thread.Sleep(TimeSpan.FromSeconds(1.5));
                         }
                     }
                     else
@@ -169,10 +183,12 @@ namespace CheckersMinimax
 
                 CheckersSquareUserControl sourceUC = checkerBoard.BoardArray[source.Row][source.Column];
                 CheckersSquareUserControl destUC = checkerBoard.BoardArray[destination.Row][destination.Column];
-                sourceUC.CheckersPoint = source;
-                destUC.CheckersPoint = destination;
+
+                //Use dispatcher to run the Update method on the UI thread
                 sourceUC.UpdateSquare();
                 destUC.UpdateSquare();
+
+
                 moveWasMade = true;
 
                 //check for a winner
@@ -184,14 +200,30 @@ namespace CheckersMinimax
             }
 
             ColorBackgroundOfPoints(CurrentAvailableMoves, Brushes.Black);
-
+            SetTitle(string.Format("Checkers! {0}'s turn!", checkerBoard.CurrentPlayerTurn));
             EnableButtonsWithMove();
             currentMove = null;
+            
             return new MakeMoveReturnModel()
             {
                 IsTurnOver = isTurnOver,
                 WasMoveMade = moveWasMade
             };
+        }
+
+        private void SetBackgroundColor(UserControl control, Brush colorToSet)
+        {
+            Application.Current.Dispatcher.BeginInvoke(
+                      DispatcherPriority.Background,
+                      new Action(() => control.Background = colorToSet));
+            
+        }
+
+        private void SetTitle(string titleToSet)
+        {
+            Application.Current.Dispatcher.BeginInvoke(
+                      DispatcherPriority.Background,
+                      new Action(() => this.Title = titleToSet));
         }
 
         private void EnableButtonsWithMove()
@@ -205,7 +237,10 @@ namespace CheckersMinimax
                 int row = source.Row;
 
                 CheckersSquareUserControl sourceUserControl = checkerBoard.BoardArray[row][col];
-                sourceUserControl.button.IsEnabled = true;
+
+                Application.Current.Dispatcher.BeginInvoke(
+                      DispatcherPriority.Background,
+                      new Action(() => sourceUserControl.button.IsEnabled = true));
             }
         }
 
@@ -225,11 +260,14 @@ namespace CheckersMinimax
 
         private void DisableAllButtons()
         {
+
             foreach (List<CheckersSquareUserControl> list in checkerBoard.BoardArray)
             {
                 foreach (CheckersSquareUserControl squareUC in list)
                 {
-                    squareUC.button.IsEnabled = false;
+                    Application.Current.Dispatcher.BeginInvoke(
+                      DispatcherPriority.Background,
+                      new Action(() => squareUC.button.IsEnabled = false));
                 }
             }
         }
@@ -251,7 +289,9 @@ namespace CheckersMinimax
             {
                 foreach (CheckersMove checkerPoint in list)
                 {
-                    checkerBoard.BoardArray[checkerPoint.DestinationPoint.Row][checkerPoint.DestinationPoint.Column].Background = backgroundColor;
+                    Application.Current.Dispatcher.BeginInvoke(
+                      DispatcherPriority.Background,
+                      new Action(() => checkerBoard.BoardArray[checkerPoint.DestinationPoint.Row][checkerPoint.DestinationPoint.Column].Background = backgroundColor));
                 }
             }
         }
@@ -260,7 +300,9 @@ namespace CheckersMinimax
         {
             foreach (CheckersMove checkerPoint in list)
             {
-                checkerBoard.BoardArray[checkerPoint.DestinationPoint.Row][checkerPoint.DestinationPoint.Column].button.IsEnabled = true;
+                Application.Current.Dispatcher.BeginInvoke(
+                      DispatcherPriority.Background,
+                      new Action(() => checkerBoard.BoardArray[checkerPoint.DestinationPoint.Row][checkerPoint.DestinationPoint.Column].button.IsEnabled = true));
             }
         }
 

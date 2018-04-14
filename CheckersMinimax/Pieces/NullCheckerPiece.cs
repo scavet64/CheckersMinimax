@@ -29,5 +29,10 @@ namespace CheckersMinimax.Pieces
         {
             return new List<CheckersMove>();
         }
+
+        public override string GetStringRep()
+        {
+            return "|   |";
+        }
     }
 }

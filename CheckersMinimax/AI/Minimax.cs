@@ -41,7 +41,7 @@ namespace CheckersMinimax.AI
                 foreach (MinimaxNode childNode in node.NodeList)
                 {
                     value = Math.Min(value, AlphaBetaMinimax(childNode, depth - 1, alpha, beta, true));
-                    alpha = Math.Min(beta, value);
+                    beta = Math.Min(beta, value);
                     if (beta <= alpha)
                     {
                         //alpha cutoff

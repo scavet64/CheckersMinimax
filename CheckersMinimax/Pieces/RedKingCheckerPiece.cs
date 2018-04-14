@@ -17,5 +17,10 @@ namespace CheckersMinimax.Pieces
         {
             return new RedKingCheckerPiece();
         }
+
+        public override string GetStringRep()
+        {
+            return "| R |";
+        }
     }
 }

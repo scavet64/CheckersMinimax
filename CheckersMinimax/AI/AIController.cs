@@ -2,45 +2,49 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CheckersMinimax.AI
 {
     public class AIController
     {
-        public static readonly int KING_WORTH = 5;
-        public static readonly int PAWN_WORTH = 1;
-        public static readonly int AI_DEPTH = 3;
+        public static readonly int KING_WORTH = 30;
+        public static readonly int PAWN_WORTH = 15;
+        public static readonly int AI_DEPTH = 10;
+        public static readonly int PAWN_DANGER_VALUE = 10;
+        public static readonly int KING_DANGER_VALUE = 15;
+
+        public static readonly Random rng = new Random();
+        private static int counter = 0;
 
         private MinimaxNode root;
         private bool thinking;
-
-        /// <summary>
-        /// Construtor for the AI Controller.
-        /// </summary>
-        /// <param name="game">Current checkerboard to initilize the state</param>
-        public AIController(CheckerBoard game)
-        {
-            //Spool off a new thread and start algorithm
-        }
 
         /// <summary>
         /// Score the passed in board
         /// </summary>
         /// <param name="board">Board to score</param>
         /// <returns>Score for the board</returns>
-        private static int score(CheckerBoard board)
+        private static int Score(CheckerBoard board)
         {
-            return board.ScoreA();
+            int score = board.ScoreA() + board.ScoreB() + board.ScoreC();
+            if (counter++ % 10000 == 0)
+            {
+                Console.WriteLine(string.Format("Evaluating Node number: {0} - Score: {1}", counter, score));
+            }
+
+            //Console.WriteLine(board.ToString());
+
+            return score;
         }
 
-        public CheckersMove MinimaxStart(CheckerBoard board, int depth, bool isMax)
+        public static CheckersMove MinimaxStart(CheckerBoard board)
         {
             int alpha = int.MinValue;
             int beta = int.MaxValue;
 
             List<CheckersMove> possibleMoves = board.GetMovesForPlayer(board.CurrentPlayerTurn);
-            CheckerBoard tempBoard = null;
             List<int> values = new List<int>();
 
             if (possibleMoves.IsNullOrEmpty())
@@ -57,12 +61,16 @@ namespace CheckersMinimax.AI
                 CheckerBoard boardToMakeMoveOn = board;
                 do
                 {
+                    //Console.WriteLine("Board Before");
+                    //Console.WriteLine(boardToMakeMoveOn.ToString());
                     boardToMakeMoveOn = (CheckerBoard)boardToMakeMoveOn.GetMinimaxClone();
                     boardToMakeMoveOn.MakeMoveOnBoard((CheckersMove)moveToMake.GetMinimaxClone());
                     moveToMake = moveToMake.NextMove;
+                    //Console.WriteLine("Board After");
+                    //Console.WriteLine(boardToMakeMoveOn.ToString());
                 } while (moveToMake != null);
 
-                values.Add(Minimax(boardToMakeMoveOn, depth - 1, alpha, beta, false));
+                values.Add(Minimax(boardToMakeMoveOn, AI_DEPTH - 1, alpha, beta, false));
             }
 
             int maxHeuristics = int.MinValue;
@@ -83,25 +91,23 @@ namespace CheckersMinimax.AI
                 }
             }
 
+            counter = 0;
             Console.WriteLine("Node Values: " + string.Join(",", values.Select(x => x.ToString()).ToArray()));
-
-            Random random = new Random();
-            return bestMoves[random.Next(bestMoves.Count)];
+            return bestMoves[rng.Next(bestMoves.Count)];
         }
 
-        public int Minimax(CheckerBoard board, int depth, int alpha, int beta, bool isMax)
+        public static int Minimax(CheckerBoard board, int depth, int alpha, int beta, bool isMax)
         {
             List<CheckersMove> possibleMoves = board.GetMovesForPlayer(board.CurrentPlayerTurn);
 
             if (depth == 0 || possibleMoves.Count == 0)
             {
                 //return board.ScoreB();
-                return score(board);
+                return Score(board);
             }
             
 
             int value = 0;
-            CheckerBoard tempBoard = null;
             if (isMax)
             {
                 value = int.MinValue;
@@ -122,6 +128,7 @@ namespace CheckersMinimax.AI
 
                     if (alpha >= beta)
                     {
+                        //Console.WriteLine("Branch was pruned");
                         break;
                     }
                 }
@@ -143,10 +150,11 @@ namespace CheckersMinimax.AI
                     int result = Minimax(boardToMakeMoveOn, depth - 1, alpha, beta, true);
 
                     value = Math.Min(result, value);
-                    alpha = Math.Min(alpha, value);
+                    beta = Math.Min(alpha, value);
 
                     if (alpha >= beta)
                     {
+                        //Console.WriteLine("Branch was pruned");
                         break;
                     }
                 }
