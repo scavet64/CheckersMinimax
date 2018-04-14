@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CheckersMinimax.Properties;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,19 +8,14 @@ using System.Threading.Tasks;
 
 namespace CheckersMinimax.AI
 {
-    public class AIController
+    public static class AIController
     {
-        public static readonly int KING_WORTH = 30;
-        public static readonly int PAWN_WORTH = 15;
-        public static readonly int AI_DEPTH = 10;
-        public static readonly int PAWN_DANGER_VALUE = 10;
-        public static readonly int KING_DANGER_VALUE = 15;
+        private static readonly Settings settings = Settings.Default;
 
         public static readonly Random rng = new Random();
         private static int counter = 0;
 
-        private MinimaxNode root;
-        private bool thinking;
+        private static bool thinking;
 
         /// <summary>
         /// Score the passed in board
@@ -43,6 +39,7 @@ namespace CheckersMinimax.AI
         {
             int alpha = int.MinValue;
             int beta = int.MaxValue;
+            thinking = true;
 
             List<CheckersMove> possibleMoves = board.GetMovesForPlayer(board.CurrentPlayerTurn);
             List<int> values = new List<int>();
@@ -51,12 +48,8 @@ namespace CheckersMinimax.AI
             {
                 return null;
             }
-            int temp = 0;
             foreach(CheckersMove move in possibleMoves)
             {
-                //tempBoard = (CheckerBoard) board.GetMinimaxClone();
-                //tempBoard.MakeMoveOnBoard((CheckersMove) move.GetMinimaxClone());
-
                 CheckersMove moveToMake = move;
                 CheckerBoard boardToMakeMoveOn = board;
                 do
@@ -70,7 +63,7 @@ namespace CheckersMinimax.AI
                     //Console.WriteLine(boardToMakeMoveOn.ToString());
                 } while (moveToMake != null);
 
-                values.Add(Minimax(boardToMakeMoveOn, AI_DEPTH - 1, alpha, beta, false));
+                values.Add(Minimax(boardToMakeMoveOn, settings.AIDepth - 1, alpha, beta, false));
             }
 
             int maxHeuristics = int.MinValue;
@@ -92,6 +85,7 @@ namespace CheckersMinimax.AI
             }
 
             counter = 0;
+            thinking = false;
             Console.WriteLine("Node Values: " + string.Join(",", values.Select(x => x.ToString()).ToArray()));
             return bestMoves[rng.Next(bestMoves.Count)];
         }
@@ -167,7 +161,7 @@ namespace CheckersMinimax.AI
         /// Return true of false depending on if the AI is currently working
         /// </summary>
         /// <returns></returns>
-        public bool IsThinking()
+        public static bool IsThinking()
         {
             return thinking;
         }

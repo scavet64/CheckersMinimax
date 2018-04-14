@@ -1,6 +1,7 @@
 ﻿using CheckersMinimax.AI;
 using CheckersMinimax.Clone;
 using CheckersMinimax.Pieces;
+using CheckersMinimax.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace CheckersMinimax
     /// </summary>
     public class CheckerBoard : IMinimaxClonable
     {
+        private static readonly Settings settings = Settings.Default;
         public static int idCounter = 0;
         public int id;
         private List<List<CheckersSquareUserControl>> boardArray = new List<List<CheckersSquareUserControl>>();
@@ -201,11 +203,11 @@ namespace CheckersMinimax
             {
                 foreach (CheckersPoint point in GetPointsForColor<IBlackPiece>())
                 {
-                    score += point.Checker is KingCheckerPiece ? AIController.KING_WORTH : AIController.PAWN_WORTH;
+                    score += point.Checker is KingCheckerPiece ? settings.KingWorth : settings.PawnWorth;
                 }
                 foreach (CheckersPoint point in GetPointsForColor<IRedPiece>())
                 {
-                    score -= point.Checker is KingCheckerPiece ? AIController.KING_WORTH : AIController.PAWN_WORTH;
+                    score -= point.Checker is KingCheckerPiece ? settings.KingWorth : settings.PawnWorth;
                 }
             }
             return score;
@@ -272,11 +274,11 @@ namespace CheckersMinimax
                         //A piece is in danger
                         if(moveToCheck.JumpedPoint.Checker is KingCheckerPiece)
                         {
-                            score -= AIController.KING_DANGER_VALUE;
+                            score -= settings.KingDangerValue;
                         }
                         else
                         {
-                            score -= AIController.PAWN_DANGER_VALUE;
+                            score -= settings.PawnDangerValue;
                         }
                     }
                     moveToCheck = moveToCheck.NextMove;
