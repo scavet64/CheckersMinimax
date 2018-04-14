@@ -174,18 +174,18 @@ namespace CheckersMinimax
                 }
             }
         }
-    }
-    /// <summary>
-    /// Supported log level
-    /// </summary>
-    [Serializable]
-    public enum LogLevel
-    {
-        TRACE = 0,
-        DEBUG = 1,
-        INFO = 2,
-        WARNING = 3,
-        ERROR = 4,
-        FATAL = 5
+        /// <summary>
+        /// Supported log level
+        /// </summary>
+        [Serializable]
+        private enum LogLevel
+        {
+            TRACE = 0,
+            DEBUG = 1,
+            INFO = 2,
+            WARNING = 3,
+            ERROR = 4,
+            FATAL = 5
+        }
     }
 }
