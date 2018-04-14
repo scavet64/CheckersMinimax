@@ -364,9 +364,6 @@ namespace CheckersMinimax
             CheckersPoint moveSource = moveToMake.SourcePoint;
             CheckersPoint moveDestination = moveToMake.DestinationPoint;
 
-            //Console.WriteLine("Piece1 " + source.Row + ", " + source.Column);
-            //Console.WriteLine("Piece2 " + destination.Row + ", " + destination.Column);
-
             //was this a cancel?
             if (moveSource != moveDestination)
             {

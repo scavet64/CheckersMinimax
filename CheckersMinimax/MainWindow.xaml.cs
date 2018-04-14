@@ -24,6 +24,8 @@ namespace CheckersMinimax
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static readonly SimpleLogger logger = SimpleLogger.GetSimpleLogger();
+
         private CheckersMove currentMove;
         private CheckerBoard checkerBoard = new CheckerBoard();
         private bool isAIGame = true;
@@ -101,7 +103,7 @@ namespace CheckersMinimax
         {
             Button button = (Button)sender;
             CheckersSquareUserControl checkerSquareUC = (CheckersSquareUserControl)((Grid)button.Parent).Parent;
-            Console.WriteLine("Row: " + checkerSquareUC.CheckersPoint.Row + " Column: " + checkerSquareUC.CheckersPoint.Column);
+            logger.Info("Row: " + checkerSquareUC.CheckersPoint.Row + " Column: " + checkerSquareUC.CheckersPoint.Column);
             DisableAllButtons();
             if (currentMove == null)
             {
@@ -142,7 +144,7 @@ namespace CheckersMinimax
                         {
                             MakeMove(aiMove);
                             aiMove = aiMove.NextMove;
-                            //Thread.Sleep(TimeSpan.FromSeconds(1.5));
+                            Thread.Sleep(TimeSpan.FromSeconds(1));
                         }
                     }
                     else
@@ -173,8 +175,8 @@ namespace CheckersMinimax
             CheckersPoint source = moveToMake.SourcePoint;
             CheckersPoint destination = moveToMake.DestinationPoint;
 
-            Console.WriteLine("Piece1 " + source.Row + ", " + source.Column);
-            Console.WriteLine("Piece2 " + destination.Row + ", " + destination.Column);
+            logger.Info("Piece1 " + source.Row + ", " + source.Column);
+            logger.Info("Piece2 " + destination.Row + ", " + destination.Column);
 
             //was this a cancel?
             if (source != destination)

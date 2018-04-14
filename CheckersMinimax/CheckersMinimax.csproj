@@ -71,6 +71,7 @@
     <Compile Include="Pieces\NullCheckerPiece.cs" />
     <Compile Include="Pieces\RedKingCheckerPiece.cs" />
     <Compile Include="Pieces\RedPawnCheckerPiece.cs" />
+    <Compile Include="SimpleLogger.cs" />
     <Page Include="CheckersSquareUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

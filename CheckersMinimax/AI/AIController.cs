@@ -11,6 +11,7 @@ namespace CheckersMinimax.AI
     public static class AIController
     {
         private static readonly Settings settings = Settings.Default;
+        private static readonly SimpleLogger logger = SimpleLogger.GetSimpleLogger();
 
         public static readonly Random rng = new Random();
         private static int counter = 0;
@@ -27,10 +28,10 @@ namespace CheckersMinimax.AI
             int score = board.ScoreA() + board.ScoreB() + board.ScoreC();
             if (counter++ % 10000 == 0)
             {
-                Console.WriteLine(string.Format("Evaluating Node number: {0} - Score: {1}", counter, score));
+                logger.Info(string.Format("Evaluating Node number: {0} - Score: {1}", counter, score));
             }
 
-            //Console.WriteLine(board.ToString());
+            logger.Debug(board.ToString());
 
             return score;
         }
@@ -54,13 +55,15 @@ namespace CheckersMinimax.AI
                 CheckerBoard boardToMakeMoveOn = board;
                 do
                 {
-                    //Console.WriteLine("Board Before");
-                    //Console.WriteLine(boardToMakeMoveOn.ToString());
+                    logger.Debug("Board Before");
+                    logger.Debug(boardToMakeMoveOn.ToString());
+
                     boardToMakeMoveOn = (CheckerBoard)boardToMakeMoveOn.GetMinimaxClone();
                     boardToMakeMoveOn.MakeMoveOnBoard((CheckersMove)moveToMake.GetMinimaxClone());
                     moveToMake = moveToMake.NextMove;
-                    //Console.WriteLine("Board After");
-                    //Console.WriteLine(boardToMakeMoveOn.ToString());
+
+                    logger.Debug("Board After");
+                    logger.Debug(boardToMakeMoveOn.ToString());
                 } while (moveToMake != null);
 
                 values.Add(Minimax(boardToMakeMoveOn, settings.AIDepth - 1, alpha, beta, false));
@@ -86,7 +89,7 @@ namespace CheckersMinimax.AI
 
             counter = 0;
             thinking = false;
-            Console.WriteLine("Node Values: " + string.Join(",", values.Select(x => x.ToString()).ToArray()));
+            logger.Info("Node Values: " + string.Join(",", values.Select(x => x.ToString()).ToArray()));
             return bestMoves[rng.Next(bestMoves.Count)];
         }
 
@@ -96,7 +99,6 @@ namespace CheckersMinimax.AI
 
             if (depth == 0 || possibleMoves.Count == 0)
             {
-                //return board.ScoreB();
                 return Score(board);
             }
             
@@ -122,7 +124,7 @@ namespace CheckersMinimax.AI
 
                     if (alpha >= beta)
                     {
-                        //Console.WriteLine("Branch was pruned");
+                        logger.Debug("Branch was pruned");
                         break;
                     }
                 }
@@ -148,7 +150,7 @@ namespace CheckersMinimax.AI
 
                     if (alpha >= beta)
                     {
-                        //Console.WriteLine("Branch was pruned");
+                        logger.Debug("Branch was pruned");
                         break;
                     }
                 }

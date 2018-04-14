@@ -121,13 +121,13 @@ namespace CheckersMinimax.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool IsDebugLogging {
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int MinimumLogLevel {
             get {
-                return ((bool)(this["IsDebugLogging"]));
+                return ((int)(this["MinimumLogLevel"]));
             }
             set {
-                this["IsDebugLogging"] = value;
+                this["MinimumLogLevel"] = value;
             }
         }
     }
