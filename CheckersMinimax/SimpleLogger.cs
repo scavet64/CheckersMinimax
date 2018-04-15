@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Windows;
 
 namespace CheckersMinimax
 {
@@ -165,13 +166,20 @@ namespace CheckersMinimax
         /// <exception cref="System.IO.IOException"></exception>
         private void WriteLine(string text, bool append = true)
         {
-            using (StreamWriter Writer = new StreamWriter(Filename, append, Encoding.UTF8))
+            try
             {
-                if (text != "")
+                using (StreamWriter Writer = new StreamWriter(Filename, append, Encoding.UTF8))
                 {
-                    Writer.WriteLine(text);
-                    Console.WriteLine(text);
+                    if (text != "")
+                    {
+                        Writer.WriteLine(text);
+                        Console.WriteLine(text);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("There was an error saving the log file: " + ex.Message);
             }
         }
         /// <summary>
