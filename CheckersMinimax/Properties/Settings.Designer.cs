@@ -97,7 +97,7 @@ namespace CheckersMinimax.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool IsAIDuel {
             get {
                 return ((bool)(this["IsAIDuel"]));
@@ -109,7 +109,7 @@ namespace CheckersMinimax.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("hard")]
         public string Difficulty {
             get {
                 return ((string)(this["Difficulty"]));
@@ -128,6 +128,18 @@ namespace CheckersMinimax.Properties {
             }
             set {
                 this["MinimumLogLevel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("black")]
+        public string WhosFirst {
+            get {
+                return ((string)(this["WhosFirst"]));
+            }
+            set {
+                this["WhosFirst"] = value;
             }
         }
     }

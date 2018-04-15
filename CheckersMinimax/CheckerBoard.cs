@@ -19,14 +19,26 @@ namespace CheckersMinimax
     public class CheckerBoard : IMinimaxClonable
     {
         private static readonly Settings settings = Settings.Default;
-        public static int idCounter = 0;
-        public int id;
         private List<List<CheckersSquareUserControl>> boardArray = new List<List<CheckersSquareUserControl>>();
-        public PlayerColor CurrentPlayerTurn { get; set; } = PlayerColor.Red;
+
+        public PlayerColor CurrentPlayerTurn { get; set; }
 
         public CheckerBoard()
         {
-            id = idCounter++;
+            CurrentPlayerTurn = DetermineWhosFirst();
+        }
+
+        private PlayerColor DetermineWhosFirst()
+        {
+            if (settings.WhosFirst.Equals("black", StringComparison.CurrentCultureIgnoreCase))
+            {
+                return PlayerColor.Black;
+            }
+            else
+            {
+                //If the user enters something other than black, default to red
+                return PlayerColor.Red;
+            }
         }
 
         /// <summary>
@@ -55,21 +67,29 @@ namespace CheckersMinimax
                     {
                         if (Column % 2 == 0)
                         {
-                            checkerSquareUC = new CheckersSquareUserControl(Brushes.White, new CheckersPoint(Row, Column, CheckerPieceType.nullPiece), routedEventHandler);
+                            checkerSquareUC = new CheckersSquareUserControl(
+                                Brushes.White,
+                                new CheckersPoint(Row, Column, CheckerPieceType.nullPiece), routedEventHandler);
                         }
                         else
                         {
                             if (Row < 3)
                             {
-                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.BlackPawn), routedEventHandler);
+                                checkerSquareUC = new CheckersSquareUserControl(
+                                    Brushes.Black,
+                                    new CheckersPoint(Row, Column, CheckerPieceType.BlackPawn), routedEventHandler);
                             }
                             else if (Row > 4)
                             {
-                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.RedPawn), routedEventHandler);
+                                checkerSquareUC = new CheckersSquareUserControl(
+                                    Brushes.Black,
+                                    new CheckersPoint(Row, Column, CheckerPieceType.RedPawn), routedEventHandler);
                             }
                             else
                             {
-                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.nullPiece), routedEventHandler);
+                                checkerSquareUC = new CheckersSquareUserControl(
+                                    Brushes.Black,
+                                    new CheckersPoint(Row, Column, CheckerPieceType.nullPiece), routedEventHandler);
                             }
                         }
                     }
@@ -79,21 +99,29 @@ namespace CheckersMinimax
                         {
                             if (Row < 3)
                             {
-                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.BlackPawn), routedEventHandler);
+                                checkerSquareUC = new CheckersSquareUserControl(
+                                    Brushes.Black,
+                                    new CheckersPoint(Row, Column, CheckerPieceType.BlackPawn), routedEventHandler);
                             }
                             else if (Row > 4)
                             {
-                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.RedPawn), routedEventHandler);
+                                checkerSquareUC = new CheckersSquareUserControl(
+                                    Brushes.Black,
+                                    new CheckersPoint(Row, Column, CheckerPieceType.RedPawn), routedEventHandler);
                             }
                             else
                             {
                                 //empty middle spot
-                                checkerSquareUC = new CheckersSquareUserControl(Brushes.Black, new CheckersPoint(Row, Column, CheckerPieceType.nullPiece), routedEventHandler);
+                                checkerSquareUC = new CheckersSquareUserControl(
+                                    Brushes.Black,
+                                    new CheckersPoint(Row, Column, CheckerPieceType.nullPiece), routedEventHandler);
                             }
                         }
                         else
                         {
-                            checkerSquareUC = new CheckersSquareUserControl(Brushes.White, new CheckersPoint(Row, Column, CheckerPieceType.nullPiece), routedEventHandler);
+                            checkerSquareUC = new CheckersSquareUserControl(
+                                Brushes.White,
+                                new CheckersPoint(Row, Column, CheckerPieceType.nullPiece), routedEventHandler);
                         }
 
                     }
@@ -182,22 +210,54 @@ namespace CheckersMinimax
             return listOfColor;
         }
 
-        public int ScoreA()
+        public int ScoreWin(PlayerColor rootPlayer)
         {
             int score = 0;
             object winningColor = this.GetWinner();
 
             if (winningColor != null && winningColor is PlayerColor winnerColor)
             {
-                if (winnerColor == PlayerColor.Black)
+                if (rootPlayer == PlayerColor.Red)
                 {
-                    score = int.MaxValue;
+                    if (winnerColor == PlayerColor.Red)
+                    {
+                        score = int.MaxValue;
+                    }
+                    else
+                    {
+                        score = int.MinValue;
+                    }
                 }
                 else
                 {
-                    score = int.MinValue;
+                    if (winnerColor == PlayerColor.Black)
+                    {
+                        score = int.MaxValue;
+                    }
+                    else
+                    {
+                        score = int.MinValue;
+                    }
                 }
+            }
 
+            return score;
+        }
+
+        public int ScoreA(PlayerColor rootPlayer)
+        {
+            int score = 0;
+
+            if (rootPlayer == PlayerColor.Red)
+            {
+                foreach (CheckersPoint point in GetPointsForColor<IBlackPiece>())
+                {
+                    score -= point.Checker is KingCheckerPiece ? settings.KingWorth : settings.PawnWorth;
+                }
+                foreach (CheckersPoint point in GetPointsForColor<IRedPiece>())
+                {
+                    score += point.Checker is KingCheckerPiece ? settings.KingWorth : settings.PawnWorth;
+                }
             }
             else
             {
@@ -210,10 +270,11 @@ namespace CheckersMinimax
                     score -= point.Checker is KingCheckerPiece ? settings.KingWorth : settings.PawnWorth;
                 }
             }
+
             return score;
         }
 
-        internal int ScoreB()
+        internal int ScoreB(PlayerColor rootPlayer)
         {
             int score = 0;
 
@@ -223,7 +284,7 @@ namespace CheckersMinimax
                 {
                     if (squareUC.CheckersPoint.Checker != null && !(squareUC.CheckersPoint.Checker is KingCheckerPiece))
                     {
-                        if (CurrentPlayerTurn == PlayerColor.Black)
+                        if (rootPlayer == PlayerColor.Black)
                         {
                             if (squareUC.CheckersPoint.Checker is IRedPiece)
                             {
@@ -256,15 +317,16 @@ namespace CheckersMinimax
             }
 
             return score;
+            //return 0;
         }
 
-        internal int ScoreC()
+        internal int ScoreC(PlayerColor rootPlayer)
         {
             int score = 0;
 
             List<CheckersMove> movesForOtherPlayer = GetMovesForPlayer(CurrentPlayerTurn);
 
-            foreach(CheckersMove move in movesForOtherPlayer)
+            foreach (CheckersMove move in movesForOtherPlayer)
             {
                 CheckersMove moveToCheck = move;
                 do
@@ -272,7 +334,7 @@ namespace CheckersMinimax
                     if (moveToCheck.JumpedPoint != null)
                     {
                         //A piece is in danger
-                        if(moveToCheck.JumpedPoint.Checker is KingCheckerPiece)
+                        if (moveToCheck.JumpedPoint.Checker is KingCheckerPiece)
                         {
                             score -= settings.KingDangerValue;
                         }
@@ -285,11 +347,22 @@ namespace CheckersMinimax
                 } while (moveToCheck != null);
             }
 
-            if(CurrentPlayerTurn == PlayerColor.Black)
-            {
-                //invert score for other player
-                score *= -1;
-            } 
+            ////invert score for root's opponent player
+            //if (rootPlayer == PlayerColor.Black)
+            //{
+            //    if (CurrentPlayerTurn == PlayerColor.Black)
+            //    {
+            //        score *= -1;
+            //    }
+            //}
+            //else
+            //{
+            //    if (CurrentPlayerTurn == PlayerColor.Red)
+            //    {
+            //        score *= -1;
+            //    }
+            //}
+
 
             return score;
         }
@@ -370,7 +443,7 @@ namespace CheckersMinimax
                 CheckersPoint realDestination = this.BoardArray[moveDestination.Row][moveDestination.Column].CheckersPoint;
                 CheckersPoint realSource = this.BoardArray[moveSource.Row][moveSource.Column].CheckersPoint;
 
-                realDestination.Checker = (CheckerPiece) realSource.Checker.GetMinimaxClone();
+                realDestination.Checker = (CheckerPiece)realSource.Checker.GetMinimaxClone();
                 realSource.Checker = CheckerPieceFactory.GetCheckerPiece(CheckerPieceType.nullPiece);
 
                 //was this a jump move?
@@ -384,7 +457,7 @@ namespace CheckersMinimax
                 }
 
                 //Is this piece a king now?
-                if (!(realDestination.Checker is KingCheckerPiece) 
+                if (!(realDestination.Checker is KingCheckerPiece)
                     && (realDestination.Row == 7 || realDestination.Row == 0))
                 {
                     //Should be a king now

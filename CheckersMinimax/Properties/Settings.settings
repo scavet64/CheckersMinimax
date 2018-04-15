@@ -21,13 +21,16 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="IsAIDuel" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="Difficulty" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">hard</Value>
     </Setting>
     <Setting Name="MinimumLogLevel" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="WhosFirst" Type="System.String" Scope="User">
+      <Value Profile="(Default)">black</Value>
     </Setting>
   </Settings>
 </SettingsFile>

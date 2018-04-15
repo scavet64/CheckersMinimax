@@ -1,5 +1,6 @@
 ﻿using CheckersMinimax.AI;
 using CheckersMinimax.Pieces;
+using CheckersMinimax.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,12 +25,11 @@ namespace CheckersMinimax
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static readonly Settings settings = Settings.Default;
         private static readonly SimpleLogger logger = SimpleLogger.GetSimpleLogger();
 
         private CheckersMove currentMove;
         private CheckerBoard checkerBoard = new CheckerBoard();
-        private bool isAIGame = true;
-        private bool isTwoAI = false;
 
         private List<CheckersMove> CurrentAvailableMoves;
 
@@ -48,7 +48,7 @@ namespace CheckersMinimax
             DisableAllButtons();
             EnableButtonsWithMove();
 
-            if (isTwoAI)
+            if (settings.IsAIDuel)
             {
                 Thread aiThread = new Thread(new ThreadStart(RunAIGame));
                 aiThread.SetApartmentState(ApartmentState.STA);
@@ -64,13 +64,12 @@ namespace CheckersMinimax
                 CheckersMove aiMove = AIController.MinimaxStart(checkerBoard);
                 if (aiMove != null)
                 {
-                    Application.Current.Dispatcher.Invoke((Action)delegate
+                    while (aiMove != null)
                     {
-
                         MakeMove(aiMove);
-
-                    });
-
+                        aiMove = aiMove.NextMove;
+                        Thread.Sleep(TimeSpan.FromSeconds(1));
+                    }
                 }
                 else
                 {
@@ -131,7 +130,7 @@ namespace CheckersMinimax
 
                 //get move from the list that has this point as its destination
                 MakeMoveReturnModel returnModel = MakeMove(GetMoveFromList(checkerSquareUC.CheckersPoint));
-                if (returnModel.WasMoveMade && returnModel.IsTurnOver && isAIGame)
+                if (returnModel.WasMoveMade && returnModel.IsTurnOver && settings.IsAIGame)
                 {
                     //Disable buttons so the user cant click anything while the AI is thinking
                     DisableAllButtons();
