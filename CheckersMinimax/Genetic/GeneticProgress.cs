@@ -11,40 +11,65 @@ namespace CheckersMinimax.Genetic
     [XmlRoot]
     public class GeneticProgress
     {
-        private static GeneticProgress instance;
         private static readonly object Lock = new object();
-        private static readonly string filepath = FileNameHelper.GetExecutingDirectory() + @"GeneticProgress.xml";
+        private static readonly string Filepath = FileNameHelper.GetExecutingDirectory() + @"GeneticProgress.xml";
 
-        public int NumberOfRandomGenomeWins {
+        private static GeneticProgress instance;
+
+        /// <summary>
+        /// Gets or sets the number of random genome wins.
+        /// </summary>
+        /// <value>
+        /// The number of random genome wins.
+        /// </value>
+        public int NumberOfRandomGenomeWins
+        {
             get
             {
                 return numberOfRandomGenomeWins;
             }
-            set {
+
+            set
+            {
                 numberOfRandomGenomeWins = value;
-                this.Serialize(filepath);
+                this.Serialize(Filepath);
             }
         }
 
+        /// <summary>
+        /// Gets or sets the number of games.
+        /// </summary>
+        /// <value>
+        /// The number of games.
+        /// </value>
         public int NumberOfGames
         {
-            get { return numberOfGames; }
+            get
+            {
+                return numberOfGames;
+            }
+
             set
             {
                 numberOfGames = value;
-                this.Serialize(filepath);
+                this.Serialize(Filepath);
             }
         }
 
         private int numberOfGames;
         private int numberOfRandomGenomeWins;
-        
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GeneticProgress"/> class.
+        /// </summary>
         public GeneticProgress()
         {
-
         }
 
+        /// <summary>
+        /// Gets the genetic progress instance.
+        /// </summary>
+        /// <returns>Genetic progress singleton</returns>
         public static GeneticProgress GetGeneticProgressInstance()
         {
             if (instance == null)
@@ -53,15 +78,15 @@ namespace CheckersMinimax.Genetic
                 {
                     if (instance == null)
                     {
-                        if (File.Exists(filepath))
+                        if (File.Exists(Filepath))
                         {
-                            instance = XmlSerializationHelper.Deserialize<GeneticProgress>(filepath);
+                            instance = XmlSerializationHelper.Deserialize<GeneticProgress>(Filepath);
                         }
                         else
                         {
                             //create new file and save it
                             instance = new GeneticProgress();
-                            instance.Serialize(filepath);
+                            instance.Serialize(Filepath);
                         }
                     }
                 }
@@ -70,11 +95,14 @@ namespace CheckersMinimax.Genetic
             return instance;
         }
 
+        /// <summary>
+        /// Resets the values for this singleton.
+        /// </summary>
         public void ResetValues()
         {
             numberOfGames = 0;
             numberOfRandomGenomeWins = 0;
-            this.Serialize(filepath);
+            this.Serialize(Filepath);
         }
     }
 }

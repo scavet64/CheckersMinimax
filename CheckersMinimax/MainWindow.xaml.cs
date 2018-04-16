@@ -29,7 +29,7 @@ namespace CheckersMinimax
         private static readonly Settings Settings = Settings.Default;
         private static readonly SimpleLogger Logger = SimpleLogger.GetSimpleLogger();
 
-        private static readonly int maxTurns = 500;
+        private static readonly int MaxTurns = 500;
 
         private CheckersMove currentMove;
         private CheckerBoard checkerBoard;
@@ -38,6 +38,9 @@ namespace CheckersMinimax
 
         private List<CheckersMove> currentAvailableMoves;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainWindow"/> class.
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
@@ -51,12 +54,17 @@ namespace CheckersMinimax
             }
             else if (Settings.IsAIDuel)
             {
-                aiThread = new Thread(new ThreadStart(RunAIGame));
+                aiThread = new Thread(new ThreadStart(RunAIDuel));
                 aiThread.SetApartmentState(ApartmentState.STA);
                 aiThread.Start();
             }
         }
 
+        /// <summary>
+        /// Handles the Click event of the Button control. Spawns a new thread for each button click. The thread runs the ButtonClickWork method
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         public void Button_Click(object sender, RoutedEventArgs e)
         {
             Thread myNewThread = new Thread(() => ButtonClickWork(sender));
@@ -64,6 +72,9 @@ namespace CheckersMinimax
             myNewThread.Start();
         }
 
+        /// <summary>
+        /// Initializes the checkers game.
+        /// </summary>
         private void InitializeCheckers()
         {
             this.Dispatcher.Invoke(() =>
@@ -81,6 +92,9 @@ namespace CheckersMinimax
             });
         }
 
+        /// <summary>
+        /// Main loop for the basic genetic algorithm
+        /// </summary>
         private void GeneticAlgoLoop()
         {
             int roundNumber = 0;
@@ -91,6 +105,16 @@ namespace CheckersMinimax
             }
         }
 
+        /// <summary>
+        /// Does the a basic sudo genetic algorithm to determine the most optimal values for KingsWorth, PawnsWorth, KingsDangerValue, PawnsDangerValue.
+        /// This was not originally part of the project. This was my attempt at letting the AI tell me what works best for these values. 
+        /// <para>
+        /// This method essentially works by using a WinningGenome and RandomGenome. The starting winning genome is based on the initial settings file.
+        /// The random genome is based on the current winning genome with slighly increased or decreased values. The algorithm runs through n simulations
+        /// and tracks the number of wins the random genome gets. If the random genome wins more than 50% of the time, it becomes the new winning genome.
+        /// The new randome genome is based on that winner and the loop starts over.
+        /// </para>
+        /// </summary>
         private void DoGeneticAlgo()
         {
             GeneticProgress currentProgress = GeneticProgress.GetGeneticProgressInstance();
@@ -101,7 +125,7 @@ namespace CheckersMinimax
             {
                 try
                 {
-                    RunAIGame();
+                    RunAIDuel();
                 }
                 catch (AIException ex)
                 {
@@ -111,6 +135,7 @@ namespace CheckersMinimax
                     InitializeCheckers();
                     continue;
                 }
+
                 currentProgress.NumberOfGames++;
                 object winner = checkerBoard.GetWinner();
                 if (winner != null && winner is PlayerColor winningPlayer && winningPlayer == PlayerColor.Red)
@@ -140,14 +165,18 @@ namespace CheckersMinimax
             currentProgress.ResetValues();
         }
 
-        private void RunAIGame()
+        /// <summary>
+        /// Method for the aiThread. Main loop for running an AI game
+        /// </summary>
+        /// <exception cref="AIException">If the is a problem running the game</exception>
+        private void RunAIDuel()
         {
             int numberOfTurns = 0;
             while (checkerBoard.GetWinner() == null)
             {
                 //AI vs AI
                 CheckersMove aiMove = AIController.MinimaxStart(checkerBoard);
-                if (aiMove != null && numberOfTurns++ < maxTurns)
+                if (aiMove != null && numberOfTurns++ < MaxTurns)
                 {
                     while (aiMove != null)
                     {
@@ -165,6 +194,10 @@ namespace CheckersMinimax
             }
         }
 
+        /// <summary>
+        /// Method runs each time a checker button is clicked. This is for user control
+        /// </summary>
+        /// <param name="sender">Button sender.</param>
         private void ButtonClickWork(object sender)
         {
             Button button = (Button)sender;
@@ -223,6 +256,12 @@ namespace CheckersMinimax
             }
         }
 
+        /// <summary>
+        /// Gets a move from the currently available moves list. This is important for user interaction.
+        /// Todo: look into possible bug here if two moves have same destination. Might not matter
+        /// </summary>
+        /// <param name="checkersPoint">The destination</param>
+        /// <returns>The detailed checkers move for this destination</returns>
         private CheckersMove GetMoveFromList(CheckersPoint checkersPoint)
         {
             foreach (CheckersMove move in currentAvailableMoves)
@@ -236,6 +275,11 @@ namespace CheckersMinimax
             return null;
         }
 
+        /// <summary>
+        /// Makes a move on the User Interface.
+        /// </summary>
+        /// <param name="moveToMake">The move to make.</param>
+        /// <returns>Make Move Model Return. This model has two boolean properties that represent what happened this move</returns>
         private MakeMoveReturnModel MakeMove(CheckersMove moveToMake)
         {
             bool moveWasMade = false;
@@ -280,6 +324,11 @@ namespace CheckersMinimax
             };
         }
 
+        /// <summary>
+        /// Sets the color of the background for the passed in usercontrol
+        /// </summary>
+        /// <param name="control">The control.</param>
+        /// <param name="colorToSet">The color to set.</param>
         private void SetBackgroundColor(UserControl control, Brush colorToSet)
         {
             Application.Current.Dispatcher.BeginInvoke(
@@ -287,6 +336,10 @@ namespace CheckersMinimax
                       new Action(() => control.Background = colorToSet));
         }
 
+        /// <summary>
+        /// Sets the application title.
+        /// </summary>
+        /// <param name="titleToSet">The title to set.</param>
         private void SetTitle(string titleToSet)
         {
             Application.Current.Dispatcher.BeginInvoke(
@@ -294,6 +347,9 @@ namespace CheckersMinimax
                       new Action(() => this.Title = titleToSet));
         }
 
+        /// <summary>
+        /// Enables the buttons with a valid move.
+        /// </summary>
         private void EnableButtonsWithMove()
         {
             List<CheckersMove> totalPossibleMoves = checkerBoard.GetMovesForPlayer();
@@ -312,6 +368,10 @@ namespace CheckersMinimax
             }
         }
 
+        /// <summary>
+        /// Enable buttons that have a checker of type T
+        /// </summary>
+        /// <typeparam name="T">Checker Type</typeparam>
         private void EnableButtons<T>()
         {
             foreach (List<CheckersSquareUserControl> list in checkerBoard.BoardArray)
@@ -326,6 +386,9 @@ namespace CheckersMinimax
             }
         }
 
+        /// <summary>
+        /// Disables all buttons on the board
+        /// </summary>
         private void DisableAllButtons()
         {
             foreach (List<CheckersSquareUserControl> list in checkerBoard.BoardArray)
@@ -339,6 +402,9 @@ namespace CheckersMinimax
             }
         }
 
+        /// <summary>
+        /// Enables all buttons on the board
+        /// </summary>
         private void EnableAllButtons()
         {
             foreach (List<CheckersSquareUserControl> list in checkerBoard.BoardArray)
@@ -350,6 +416,11 @@ namespace CheckersMinimax
             }
         }
 
+        /// <summary>
+        /// Colors the background of all destination points from the list of moves
+        /// </summary>
+        /// <param name="list">The list of moves</param>
+        /// <param name="backgroundColor">Color of the background.</param>
         private void ColorBackgroundOfPoints(List<CheckersMove> list, Brush backgroundColor)
         {
             if (list != null)
@@ -363,6 +434,10 @@ namespace CheckersMinimax
             }
         }
 
+        /// <summary>
+        /// Enables the buttons with possible move.
+        /// </summary>
+        /// <param name="list">The list.</param>
         private void EnableButtonsWithPossibleMove(List<CheckersMove> list)
         {
             foreach (CheckersMove checkerPoint in list)
@@ -373,6 +448,9 @@ namespace CheckersMinimax
             }
         }
 
+        /// <summary>
+        /// Updates the squares.
+        /// </summary>
         private void UpdateSquares()
         {
             foreach (List<CheckersSquareUserControl> list in checkerBoard.BoardArray)
@@ -384,6 +462,11 @@ namespace CheckersMinimax
             }
         }
 
+        /// <summary>
+        /// Restarts the game.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void RestartGame(object sender, RoutedEventArgs e)
         {
             if (aiThread != null)
@@ -394,6 +477,11 @@ namespace CheckersMinimax
             InitializeCheckers();
         }
 
+        /// <summary>
+        /// Exits the game.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void ExitGame(object sender, RoutedEventArgs e)
         {
             Environment.Exit(0);

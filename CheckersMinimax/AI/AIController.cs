@@ -17,6 +17,21 @@ namespace CheckersMinimax.AI
         private static int counter = 0;
         private static bool thinking;
 
+        /// <summary>
+        /// Return true of false depending on if the AI is currently working
+        /// </summary>
+        /// <returns>true if the AI is still thinking</returns>
+        public static bool IsThinking()
+        {
+            return thinking;
+        }
+
+        /// <summary>
+        /// Initial minimax starting method. This method kicks off the algoritm and finds the best move for the current player.
+        /// If two or more moves have the same value, the best move is choosen randomly from the moves
+        /// </summary>
+        /// <param name="board">The board.</param>
+        /// <returns>Best move for the current player</returns>
         public static CheckersMove MinimaxStart(CheckerBoard board)
         {
             int alpha = int.MinValue;
@@ -79,7 +94,17 @@ namespace CheckersMinimax.AI
             return bestMoves[Rng.Next(bestMoves.Count)];
         }
 
-        public static int Minimax(CheckerBoard board, int depth, int alpha, int beta, bool isMax, PlayerColor rootPlayer)
+        /// <summary>
+        /// Runs the minimax algoritm with alpha beta pruning
+        /// </summary>
+        /// <param name="board">The board.</param>
+        /// <param name="depth">The depth.</param>
+        /// <param name="alpha">The alpha.</param>
+        /// <param name="beta">The beta.</param>
+        /// <param name="isMax">if set to <c>true</c> [is maximum].</param>
+        /// <param name="rootPlayer">The root player.</param>
+        /// <returns>Minimax value for this board state</returns>
+        private static int Minimax(CheckerBoard board, int depth, int alpha, int beta, bool isMax, PlayerColor rootPlayer)
         {
             List<CheckersMove> possibleMoves = board.GetMovesForPlayer();
 
@@ -147,18 +172,10 @@ namespace CheckersMinimax.AI
         }
 
         /// <summary>
-        /// Return true of false depending on if the AI is currently working
-        /// </summary>
-        /// <returns></returns>
-        public static bool IsThinking()
-        {
-            return thinking;
-        }
-
-        /// <summary>
-        /// Score the passed in board
+        /// Score the passed in board. This method will change the heuristics to evaluate depending on the difficulty in the settings
         /// </summary>
         /// <param name="board">Board to score</param>
+        /// <param name="rootPlayer">The root minimax player</param>
         /// <returns>Score for the board</returns>
         private static int Score(CheckerBoard board, PlayerColor rootPlayer)
         {

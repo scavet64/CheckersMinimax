@@ -15,8 +15,18 @@ namespace CheckersMinimax
 
         private readonly string datetimeFormat;
 
+        /// <summary>
+        /// Gets or sets the filename.
+        /// </summary>
+        /// <value>
+        /// The filename to set
+        /// </value>
         public string Filename { get; set; }
 
+        /// <summary>
+        /// Gets the simple logger instance
+        /// </summary>
+        /// <returns>singleton instance of the simple logger</returns>
         public static SimpleLogger GetSimpleLogger()
         {
             if (instance == null)
@@ -36,7 +46,7 @@ namespace CheckersMinimax
         /// <summary>
         /// Log a debug message
         /// </summary>
-        /// <param name="text">Message</param>
+        /// <param name="text">Message to write</param>
         public void Debug(string text)
         {
             WriteFormattedLog(LogLevel.DEBUG, text);
@@ -45,7 +55,7 @@ namespace CheckersMinimax
         /// <summary>
         /// Log an error message
         /// </summary>
-        /// <param name="text">Message</param>
+        /// <param name="text">Message to write</param>
         public void Error(string text)
         {
             WriteFormattedLog(LogLevel.ERROR, text);
@@ -54,7 +64,7 @@ namespace CheckersMinimax
         /// <summary>
         /// Log a fatal error message
         /// </summary>
-        /// <param name="text">Message</param>
+        /// <param name="text">Message to write</param>
         public void Fatal(string text)
         {
             WriteFormattedLog(LogLevel.FATAL, text);
@@ -63,7 +73,7 @@ namespace CheckersMinimax
         /// <summary>
         /// Log an info message
         /// </summary>
-        /// <param name="text">Message</param>
+        /// <param name="text">Message to write</param>
         public void Info(string text)
         {
             WriteFormattedLog(LogLevel.INFO, text);
@@ -72,7 +82,7 @@ namespace CheckersMinimax
         /// <summary>
         /// Log a trace message
         /// </summary>
-        /// <param name="text">Message</param>
+        /// <param name="text">Message to write</param>
         public void Trace(string text)
         {
             WriteFormattedLog(LogLevel.TRACE, text);
@@ -81,7 +91,7 @@ namespace CheckersMinimax
         /// <summary>
         /// Log a waning message
         /// </summary>
-        /// <param name="text">Message</param>
+        /// <param name="text">Message to write</param>
         public void Warning(string text)
         {
             WriteFormattedLog(LogLevel.WARNING, text);
@@ -113,6 +123,10 @@ namespace CheckersMinimax
             }
         }
 
+        /// <summary>
+        /// Gets the current date string.
+        /// </summary>
+        /// <returns>Current date string</returns>
         private string GetCurrentDateString()
         {
             return DateTime.Now.ToShortDateString().Replace("/", "_");
@@ -160,11 +174,10 @@ namespace CheckersMinimax
         }
 
         /// <summary>
-        /// Write a line of formatted log message into a log file
+        /// Write a line of formatted log message into a log file. If a failure happens when logging, this method silently fails
         /// </summary>
         /// <param name="text">Formatted log message</param>
         /// <param name="append">True to append, False to overwrite the file</param>
-        /// <exception cref="System.IO.IOException"></exception>
         private void WriteLine(string text, bool append = true)
         {
             lock (Lock)

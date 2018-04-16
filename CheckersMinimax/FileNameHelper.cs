@@ -8,8 +8,12 @@ using System.Threading.Tasks;
 
 namespace CheckersMinimax
 {
-    public class FileNameHelper
+    public static class FileNameHelper
     {
+        /// <summary>
+        /// Gets the executing directory.
+        /// </summary>
+        /// <returns>The executing directory path</returns>
         public static string GetExecutingDirectory()
         {
             var location = System.Reflection.Assembly.GetExecutingAssembly().Location;

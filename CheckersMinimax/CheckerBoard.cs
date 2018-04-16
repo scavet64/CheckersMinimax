@@ -12,23 +12,29 @@ using System.Windows.Media;
 
 namespace CheckersMinimax
 {
-
     [Serializable]
+
     /// <summary>
-    /// [Row][Column]
+    /// The Checkerboard class. This class holds the two dimentional board array ([Row][Column]) and evaluates the heuristics for the board
     /// </summary>
     public class CheckerBoard : IMinimaxClonable
     {
-        private static readonly Settings settings = Settings.Default;
+        private static readonly Settings Settings = Settings.Default;
 
         /// <summary>
-        /// [Row][Column]
+        /// Gets or sets the board array. Board represents [Row][Column]
         /// </summary>
         /// <value>
         /// The board array.
         /// </value>
         public List<List<CheckersSquareUserControl>> BoardArray { get; set; } = new List<List<CheckersSquareUserControl>>();
 
+        /// <summary>
+        /// Gets or sets the current player turn.
+        /// </summary>
+        /// <value>
+        /// The current player turn.
+        /// </value>
         public PlayerColor CurrentPlayerTurn { get; set; }
 
         public CheckerBoard()
@@ -218,43 +224,43 @@ namespace CheckersMinimax
         public int ScoreA(PlayerColor rootPlayer)
         {
             int score = 0;
-            int KingWorth = settings.KingWorth;
-            int PawnWorth = settings.PawnWorth;
+            int kingWorth = Settings.KingWorth;
+            int pawnWorth = Settings.PawnWorth;
 
             if (rootPlayer == PlayerColor.Red)
             {
-                if (settings.RunningGeneticAlgo)
+                if (Settings.RunningGeneticAlgo)
                 {
-                    KingWorth = Genetic.RandomGenome.GetRandomGenomeInstance().KingWorthGene;
-                    PawnWorth = Genetic.RandomGenome.GetRandomGenomeInstance().PawnWorthGene;
+                    kingWorth = Genetic.RandomGenome.GetRandomGenomeInstance().KingWorthGene;
+                    pawnWorth = Genetic.RandomGenome.GetRandomGenomeInstance().PawnWorthGene;
                 }
 
                 foreach (CheckersPoint point in GetPointsForColor<IBlackPiece>())
                 {
-                    score -= point.Checker is KingCheckerPiece ? KingWorth : PawnWorth;
+                    score -= point.Checker is KingCheckerPiece ? kingWorth : pawnWorth;
                 }
 
                 foreach (CheckersPoint point in GetPointsForColor<IRedPiece>())
                 {
-                    score += point.Checker is KingCheckerPiece ? KingWorth : PawnWorth;
+                    score += point.Checker is KingCheckerPiece ? kingWorth : pawnWorth;
                 }
             }
             else
             {
-                if (settings.RunningGeneticAlgo)
+                if (Settings.RunningGeneticAlgo)
                 {
-                    KingWorth = Genetic.WinningGenome.GetWinningGenomeInstance().KingWorthGene;
-                    PawnWorth = Genetic.WinningGenome.GetWinningGenomeInstance().PawnWorthGene;
+                    kingWorth = Genetic.WinningGenome.GetWinningGenomeInstance().KingWorthGene;
+                    pawnWorth = Genetic.WinningGenome.GetWinningGenomeInstance().PawnWorthGene;
                 }
 
                 foreach (CheckersPoint point in GetPointsForColor<IBlackPiece>())
                 {
-                    score += point.Checker is KingCheckerPiece ? KingWorth : PawnWorth;
+                    score += point.Checker is KingCheckerPiece ? kingWorth : pawnWorth;
                 }
 
                 foreach (CheckersPoint point in GetPointsForColor<IRedPiece>())
                 {
-                    score -= point.Checker is KingCheckerPiece ? KingWorth : PawnWorth;
+                    score -= point.Checker is KingCheckerPiece ? kingWorth : pawnWorth;
                 }
             }
 
@@ -319,10 +325,10 @@ namespace CheckersMinimax
         public int ScoreC(PlayerColor rootPlayer)
         {
             int score = 0;
-            int kingDangerValue = settings.KingDangerValue;
-            int pawnDangerValue = settings.PawnDangerValue;
+            int kingDangerValue = Settings.KingDangerValue;
+            int pawnDangerValue = Settings.PawnDangerValue;
 
-            if (settings.RunningGeneticAlgo)
+            if (Settings.RunningGeneticAlgo)
             {
                 if (rootPlayer == PlayerColor.Red)
                 {
@@ -380,10 +386,9 @@ namespace CheckersMinimax
         }
 
         /// <summary>
-        /// Returns a list of moves for the passed in player
+        /// Returns a list of moves for the current players turn
         /// </summary>
-        /// <param name="currentPlayerTurn">The current player turn.</param>
-        /// <returns></returns>
+        /// <returns>List of moves for the current players turn</returns>
         /// <exception cref="ArgumentException">Unknown Player Color</exception>
         public List<CheckersMove> GetMovesForPlayer()
         {
@@ -443,7 +448,7 @@ namespace CheckersMinimax
         /// </summary>
         /// <param name="moveToMake">The move to make.</param>
         /// <param name="swapTurn">if set to <c>true</c> [swap turn].</param>
-        /// <returns></returns>
+        /// <returns>true if the current turn was finished</returns>
         public bool MakeMoveOnBoard(CheckersMove moveToMake, bool swapTurn)
         {
             CheckersPoint moveSource = moveToMake.SourcePoint;
@@ -552,9 +557,13 @@ namespace CheckersMinimax
             };
         }
 
+        /// <summary>
+        /// Determines the whos first.
+        /// </summary>
+        /// <returns>PlayerColor enum of whos first</returns>
         private PlayerColor DetermineWhosFirst()
         {
-            if (settings.WhosFirst.Equals("black", StringComparison.CurrentCultureIgnoreCase))
+            if (Settings.WhosFirst.Equals("black", StringComparison.CurrentCultureIgnoreCase))
             {
                 return PlayerColor.Black;
             }

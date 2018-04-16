@@ -8,6 +8,12 @@ namespace CheckersMinimax.Pieces
 {
     public static class CheckerPieceFactory
     {
+        /// <summary>
+        /// Gets the checker piece.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>Checkerpiece from the factory</returns>
+        /// <exception cref="ArgumentException">Enum to Checker Piece not defined</exception>
         public static CheckerPiece GetCheckerPiece(CheckerPieceType type)
         {
             switch (type)

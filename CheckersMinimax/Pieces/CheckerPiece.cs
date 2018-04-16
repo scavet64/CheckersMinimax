@@ -11,28 +11,55 @@ namespace CheckersMinimax.Pieces
 {
     public abstract class CheckerPiece : IMinimaxClonable
     {
-        public static readonly int MoveLeft = -1;
-        public static readonly int MoveRight = 1;
-        public static readonly int MoveUp = -1;
-        public static readonly int MoveDown = 1;
-
         protected string imageSource;
 
+        private static readonly int MoveLeft = -1;
+        private static readonly int MoveRight = 1;
+        private static readonly int MoveUp = -1;
+        private static readonly int MoveDown = 1;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CheckerPiece"/> class.
+        /// </summary>
         protected CheckerPiece()
         {
         }
 
+        /// <summary>
+        /// Gets the possible moves.
+        /// </summary>
+        /// <param name="currentLocation">The current location.</param>
+        /// <param name="checkerBoard">The checker board.</param>
+        /// <returns>List of possible moves for this piece</returns>
         public abstract List<CheckersMove> GetPossibleMoves(CheckersPoint currentLocation, CheckerBoard checkerBoard);
 
+        /// <summary>
+        /// Gets the string rep.
+        /// </summary>
+        /// <returns>String representation used for debugging</returns>
         public abstract string GetStringRep();
 
+        /// <summary>
+        /// Gets the minimax clone.
+        /// </summary>
+        /// <returns>clone to be used for minimax</returns>
         public abstract object GetMinimaxClone();
 
+        /// <summary>
+        /// Builds the checker image source.
+        /// </summary>
+        /// <returns>Imagesource based on the imagepath</returns>
         public virtual ImageSource BuildCheckerImageSource()
         {
             return new BitmapImage(new Uri(imageSource, UriKind.Relative));
         }
 
+        /// <summary>
+        /// Processes up moves.
+        /// </summary>
+        /// <param name="currentLocation">The current location.</param>
+        /// <param name="checkerBoard">The checker board.</param>
+        /// <returns>list of up moves</returns>
         protected List<CheckersMove> ProcessUpMoves(CheckersPoint currentLocation, CheckerBoard checkerBoard)
         {
             List<CheckersMove> list = new List<CheckersMove>();
@@ -51,6 +78,12 @@ namespace CheckersMinimax.Pieces
             return ProcessJumpMoves(list);
         }
 
+        /// <summary>
+        /// Processes down moves.
+        /// </summary>
+        /// <param name="currentLocation">The current location.</param>
+        /// <param name="checkerBoard">The checker board.</param>
+        /// <returns>List of down moves</returns>
         protected List<CheckersMove> ProcessDownMoves(CheckersPoint currentLocation, CheckerBoard checkerBoard)
         {
             List<CheckersMove> list = new List<CheckersMove>();
@@ -68,6 +101,15 @@ namespace CheckersMinimax.Pieces
             return ProcessJumpMoves(list);
         }
 
+        /// <summary>
+        /// Get all of the horizontal moves. The vertical moves are dependant on the vertical modifier. The direction of the hotizontal move is dependant on the modifier
+        /// </summary>
+        /// <param name="currentLocation">The current location.</param>
+        /// <param name="checkerBoard">The checker board.</param>
+        /// <param name="oneAdjacentRow">The one adjacent row.</param>
+        /// <param name="verticalModifier">The vertical modifier.</param>
+        /// <param name="horizontalModifier">The horizontal modifier.</param>
+        /// <returns>List of moves</returns>
         private List<CheckersMove> ProcessBoardHorizontal(CheckersPoint currentLocation, CheckerBoard checkerBoard, int oneAdjacentRow, int verticalModifier, int horizontalModifier)
         {
             List<CheckersMove> list = new List<CheckersMove>();
@@ -85,7 +127,7 @@ namespace CheckersMinimax.Pieces
                 {
                     //can we jump this guy?
                     if ((possibleCheckerOnPossiblePoint is IRedPiece && this is IBlackPiece) ||
-                            possibleCheckerOnPossiblePoint is IBlackPiece && this is IRedPiece)
+                            (possibleCheckerOnPossiblePoint is IBlackPiece && this is IRedPiece))
                     {
                         //go another row up and another column to the right
                         int twoAdjacentRow = oneAdjacentRow + (1 * verticalModifier);
@@ -134,6 +176,11 @@ namespace CheckersMinimax.Pieces
             return list;
         }
 
+        /// <summary>
+        /// Return a list of just jump moves
+        /// </summary>
+        /// <param name="listToProcess">The list to process.</param>
+        /// <returns>List of jump moves from the original list</returns>
         private List<CheckersMove> GetJumpMoves(List<CheckersMove> listToProcess)
         {
             List<CheckersMove> processedList = new List<CheckersMove>();
@@ -149,6 +196,11 @@ namespace CheckersMinimax.Pieces
             return processedList;
         }
 
+        /// <summary>
+        /// Processes the jump moves. If there are any jump moves, then remove all non jump moves
+        /// </summary>
+        /// <param name="listToProcess">The list to process.</param>
+        /// <returns>List of processed moves.</returns>
         private List<CheckersMove> ProcessJumpMoves(List<CheckersMove> listToProcess)
         {
             List<CheckersMove> processedList = GetJumpMoves(listToProcess);

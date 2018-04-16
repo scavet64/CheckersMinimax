@@ -1,5 +1,6 @@
 ﻿using CheckersMinimax.Clone;
 using CheckersMinimax.Pieces;
+using CheckersMinimax.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,16 +25,29 @@ namespace CheckersMinimax
     /// </summary>
     public partial class CheckersSquareUserControl : UserControl, INotifyPropertyChanged, IMinimaxClonable
     {
+        private static readonly Settings Settings = Settings.Default;
+
+        /// <summary>
+        /// Gets or sets the checkers point.
+        /// </summary>
+        /// <value>
+        /// The checkers point.
+        /// </value>
         public CheckersPoint CheckersPoint { get; set; }
 
-        private Brush background;
-
+        /// <summary>
+        /// Gets or sets the color of the background.
+        /// </summary>
+        /// <value>
+        /// The color of the background.
+        /// </value>
         public Brush BackgroundColor
         {
             get
             {
                 return background;
             }
+
             set
             {
                 background = value;
@@ -41,10 +55,21 @@ namespace CheckersMinimax
             }
         }
 
+        private Brush background;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CheckersSquareUserControl"/> class.
+        /// </summary>
         public CheckersSquareUserControl()
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CheckersSquareUserControl"/> class.
+        /// </summary>
+        /// <param name="backgroundColor">Color of the background.</param>
+        /// <param name="checkersPoint">The checkers point.</param>
+        /// <param name="routedEventHandler">The routed event handler.</param>
         public CheckersSquareUserControl(Brush backgroundColor, CheckersPoint checkersPoint, RoutedEventHandler routedEventHandler)
         {
             InitializeComponent();
@@ -58,6 +83,9 @@ namespace CheckersMinimax
             button.Content = "row: " + checkersPoint.Row + " , col: " + checkersPoint.Column;
         }
 
+        /// <summary>
+        /// Updates the square.
+        /// </summary>
         public void UpdateSquare()
         {
             if (CheckersPoint != null && CheckersPoint.Checker != null)
@@ -84,11 +112,23 @@ namespace CheckersMinimax
             }
         }
 
+        /// <summary>
+        /// Determines whether this instance has checker.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if this instance has checker; otherwise, <c>false</c>.
+        /// </returns>
         public bool HasChecker()
         {
-            return (CheckersPoint.Checker != null && !(CheckersPoint.Checker is NullCheckerPiece));
+            return CheckersPoint.Checker != null && !(CheckersPoint.Checker is NullCheckerPiece);
         }
 
+        /// <summary>
+        /// Gets the minimax clone.
+        /// </summary>
+        /// <returns>
+        /// A clone to be used in the minimax algoritm
+        /// </returns>
         public object GetMinimaxClone()
         {
             CheckersSquareUserControl clone = new CheckersSquareUserControl();
@@ -97,9 +137,16 @@ namespace CheckersMinimax
             return clone;
         }
 
-        #region INotifiedProperty Block
+        #region INotifiedProperty Block        
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// Called when [property changed]. Used in data binding
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
@@ -111,6 +158,9 @@ namespace CheckersMinimax
         }
         #endregion
 
+        /// <summary>
+        /// Hides the checker.
+        /// </summary>
         private void HideChecker()
         {
             checkerImage.Visibility = Visibility.Collapsed;
