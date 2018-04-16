@@ -24,7 +24,7 @@ namespace CheckersMinimax
                 {
                     if (instance == null)
                     {
-                        instance = new SimpleLogger();
+                        instance = new SimpleLogger(true);
                     }
                 }
             }
@@ -166,20 +166,23 @@ namespace CheckersMinimax
         /// <exception cref="System.IO.IOException"></exception>
         private void WriteLine(string text, bool append = true)
         {
-            try
+            lock (Lock)
             {
-                using (StreamWriter Writer = new StreamWriter(Filename, append, Encoding.UTF8))
+                try
                 {
-                    if (text != "")
+                    using (StreamWriter Writer = new StreamWriter(Filename, append, Encoding.UTF8))
                     {
-                        Writer.WriteLine(text);
-                        Console.WriteLine(text);
+                        if (text != "")
+                        {
+                            Writer.WriteLine(text);
+                            Console.WriteLine(text);
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("There was an error saving the log file: " + ex.Message);
+                catch (Exception ex)
+                {
+                    MessageBox.Show("There was an error saving the log file: " + ex.Message);
+                }
             }
         }
         /// <summary>
