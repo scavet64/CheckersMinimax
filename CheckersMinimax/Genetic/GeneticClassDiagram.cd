@@ -1,2 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram /> 
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CheckersMinimax.Genetic.AbstractGenome">
+    <Position X="8" Y="3.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAEAAAAAAAAAAAAABAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Genetic\AbstractGenome.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CheckersMinimax.Genetic.GeneticProgress">
+    <Position X="12" Y="3.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAEAAAARAAAAEAIAAAAAAFAAEAAAAREAAAAAAA=</HashCode>
+      <FileName>Genetic\GeneticProgress.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CheckersMinimax.Genetic.RandomGenome">
+    <Position X="6.25" Y="5.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAUAAAAAEAAAAAIAAAAIAAAAABAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>Genetic\RandomGenome.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CheckersMinimax.Genetic.WinningGenome">
+    <Position X="9.25" Y="5.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAQAAAAAAAAAAAAABAAAAAgAAAAQAEAAA=</HashCode>
+      <FileName>Genetic\WinningGenome.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
