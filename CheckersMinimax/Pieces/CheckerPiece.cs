@@ -16,20 +16,9 @@ namespace CheckersMinimax.Pieces
         public static readonly int MoveUp = -1;
         public static readonly int MoveDown = 1;
 
-        //CheckersPoint Location { get; set; }
-
         protected string imageSource;
 
-        //public string ImageSource
-        //{
-        //    get { return imageSource; }
-        //    set { imageSource = value; }
-        //}
-
-        protected CheckerPiece()
-        {
-            //this.Location = location;
-        }
+        protected CheckerPiece() { }
 
         public abstract List<CheckersMove> GetPossibleMoves(CheckersPoint currentLocation, CheckerBoard checkerBoard);
 

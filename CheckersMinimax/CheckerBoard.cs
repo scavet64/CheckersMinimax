@@ -19,7 +19,14 @@ namespace CheckersMinimax
     public class CheckerBoard : IMinimaxClonable
     {
         private static readonly Settings settings = Settings.Default;
-        private List<List<CheckersSquareUserControl>> boardArray = new List<List<CheckersSquareUserControl>>();
+
+        /// <summary>
+        /// [Row][Column]
+        /// </summary>
+        /// <value>
+        /// The board array.
+        /// </value>
+        public List<List<CheckersSquareUserControl>> BoardArray { get; set; }
 
         public PlayerColor CurrentPlayerTurn { get; set; }
 
@@ -41,25 +48,12 @@ namespace CheckersMinimax
             }
         }
 
-        /// <summary>
-        /// [Row][Column]
-        /// </summary>
-        /// <value>
-        /// The board array.
-        /// </value>
-        public List<List<CheckersSquareUserControl>> BoardArray
-        {
-            get { return boardArray; }
-            set { boardArray = value; }
-        }
-
-
         public void MakeBoard(RoutedEventHandler routedEventHandler)
         {
             int count = 0;
             for (int Row = 0; Row < 8; Row++)
             {
-                boardArray.Add(new List<CheckersSquareUserControl>());
+                BoardArray.Add(new List<CheckersSquareUserControl>());
                 for (int Column = 0; Column < 8; Column++)
                 {
                     CheckersSquareUserControl checkerSquareUC;
@@ -126,7 +120,7 @@ namespace CheckersMinimax
 
                     }
                     count++;
-                    boardArray[Row].Add(checkerSquareUC);
+                    BoardArray[Row].Add(checkerSquareUC);
                 }
             }
         }
@@ -150,28 +144,6 @@ namespace CheckersMinimax
 
             return boardString.ToString();
         }
-
-        //public List<CheckersMove> getAvaliableMoves()
-        //{
-        //    foreach(List<CheckersSquareUserControl> rowsOfCheckerSquares in boardArray)
-        //    {
-        //        foreach(CheckersSquareUserControl checkerSquareUserControl in rowsOfCheckerSquares)
-        //        {
-        //            List<CheckersMove> list = new List<CheckersMove>();
-
-        //        }
-        //    }
-        //}
-
-        //public List<CheckersMove> GetAvailableMovesForSquare(CheckersPoint checkersPoint)
-        //{
-        //    if (checkersPoint.Checker == null)
-        //    {
-        //        return null;
-        //    }
-
-        //    return checkersPoint.GetPossibleMoves(this);
-        //}
 
         public object GetWinner()
         {
@@ -274,7 +246,7 @@ namespace CheckersMinimax
             return score;
         }
 
-        internal int ScoreB(PlayerColor rootPlayer)
+        public int ScoreB(PlayerColor rootPlayer)
         {
             int score = 0;
 
@@ -317,10 +289,9 @@ namespace CheckersMinimax
             }
 
             return score;
-            //return 0;
         }
 
-        internal int ScoreC(PlayerColor rootPlayer)
+        public int ScoreC(PlayerColor rootPlayer)
         {
             int score = 0;
 
@@ -346,23 +317,6 @@ namespace CheckersMinimax
                     moveToCheck = moveToCheck.NextMove;
                 } while (moveToCheck != null);
             }
-
-            ////invert score for root's opponent player
-            //if (rootPlayer == PlayerColor.Black)
-            //{
-            //    if (CurrentPlayerTurn == PlayerColor.Black)
-            //    {
-            //        score *= -1;
-            //    }
-            //}
-            //else
-            //{
-            //    if (CurrentPlayerTurn == PlayerColor.Red)
-            //    {
-            //        score *= -1;
-            //    }
-            //}
-
 
             return score;
         }
@@ -490,12 +444,12 @@ namespace CheckersMinimax
         {
             List<List<CheckersSquareUserControl>> rows = new List<List<CheckersSquareUserControl>>();
 
-            for (int row = 0; row < this.boardArray.Count; row++)
+            for (int row = 0; row < this.BoardArray.Count; row++)
             {
                 List<CheckersSquareUserControl> columns = new List<CheckersSquareUserControl>();
-                for (int col = 0; col < this.boardArray[row].Count; col++)
+                for (int col = 0; col < this.BoardArray[row].Count; col++)
                 {
-                    columns.Add((CheckersSquareUserControl)this.boardArray[row][col].GetMinimaxClone());
+                    columns.Add((CheckersSquareUserControl)this.BoardArray[row][col].GetMinimaxClone());
                 }
                 rows.Add(columns);
             }

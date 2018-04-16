@@ -25,13 +25,7 @@ namespace CheckersMinimax
     public partial class CheckersSquareUserControl : UserControl, INotifyPropertyChanged, IMinimaxClonable
     {
 
-        private CheckersPoint checkersPoint;
-
-        public CheckersPoint CheckersPoint
-        {
-            get { return checkersPoint; }
-            set { checkersPoint = value; }
-        }
+        public CheckersPoint CheckersPoint { get; set; }
 
         private Brush _background;
         public Brush BackgroundColor
@@ -52,9 +46,8 @@ namespace CheckersMinimax
         public CheckersSquareUserControl(Brush backgroundColor, CheckersPoint checkersPoint, RoutedEventHandler routedEventHandler)
         {
             InitializeComponent();
-            //BackgroundColor = backgroundColor;
             this.Background = backgroundColor;
-            this.checkersPoint = checkersPoint;
+            this.CheckersPoint = checkersPoint;
             this.button.Click += routedEventHandler;
 
             UpdateSquare();
@@ -65,20 +58,21 @@ namespace CheckersMinimax
 
         public void UpdateSquare()
         {
-            if(checkersPoint != null && checkersPoint.Checker != null)
+            if (CheckersPoint != null && CheckersPoint.Checker != null)
             {
                 try
                 {
-                    if(checkerImage != null)
+                    if (checkerImage != null)
                     {
                         Application.Current.Dispatcher.BeginInvoke(
                           DispatcherPriority.Background,
-                          new Action(() => checkerImage.Source = checkersPoint.Checker.BuildCheckerImageSource()));
+                          new Action(() => checkerImage.Source = CheckersPoint.Checker.BuildCheckerImageSource()));
                     }
                 }
                 catch (Exception ex)
                 {
                     //Show error message to user
+                    MessageBox.Show(string.Format("Error Updating Square Row: Message = {0}", ex.Message));
                 }
             }
             else
@@ -94,13 +88,13 @@ namespace CheckersMinimax
 
         public bool HasChecker()
         {
-            return (CheckersPoint.Checker != null && !(checkersPoint.Checker is NullCheckerPiece));
+            return (CheckersPoint.Checker != null && !(CheckersPoint.Checker is NullCheckerPiece));
         }
 
         public object GetMinimaxClone()
         {
             CheckersSquareUserControl clone = new CheckersSquareUserControl();
-            clone.CheckersPoint = (CheckersPoint) this.checkersPoint.GetMinimaxClone();
+            clone.CheckersPoint = (CheckersPoint)this.CheckersPoint.GetMinimaxClone();
 
             return clone;
         }

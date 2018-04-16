@@ -86,17 +86,6 @@ namespace CheckersMinimax
             }
         }
 
-        private void ClearBoard()
-        {
-            List<List<CheckersSquareUserControl>> boardArray = new List<List<CheckersSquareUserControl>>();
-            checkerBoard.MakeBoard(new RoutedEventHandler(Button_Click));
-
-            //todo try to use databinding here
-            lst.ItemsSource = checkerBoard.BoardArray;
-        }
-
-
-
         public void Button_Click(Object sender, RoutedEventArgs e)
         {
             Thread myNewThread = new Thread(() => ButtonClickWork(sender));

@@ -8,20 +8,7 @@ namespace CheckersMinimax
 {
     public class MakeMoveReturnModel
     {
-        private bool wasMoveMade;
-
-        public bool WasMoveMade
-        {
-            get { return wasMoveMade; }
-            set { wasMoveMade = value; }
-        }
-
-        private bool isTurnOver;
-
-        public bool IsTurnOver
-        {
-            get { return isTurnOver; }
-            set { isTurnOver = value; }
-        }
+        public bool WasMoveMade { get; set; }
+        public bool IsTurnOver { get; set; }
     }
 }
