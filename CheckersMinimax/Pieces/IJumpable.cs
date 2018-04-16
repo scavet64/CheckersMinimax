@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CheckersMinimax.Pieces
 {
-    interface IJumpable
+    public interface IJumpable
     {
     }
 }

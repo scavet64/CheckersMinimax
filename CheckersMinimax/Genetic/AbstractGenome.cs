@@ -13,10 +13,11 @@ namespace CheckersMinimax.Genetic
     public class AbstractGenome
     {
         public int KingWorthGene { get; set; }
-        public int PawnWorthGene { get; set; }
-        public int PawnDangerValueGene { get; set; }
-        public int KingDangerValueGene { get; set; }
 
-        
+        public int PawnWorthGene { get; set; }
+
+        public int PawnDangerValueGene { get; set; }
+
+        public int KingDangerValueGene { get; set; }
     }
 }

@@ -8,45 +8,49 @@ using System.Threading.Tasks;
 
 namespace CheckersMinimax
 {
-    public class CheckersMove: IMinimaxClonable
+    public class CheckersMove : IMinimaxClonable
     {
         public CheckersPoint SourcePoint { get; set; }
+
         public CheckersPoint DestinationPoint { get; set; }
+
         public CheckersPoint JumpedPoint { get; set; }
+
         public CheckersMove NextMove { get; set; }
-         
 
-        public CheckersMove() { }
-
-        public CheckersMove(CheckersPoint SourcePoint, CheckersPoint DestinationPoint)
+        public CheckersMove()
         {
-            this.SourcePoint = SourcePoint;
-            this.DestinationPoint = DestinationPoint;
-            this.JumpedPoint = null;
-            this.NextMove = null;
         }
 
-        public CheckersMove(CheckersPoint SourcePoint, CheckersPoint DestinationPoint, CheckersPoint JumpedPoint)
+        public CheckersMove(CheckersPoint sourcePoint, CheckersPoint destinationPoint)
         {
-            this.SourcePoint = SourcePoint;
-            this.DestinationPoint = DestinationPoint;
-            this.JumpedPoint = JumpedPoint;
-            this.NextMove = null;
+            SourcePoint = sourcePoint;
+            DestinationPoint = destinationPoint;
+            JumpedPoint = null;
+            NextMove = null;
         }
 
-        public CheckersMove(CheckersPoint SourcePoint, CheckersPoint DestinationPoint, CheckersPoint JumpedPoint, CheckersMove NextMove)
+        public CheckersMove(CheckersPoint sourcePoint, CheckersPoint destinationPoint, CheckersPoint jumpedPoint)
         {
-            this.SourcePoint = SourcePoint;
-            this.DestinationPoint = DestinationPoint;
-            this.JumpedPoint = JumpedPoint;
-            this.NextMove = NextMove;
+            SourcePoint = sourcePoint;
+            DestinationPoint = destinationPoint;
+            JumpedPoint = jumpedPoint;
+            NextMove = null;
+        }
+
+        public CheckersMove(CheckersPoint sourcePoint, CheckersPoint destinationPoint, CheckersPoint jumpedPoint, CheckersMove nextMove)
+        {
+            SourcePoint = sourcePoint;
+            DestinationPoint = destinationPoint;
+            JumpedPoint = jumpedPoint;
+            NextMove = nextMove;
         }
 
         public object GetMinimaxClone()
         {
             CheckersMove clone = new CheckersMove();
 
-            if(this.DestinationPoint != null)
+            if (this.DestinationPoint != null)
             {
                 clone.DestinationPoint = (CheckersPoint)this.DestinationPoint.GetMinimaxClone();
             }

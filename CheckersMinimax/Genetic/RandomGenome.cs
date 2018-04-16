@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 
 namespace CheckersMinimax.Genetic
 {
-    public class RandomGenome: AbstractGenome
+    public class RandomGenome : AbstractGenome
     {
-        private readonly object Lock = new object();
-        private RandomGenome instance;
-        private static string filename = "RandomGenome.xml";
+        private static readonly string Filename = "RandomGenome.xml";
+        private static readonly object Lock = new object();
+        private static RandomGenome instance;
+        
         private readonly Random rng = new Random();
 
         public RandomGenome()
@@ -20,13 +21,13 @@ namespace CheckersMinimax.Genetic
             //Base Random Genome off of the winning Genome with slight random modifications
             WinningGenome winningGenome = WinningGenome.GetWinningGenomeInstance();
 
-            this.KingDangerValueGene = winningGenome.KingDangerValueGene * rng.Next(-3,3);
+            this.KingDangerValueGene = winningGenome.KingDangerValueGene * rng.Next(-3, 3);
             this.KingWorthGene = winningGenome.KingWorthGene * rng.Next(-3, 3);
             this.PawnDangerValueGene = winningGenome.PawnDangerValueGene * rng.Next(-3, 3);
             this.PawnWorthGene = winningGenome.PawnWorthGene * rng.Next(-3, 3);
         }
 
-        public RandomGenome GetRandomGenomeInstance()
+        public static RandomGenome GetRandomGenomeInstance()
         {
             if (instance == null)
             {
@@ -34,9 +35,9 @@ namespace CheckersMinimax.Genetic
                 {
                     if (instance == null)
                     {
-                        if (File.Exists(filename))
+                        if (File.Exists(Filename))
                         {
-                            instance = XmlSerializationHelper.Deserialize<RandomGenome>(filename);
+                            instance = XmlSerializationHelper.Deserialize<RandomGenome>(Filename);
                         }
                         else
                         {
@@ -50,7 +51,5 @@ namespace CheckersMinimax.Genetic
 
             return instance;
         }
-
-
     }
 }

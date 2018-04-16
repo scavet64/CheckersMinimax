@@ -25,20 +25,27 @@ namespace CheckersMinimax
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static readonly Settings settings = Settings.Default;
-        private static readonly SimpleLogger logger = SimpleLogger.GetSimpleLogger();
+        private static readonly Settings Settings = Settings.Default;
+        private static readonly SimpleLogger Logger = SimpleLogger.GetSimpleLogger();
 
         private CheckersMove currentMove;
         private CheckerBoard checkerBoard;
 
         private Thread aiThread;
 
-        private List<CheckersMove> CurrentAvailableMoves;
+        private List<CheckersMove> currentAvailableMoves;
 
         public MainWindow()
         {
             InitializeComponent();
             InitializeCheckers();
+        }
+
+        public void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Thread myNewThread = new Thread(() => ButtonClickWork(sender));
+            myNewThread.SetApartmentState(ApartmentState.STA);
+            myNewThread.Start();
         }
 
         private void InitializeCheckers()
@@ -55,7 +62,7 @@ namespace CheckersMinimax
             DisableAllButtons();
             EnableButtonsWithMove();
 
-            if (settings.IsAIDuel)
+            if (Settings.IsAIDuel)
             {
                 aiThread = new Thread(new ThreadStart(RunAIGame));
                 aiThread.SetApartmentState(ApartmentState.STA);
@@ -75,7 +82,7 @@ namespace CheckersMinimax
                     {
                         MakeMove(aiMove);
                         aiMove = aiMove.NextMove;
-                        Thread.Sleep(settings.TimeToSleeepBetweenMoves);
+                        Thread.Sleep(Settings.TimeToSleeepBetweenMoves);
                     }
                 }
                 else
@@ -86,37 +93,31 @@ namespace CheckersMinimax
             }
         }
 
-        public void Button_Click(Object sender, RoutedEventArgs e)
-        {
-            Thread myNewThread = new Thread(() => ButtonClickWork(sender));
-            myNewThread.SetApartmentState(ApartmentState.STA);
-            myNewThread.Start();
-        }
-
-        private void ButtonClickWork(Object sender)
+        private void ButtonClickWork(object sender)
         {
             Button button = (Button)sender;
             CheckersSquareUserControl checkerSquareUC = (CheckersSquareUserControl)((Grid)button.Parent).Parent;
-            logger.Info("Row: " + checkerSquareUC.CheckersPoint.Row + " Column: " + checkerSquareUC.CheckersPoint.Column);
+            Logger.Info("Row: " + checkerSquareUC.CheckersPoint.Row + " Column: " + checkerSquareUC.CheckersPoint.Column);
             DisableAllButtons();
             if (currentMove == null)
             {
                 currentMove = new CheckersMove();
             }
+
             if (currentMove.SourcePoint == null)
             {
                 currentMove.SourcePoint = checkerSquareUC.CheckersPoint;
                 SetBackgroundColor(checkerSquareUC, Brushes.Green);
 
                 //starting a move, enable spaces where a valid move is present
-                CurrentAvailableMoves = checkerSquareUC.CheckersPoint.GetPossibleMoves(checkerBoard);
+                currentAvailableMoves = checkerSquareUC.CheckersPoint.GetPossibleMoves(checkerBoard);
 
                 //Add self move to act as cancel
-                CurrentAvailableMoves.Add(new CheckersMove(checkerSquareUC.CheckersPoint, checkerSquareUC.CheckersPoint));
+                currentAvailableMoves.Add(new CheckersMove(checkerSquareUC.CheckersPoint, checkerSquareUC.CheckersPoint));
 
-                ColorBackgroundOfPoints(CurrentAvailableMoves, Brushes.Aqua);
+                ColorBackgroundOfPoints(currentAvailableMoves, Brushes.Aqua);
 
-                EnableButtonsWithPossibleMove(CurrentAvailableMoves);
+                EnableButtonsWithPossibleMove(currentAvailableMoves);
             }
             else
             {
@@ -125,7 +126,7 @@ namespace CheckersMinimax
 
                 //get move from the list that has this point as its destination
                 MakeMoveReturnModel returnModel = MakeMove(GetMoveFromList(checkerSquareUC.CheckersPoint));
-                if (returnModel.WasMoveMade && returnModel.IsTurnOver && settings.IsAIGame)
+                if (returnModel.WasMoveMade && returnModel.IsTurnOver && Settings.IsAIGame)
                 {
                     //Disable buttons so the user cant click anything while the AI is thinking
                     DisableAllButtons();
@@ -138,7 +139,7 @@ namespace CheckersMinimax
                         {
                             MakeMove(aiMove);
                             aiMove = aiMove.NextMove;
-                            Thread.Sleep(settings.TimeToSleeepBetweenMoves);
+                            Thread.Sleep(Settings.TimeToSleeepBetweenMoves);
                         }
                     }
                     else
@@ -152,13 +153,14 @@ namespace CheckersMinimax
 
         private CheckersMove GetMoveFromList(CheckersPoint checkersPoint)
         {
-            foreach (CheckersMove move in CurrentAvailableMoves)
+            foreach (CheckersMove move in currentAvailableMoves)
             {
                 if (move.DestinationPoint.Equals(checkersPoint))
                 {
                     return move;
                 }
             }
+
             return null;
         }
 
@@ -169,8 +171,8 @@ namespace CheckersMinimax
             CheckersPoint source = moveToMake.SourcePoint;
             CheckersPoint destination = moveToMake.DestinationPoint;
 
-            logger.Info("Piece1 " + source.Row + ", " + source.Column);
-            logger.Info("Piece2 " + destination.Row + ", " + destination.Column);
+            Logger.Info("Piece1 " + source.Row + ", " + source.Column);
+            Logger.Info("Piece2 " + destination.Row + ", " + destination.Column);
 
             //was this a cancel?
             if (source != destination)
@@ -184,7 +186,6 @@ namespace CheckersMinimax
                 sourceUC.UpdateSquare();
                 destUC.UpdateSquare();
 
-
                 moveWasMade = true;
 
                 //check for a winner
@@ -195,7 +196,7 @@ namespace CheckersMinimax
                 }
             }
 
-            ColorBackgroundOfPoints(CurrentAvailableMoves, Brushes.Black);
+            ColorBackgroundOfPoints(currentAvailableMoves, Brushes.Black);
             SetTitle(string.Format("Checkers! {0}'s turn!", checkerBoard.CurrentPlayerTurn));
             EnableButtonsWithMove();
             currentMove = null;
@@ -212,7 +213,6 @@ namespace CheckersMinimax
             Application.Current.Dispatcher.BeginInvoke(
                       DispatcherPriority.Background,
                       new Action(() => control.Background = colorToSet));
-            
         }
 
         private void SetTitle(string titleToSet)
@@ -224,7 +224,7 @@ namespace CheckersMinimax
 
         private void EnableButtonsWithMove()
         {
-            List<CheckersMove> totalPossibleMoves = checkerBoard.GetMovesForPlayer(checkerBoard.CurrentPlayerTurn);
+            List<CheckersMove> totalPossibleMoves = checkerBoard.GetMovesForPlayer();
 
             foreach (CheckersMove move in totalPossibleMoves)
             {
@@ -256,7 +256,6 @@ namespace CheckersMinimax
 
         private void DisableAllButtons()
         {
-
             foreach (List<CheckersSquareUserControl> list in checkerBoard.BoardArray)
             {
                 foreach (CheckersSquareUserControl squareUC in list)
@@ -319,6 +318,7 @@ namespace CheckersMinimax
             {
                 aiThread.Abort();
             }
+
             InitializeCheckers();
         }
 

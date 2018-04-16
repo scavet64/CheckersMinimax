@@ -24,24 +24,26 @@ namespace CheckersMinimax
     /// </summary>
     public partial class CheckersSquareUserControl : UserControl, INotifyPropertyChanged, IMinimaxClonable
     {
-
         public CheckersPoint CheckersPoint { get; set; }
 
-        private Brush _background;
+        private Brush background;
+
         public Brush BackgroundColor
         {
             get
             {
-                return _background;
+                return background;
             }
             set
             {
-                _background = value;
+                background = value;
                 OnPropertyChanged("BackgroundColor");
             }
         }
 
-        public CheckersSquareUserControl() { }
+        public CheckersSquareUserControl()
+        {
+        }
 
         public CheckersSquareUserControl(Brush backgroundColor, CheckersPoint checkersPoint, RoutedEventHandler routedEventHandler)
         {
@@ -81,11 +83,6 @@ namespace CheckersMinimax
             }
         }
 
-        private void HideChecker()
-        {
-            checkerImage.Visibility = Visibility.Collapsed;
-        }
-
         public bool HasChecker()
         {
             return (CheckersPoint.Checker != null && !(CheckersPoint.Checker is NullCheckerPiece));
@@ -102,7 +99,7 @@ namespace CheckersMinimax
         #region INotifiedProperty Block
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string propertyName)
+        private void OnPropertyChanged(string propertyName)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
 
@@ -112,5 +109,10 @@ namespace CheckersMinimax
             }
         }
         #endregion
+
+        private void HideChecker()
+        {
+            checkerImage.Visibility = Visibility.Collapsed;
+        }
     }
 }

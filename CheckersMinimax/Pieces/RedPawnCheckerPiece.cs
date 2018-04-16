@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CheckersMinimax.Pieces
 {
-    class RedPawnCheckerPiece: CheckerPiece, IRedPiece, IJumpable
+    public class RedPawnCheckerPiece : CheckerPiece, IRedPiece, IJumpable
     {
         public RedPawnCheckerPiece()
         {
@@ -28,7 +28,7 @@ namespace CheckersMinimax.Pieces
         /// <returns></returns>
         public override List<CheckersMove> GetPossibleMoves(CheckersPoint currentLocation, CheckerBoard checkerBoard)
         {
-            return base.ProcessUpMoves(currentLocation, checkerBoard);
+            return ProcessUpMoves(currentLocation, checkerBoard);
         }
 
         public override string GetStringRep()

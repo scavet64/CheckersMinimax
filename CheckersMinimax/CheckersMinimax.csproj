@@ -100,10 +100,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Pieces\IRedPiece.cs" />
-    <Compile Include="Player.cs" />
     <Compile Include="PlayerColor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

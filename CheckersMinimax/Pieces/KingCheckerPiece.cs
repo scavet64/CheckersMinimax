@@ -13,10 +13,10 @@ namespace CheckersMinimax.Pieces
             List<CheckersMove> list = new List<CheckersMove>();
 
             //Can we go down the board?
-            list.AddRange(base.ProcessDownMoves(currentLocation, checkerBoard));
+            list.AddRange(ProcessDownMoves(currentLocation, checkerBoard));
 
             //Can we go up the board?
-            list.AddRange(base.ProcessUpMoves(currentLocation, checkerBoard));
+            list.AddRange(ProcessUpMoves(currentLocation, checkerBoard));
 
             return list;
         }

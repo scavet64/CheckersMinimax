@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 
 namespace CheckersMinimax.Pieces
 {
-    public abstract class CheckerPiece: IMinimaxClonable
+    public abstract class CheckerPiece : IMinimaxClonable
     {
         public static readonly int MoveLeft = -1;
         public static readonly int MoveRight = 1;
@@ -18,11 +18,15 @@ namespace CheckersMinimax.Pieces
 
         protected string imageSource;
 
-        protected CheckerPiece() { }
+        protected CheckerPiece()
+        {
+        }
 
         public abstract List<CheckersMove> GetPossibleMoves(CheckersPoint currentLocation, CheckerBoard checkerBoard);
 
         public abstract string GetStringRep();
+
+        public abstract object GetMinimaxClone();
 
         public virtual ImageSource BuildCheckerImageSource()
         {
@@ -31,8 +35,8 @@ namespace CheckersMinimax.Pieces
 
         protected List<CheckersMove> ProcessUpMoves(CheckersPoint currentLocation, CheckerBoard checkerBoard)
         {
-
             List<CheckersMove> list = new List<CheckersMove>();
+
             //Can we go up the board?
             int rowAbove = currentLocation.Row - 1;
             if (rowAbove >= 0)
@@ -49,7 +53,6 @@ namespace CheckersMinimax.Pieces
 
         protected List<CheckersMove> ProcessDownMoves(CheckersPoint currentLocation, CheckerBoard checkerBoard)
         {
-
             List<CheckersMove> list = new List<CheckersMove>();
             //Can we go up the board?
             int rowBelow = currentLocation.Row + 1;
@@ -97,13 +100,11 @@ namespace CheckersMinimax.Pieces
                                 //we can go here
                                 CheckersMove jumpMove = new CheckersMove(currentLocation, new CheckersPoint(twoAdjacentRow, twoColAdjacent), new CheckersPoint(oneAdjacentRow, adjacentCol));
 
-
                                 //This is a jump move
                                 //Get all possible moves for destination point
                                 //For each possible move that is a jump move, make a new move and link it
 
                                 //make the move on a temp clone of the board and pass that to find any more multimoves
-
                                 CheckerBoard clonedBoard = (CheckerBoard)checkerBoard.GetMinimaxClone();
                                 clonedBoard.MakeMoveOnBoard((CheckersMove)jumpMove.GetMinimaxClone(), false);
 
@@ -113,7 +114,7 @@ namespace CheckersMinimax.Pieces
 
                                 if (processedList.Count > 0)
                                 {
-                                    foreach(CheckersMove move in processedList)
+                                    foreach (CheckersMove move in processedList)
                                     {
                                         CheckersMove clonedMove = (CheckersMove)jumpMove.GetMinimaxClone();
                                         clonedMove.NextMove = move;
@@ -162,7 +163,5 @@ namespace CheckersMinimax.Pieces
                 return processedList;
             }
         }
-
-        public abstract object GetMinimaxClone();
     }
 }

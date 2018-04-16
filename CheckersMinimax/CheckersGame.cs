@@ -9,6 +9,7 @@ namespace CheckersMinimax
     public class CheckersGame
     {
         public CheckerBoard Board { get; set; }
+
         public PlayerColor CurrentPlayerTurn { get; set; }
     }
 }

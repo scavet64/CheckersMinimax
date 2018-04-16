@@ -10,9 +10,9 @@ using System.Xml.Serialization;
 
 namespace CheckersMinimax.Genetic
 {
-    public class WinningGenome: AbstractGenome
+    public class WinningGenome : AbstractGenome
     {
-        private static readonly Settings settings = Settings.Default;
+        private static readonly Settings Settings = Settings.Default;
         private static readonly object Lock = new object();
         private static WinningGenome instance;
         private static string filename = "WinningGenome.XML";
@@ -20,12 +20,11 @@ namespace CheckersMinimax.Genetic
         public WinningGenome()
         {
             //By default, winning genome is based on settings file
-            this.KingWorthGene = settings.KingWorth;
-            this.KingDangerValueGene = settings.KingDangerValue;
-            this.PawnDangerValueGene = settings.PawnDangerValue;
-            this.PawnWorthGene = settings.PawnWorth;
+            this.KingWorthGene = Settings.KingWorth;
+            this.KingDangerValueGene = Settings.KingDangerValue;
+            this.PawnDangerValueGene = Settings.PawnDangerValue;
+            this.PawnWorthGene = Settings.PawnWorth;
         }
-
 
         public static WinningGenome GetWinningGenomeInstance()
         {
