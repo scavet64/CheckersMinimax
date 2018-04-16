@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CheckersMinimax"
         mc:Ignorable="d"
-        Title="MainWindow" Height="640" Width="620" ResizeMode="CanMinimize">
+        Title="MainWindow" Height="660" Width="620" ResizeMode="CanMinimize">
     <Window.Resources>
         <!--<DataTemplate x:Key="DataTemplate_Level2">
             <Button Content="{Binding}" Height="40" Width="50" />
@@ -52,6 +52,12 @@
 
     </Window.Resources>
     <Grid>
-        <ItemsControl x:Name="lst" ItemTemplate="{DynamicResource DataTemplate_Level1}"/>
+        <Menu IsMainMenu="True" Height="20" VerticalAlignment="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New Game" Click="RestartGame" />
+                <MenuItem Header="_Exit" Click="ExitGame"/>
+            </MenuItem>
+        </Menu>
+        <ItemsControl x:Name="lst" ItemTemplate="{DynamicResource DataTemplate_Level1}" Margin="0,20,0,0"/>
     </Grid>
 </Window>

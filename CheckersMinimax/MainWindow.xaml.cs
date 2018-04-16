@@ -323,5 +323,19 @@ namespace CheckersMinimax
                 }
             }
         }
+
+        private void RestartGame(object sender, RoutedEventArgs e)
+        {
+            if (aiThread != null)
+            {
+                aiThread.Abort();
+            }
+            InitializeCheckers();
+        }
+
+        private void ExitGame(object sender, RoutedEventArgs e)
+        {
+            Environment.Exit(0);
+        }
     }
 }
