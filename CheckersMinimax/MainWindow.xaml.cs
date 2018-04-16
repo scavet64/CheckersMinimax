@@ -103,6 +103,9 @@ namespace CheckersMinimax
                 DoGeneticAlgo();
                 Logger.Info("Finished Round Number: " + roundNumber++);
             }
+
+            //finish up and delete temp file
+            GeneticProgress.GetGeneticProgressInstance().Delete();
         }
 
         /// <summary>
@@ -161,8 +164,9 @@ namespace CheckersMinimax
                 randomGenome.MutateGenomeAndSave();
             }
 
-            //reset progress and game
+            //reset progress
             currentProgress.ResetValues();
+            currentProgress.NumberOfRounds++;
         }
 
         /// <summary>

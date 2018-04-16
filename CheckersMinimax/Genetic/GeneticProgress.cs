@@ -22,6 +22,7 @@ namespace CheckersMinimax.Genetic
         /// <value>
         /// The number of random genome wins.
         /// </value>
+        [XmlElement]
         public int NumberOfRandomGenomeWins
         {
             get
@@ -42,6 +43,7 @@ namespace CheckersMinimax.Genetic
         /// <value>
         /// The number of games.
         /// </value>
+        [XmlElement]
         public int NumberOfGames
         {
             get
@@ -56,8 +58,30 @@ namespace CheckersMinimax.Genetic
             }
         }
 
+        /// <summary>
+        /// Gets or sets the number of rounds.
+        /// </summary>
+        /// <value>
+        /// The number of rounds.
+        /// </value>
+        public int NumberOfRounds
+        {
+            get
+            {
+                return numberOfRounds;
+            }
+
+            set
+            {
+                numberOfRounds = value;
+                this.Serialize(Filepath);
+            }
+        }
+
+
         private int numberOfGames;
         private int numberOfRandomGenomeWins;
+        private int numberOfRounds;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeneticProgress"/> class.
@@ -103,6 +127,17 @@ namespace CheckersMinimax.Genetic
             numberOfGames = 0;
             numberOfRandomGenomeWins = 0;
             this.Serialize(Filepath);
+        }
+
+        /// <summary>
+        /// Deletes the file from the disk
+        /// </summary>
+        public void Delete()
+        {
+            if (File.Exists(Filepath))
+            {
+                File.Delete(Filepath);
+            }
         }
     }
 }

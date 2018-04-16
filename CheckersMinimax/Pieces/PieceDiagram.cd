@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CheckersMinimax.Pieces.RedPawnCheckerPiece">
+    <Position X="1.5" Y="6" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAEAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Pieces\RedPawnCheckerPiece.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CheckersMinimax.Pieces.BlackKingCheckerPiece">
+    <Position X="3.75" Y="8" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Pieces\BlackKingCheckerPiece.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CheckersMinimax.Pieces.BlackPawnCheckerPiece">
+    <Position X="11" Y="6" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAEAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Pieces\BlackPawnCheckerPiece.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CheckersMinimax.Pieces.CheckerPiece">
+    <Position X="6.25" Y="1.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAgBUAAAAAAAEAAEAAEAACIQBAAAAAAAAA=</HashCode>
+      <FileName>Pieces\CheckerPiece.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CheckersMinimax.Pieces.CheckerPieceFactory">
+    <Position X="9.25" Y="1.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Pieces\CheckerPieceFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CheckersMinimax.Pieces.KingCheckerPiece">
+    <Position X="5" Y="6" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Pieces\KingCheckerPiece.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CheckersMinimax.Pieces.NullCheckerPiece">
+    <Position X="8.5" Y="6" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAEAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Pieces\NullCheckerPiece.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CheckersMinimax.Pieces.RedKingCheckerPiece">
+    <Position X="6.5" Y="8" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Pieces\RedKingCheckerPiece.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="CheckersMinimax.Pieces.IBlackPiece" Collapsed="true">
+    <Position X="9.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Pieces\IBlackPiece.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="CheckersMinimax.Pieces.IRedPiece" Collapsed="true">
+    <Position X="11" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Pieces\IRedPiece.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="CheckersMinimax.Pieces.CheckerPieceType">
+    <Position X="9.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACCAAAAAAAAAAAEAAAAAAAAQAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Pieces\CheckerPieceType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
