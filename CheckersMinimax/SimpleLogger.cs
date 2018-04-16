@@ -10,6 +10,7 @@ namespace CheckersMinimax
     public class SimpleLogger
     {
         private static readonly Settings Settings = Settings.Default;
+        private static readonly LogViewerUserControl logViewer = LogViewerUserControl.GetInstance();
         private static readonly object Lock = new object();
         private static SimpleLogger instance;
 
@@ -177,6 +178,7 @@ namespace CheckersMinimax
                         {
                             writer.WriteLine(text);
                             Console.WriteLine(text);
+                            logViewer.AddToList(text);
                         }
                     }
                 }

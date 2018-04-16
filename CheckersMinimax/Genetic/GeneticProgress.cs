@@ -53,16 +53,18 @@ namespace CheckersMinimax.Genetic
                 {
                     if (instance == null)
                     {
-                        if (File.Exists(filepath))
-                        {
-                            instance = XmlSerializationHelper.Deserialize<GeneticProgress>(filepath);
-                        }
-                        else
-                        {
-                            //create new file and save it
-                            instance = new GeneticProgress();
-                            instance.Serialize(filepath);
-                        }
+                        //if (File.Exists(filepath))
+                        //{
+                        //    instance = XmlSerializationHelper.Deserialize<GeneticProgress>(filepath);
+                        //}
+                        //else
+                        //{
+                        //    //create new file and save it
+                        //    instance = new GeneticProgress();
+                        //    instance.Serialize(filepath);
+                        //}
+                        instance = new GeneticProgress();
+                        instance.Serialize(filepath);
                     }
                 }
             }

@@ -63,6 +63,9 @@
     <Compile Include="Genetic\GeneticProgress.cs" />
     <Compile Include="Genetic\WinningGenome.cs" />
     <Compile Include="Genetic\RandomGenome.cs" />
+    <Compile Include="LogViewerUserControl.xaml.cs">
+      <DependentUpon>LogViewerUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MakeMoveReturnModel.cs" />
     <Compile Include="ListExtension.cs" />
     <Compile Include="Pieces\BlackKingCheckerPiece.cs" />
@@ -78,6 +81,10 @@
     <Compile Include="SimpleLogger.cs" />
     <Compile Include="XmlSerializationHelper.cs" />
     <Page Include="CheckersSquareUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LogViewerUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
