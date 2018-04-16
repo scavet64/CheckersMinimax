@@ -29,17 +29,24 @@ namespace CheckersMinimax
         private static readonly SimpleLogger logger = SimpleLogger.GetSimpleLogger();
 
         private CheckersMove currentMove;
-        private CheckerBoard checkerBoard = new CheckerBoard();
+        private CheckerBoard checkerBoard;
+
+        private Thread aiThread;
 
         private List<CheckersMove> CurrentAvailableMoves;
 
         public MainWindow()
         {
             InitializeComponent();
+            InitializeCheckers();
+        }
+
+        private void InitializeCheckers()
+        {
             this.Title = "Checkers! Blacks turn!";
             currentMove = null;
-            //winner = null;
-            //turn = "Black";
+            checkerBoard = new CheckerBoard();
+
             checkerBoard.MakeBoard(new RoutedEventHandler(Button_Click));
 
             //todo try to use databinding here
@@ -50,7 +57,7 @@ namespace CheckersMinimax
 
             if (settings.IsAIDuel)
             {
-                Thread aiThread = new Thread(new ThreadStart(RunAIGame));
+                aiThread = new Thread(new ThreadStart(RunAIGame));
                 aiThread.SetApartmentState(ApartmentState.STA);
                 aiThread.Start();
             }
@@ -68,7 +75,7 @@ namespace CheckersMinimax
                     {
                         MakeMove(aiMove);
                         aiMove = aiMove.NextMove;
-                        Thread.Sleep(TimeSpan.FromSeconds(1));
+                        Thread.Sleep(settings.TimeToSleeepBetweenMoves);
                     }
                 }
                 else
@@ -76,7 +83,6 @@ namespace CheckersMinimax
                     //AI could not find a valid move. Is the game over? are we in a dead lock?
                     //Show error to user
                 }
-                Thread.Sleep(500);
             }
         }
 
@@ -143,7 +149,7 @@ namespace CheckersMinimax
                         {
                             MakeMove(aiMove);
                             aiMove = aiMove.NextMove;
-                            Thread.Sleep(TimeSpan.FromSeconds(1));
+                            Thread.Sleep(settings.TimeToSleeepBetweenMoves);
                         }
                     }
                     else

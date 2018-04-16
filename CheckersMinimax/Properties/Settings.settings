@@ -32,5 +32,8 @@
     <Setting Name="WhosFirst" Type="System.String" Scope="User">
       <Value Profile="(Default)">black</Value>
     </Setting>
+    <Setting Name="TimeToSleeepBetweenMoves" Type="System.TimeSpan" Scope="User">
+      <Value Profile="(Default)">00:00:00</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
