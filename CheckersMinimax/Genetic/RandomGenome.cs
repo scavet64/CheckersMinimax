@@ -5,12 +5,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace CheckersMinimax.Genetic
 {
+    [XmlRoot]
     public class RandomGenome : AbstractGenome
     {
-        private static readonly string Filename = "RandomGenome.xml";
+        private static readonly string filepath = FileNameHelper.GetExecutingDirectory() + "RandomGenome.xml";
         private static readonly object Lock = new object();
         private static RandomGenome instance;
         
@@ -18,13 +20,7 @@ namespace CheckersMinimax.Genetic
 
         public RandomGenome()
         {
-            //Base Random Genome off of the winning Genome with slight random modifications
-            WinningGenome winningGenome = WinningGenome.GetWinningGenomeInstance();
-
-            this.KingDangerValueGene = winningGenome.KingDangerValueGene * rng.Next(-3, 3);
-            this.KingWorthGene = winningGenome.KingWorthGene * rng.Next(-3, 3);
-            this.PawnDangerValueGene = winningGenome.PawnDangerValueGene * rng.Next(-3, 3);
-            this.PawnWorthGene = winningGenome.PawnWorthGene * rng.Next(-3, 3);
+            MutateGenome();
         }
 
         public static RandomGenome GetRandomGenomeInstance()
@@ -35,21 +31,38 @@ namespace CheckersMinimax.Genetic
                 {
                     if (instance == null)
                     {
-                        if (File.Exists(Filename))
+                        if (File.Exists(filepath))
                         {
-                            instance = XmlSerializationHelper.Deserialize<RandomGenome>(Filename);
+                            instance = XmlSerializationHelper.Deserialize<RandomGenome>(filepath);
                         }
                         else
                         {
                             //create new file and save it
                             instance = new RandomGenome();
-                            instance.Serialize();
+                            instance.Serialize(filepath);
                         }
                     }
                 }
             }
 
             return instance;
+        }
+
+        public void MutateGenome()
+        {
+            //Base Random Genome off of the winning Genome with slight random modifications
+            WinningGenome winningGenome = WinningGenome.GetWinningGenomeInstance();
+
+            this.KingDangerValueGene = winningGenome.KingDangerValueGene + rng.Next(-3, 3);
+            this.KingWorthGene = winningGenome.KingWorthGene + rng.Next(-3, 3);
+            this.PawnDangerValueGene = winningGenome.PawnDangerValueGene + rng.Next(-3, 3);
+            this.PawnWorthGene = winningGenome.PawnWorthGene + rng.Next(-3, 3);
+        }
+        
+        public void MutateGenomeAndSave()
+        {
+            MutateGenome();
+            this.Serialize(filepath);
         }
     }
 }

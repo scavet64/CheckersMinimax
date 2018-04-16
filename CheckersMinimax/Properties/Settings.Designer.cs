@@ -49,7 +49,7 @@ namespace CheckersMinimax.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        [global::System.Configuration.DefaultSettingValueAttribute("8")]
         public int AIDepth {
             get {
                 return ((int)(this["AIDepth"]));
@@ -152,6 +152,42 @@ namespace CheckersMinimax.Properties {
             }
             set {
                 this["TimeToSleeepBetweenMoves"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool RunningGeneticAlgo {
+            get {
+                return ((bool)(this["RunningGeneticAlgo"]));
+            }
+            set {
+                this["RunningGeneticAlgo"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
+        public int NumberOfSimulations {
+            get {
+                return ((int)(this["NumberOfSimulations"]));
+            }
+            set {
+                this["NumberOfSimulations"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int NumberOfRounds {
+            get {
+                return ((int)(this["NumberOfRounds"]));
+            }
+            set {
+                this["NumberOfRounds"] = value;
             }
         }
     }

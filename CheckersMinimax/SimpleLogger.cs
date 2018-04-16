@@ -96,7 +96,7 @@ namespace CheckersMinimax
         private SimpleLogger(bool append = false)
         {
             datetimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
-            Filename = Assembly.GetExecutingAssembly().GetName().Name + "_" + GetCurrentDateString() + ".log";
+            Filename = FileNameHelper.GetExecutingDirectory() + Assembly.GetExecutingAssembly().GetName().Name + "_" + GetCurrentDateString() + ".log";
 
             // Log file header line
             string logHeader = Filename + " is created.";

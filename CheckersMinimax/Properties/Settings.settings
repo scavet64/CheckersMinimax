@@ -9,7 +9,7 @@
       <Value Profile="(Default)">15</Value>
     </Setting>
     <Setting Name="AIDepth" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">10</Value>
+      <Value Profile="(Default)">8</Value>
     </Setting>
     <Setting Name="PawnDangerValue" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>
@@ -34,6 +34,15 @@
     </Setting>
     <Setting Name="TimeToSleeepBetweenMoves" Type="System.TimeSpan" Scope="User">
       <Value Profile="(Default)">00:00:00</Value>
+    </Setting>
+    <Setting Name="RunningGeneticAlgo" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="NumberOfSimulations" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">25</Value>
+    </Setting>
+    <Setting Name="NumberOfRounds" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
     </Setting>
   </Settings>
 </SettingsFile>

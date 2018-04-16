@@ -11,26 +11,31 @@ namespace CheckersMinimax
 {
     public static class XmlSerializationHelper
     {
-        public static void Serialize<T>(this T value)
+        private static object Lock = new object();
+
+        public static void Serialize<T>(this T value, string filepath)
         {
-            XmlSerializer xmlserializer = new XmlSerializer(typeof(T));
-            using (StringWriter stringWriter = new StringWriter())
+            lock (Lock)
             {
-                using (XmlWriter writer = XmlWriter.Create(stringWriter))
+                XmlSerializer xmlserializer = new XmlSerializer(typeof(T));
+                using (StreamWriter stringWriter = new StreamWriter(filepath))
                 {
-                    xmlserializer.Serialize(writer, value);
+                    using (XmlWriter writer = XmlWriter.Create(stringWriter))
+                    {
+                        xmlserializer.Serialize(writer, value);
+                    }
                 }
             }
         }
 
         public static T Deserialize<T>(string filepath)
         {
-            XmlSerializer xmlserializer = new XmlSerializer(typeof(T));
-            using (StreamReader streamReader = new StreamReader(filepath))
+            lock (Lock)
             {
-                using (XmlReader xmlWriter = XmlReader.Create(streamReader))
+                XmlSerializer xmlserializer = new XmlSerializer(typeof(T));
+                using (StreamReader streamReader = new StreamReader(filepath))
                 {
-                    return (T)xmlserializer.Deserialize(xmlWriter);
+                    return (T)xmlserializer.Deserialize(streamReader);
                 }
             }
         }

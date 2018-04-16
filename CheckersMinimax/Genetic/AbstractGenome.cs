@@ -10,14 +10,19 @@ using System.Xml.Serialization;
 
 namespace CheckersMinimax.Genetic
 {
+    [XmlRoot]
     public class AbstractGenome
     {
+        [XmlElement]
         public int KingWorthGene { get; set; }
 
+        [XmlElement]
         public int PawnWorthGene { get; set; }
 
+        [XmlElement]
         public int PawnDangerValueGene { get; set; }
 
+        [XmlElement]
         public int KingDangerValueGene { get; set; }
     }
 }

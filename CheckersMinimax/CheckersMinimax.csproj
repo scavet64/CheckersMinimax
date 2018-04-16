@@ -55,9 +55,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AI\AIController.cs" />
+    <Compile Include="AI\AIException.cs" />
     <Compile Include="CheckersGame.cs" />
     <Compile Include="Clone\IMinimaxClonable.cs" />
+    <Compile Include="FileNameHelper.cs" />
     <Compile Include="Genetic\AbstractGenome.cs" />
+    <Compile Include="Genetic\GeneticProgress.cs" />
     <Compile Include="Genetic\WinningGenome.cs" />
     <Compile Include="Genetic\RandomGenome.cs" />
     <Compile Include="MakeMoveReturnModel.cs" />

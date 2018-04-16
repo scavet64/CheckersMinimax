@@ -27,7 +27,7 @@ namespace CheckersMinimax
         /// <value>
         /// The board array.
         /// </value>
-        public List<List<CheckersSquareUserControl>> BoardArray { get; set; }
+        public List<List<CheckersSquareUserControl>> BoardArray { get; set; } = new List<List<CheckersSquareUserControl>>();
 
         public PlayerColor CurrentPlayerTurn { get; set; }
 
@@ -218,29 +218,43 @@ namespace CheckersMinimax
         public int ScoreA(PlayerColor rootPlayer)
         {
             int score = 0;
+            int KingWorth = settings.KingWorth;
+            int PawnWorth = settings.PawnWorth;
 
             if (rootPlayer == PlayerColor.Red)
             {
+                if (settings.RunningGeneticAlgo)
+                {
+                    KingWorth = Genetic.RandomGenome.GetRandomGenomeInstance().KingWorthGene;
+                    PawnWorth = Genetic.RandomGenome.GetRandomGenomeInstance().PawnWorthGene;
+                }
+
                 foreach (CheckersPoint point in GetPointsForColor<IBlackPiece>())
                 {
-                    score -= point.Checker is KingCheckerPiece ? settings.KingWorth : settings.PawnWorth;
+                    score -= point.Checker is KingCheckerPiece ? KingWorth : PawnWorth;
                 }
 
                 foreach (CheckersPoint point in GetPointsForColor<IRedPiece>())
                 {
-                    score += point.Checker is KingCheckerPiece ? settings.KingWorth : settings.PawnWorth;
+                    score += point.Checker is KingCheckerPiece ? KingWorth : PawnWorth;
                 }
             }
             else
             {
+                if (settings.RunningGeneticAlgo)
+                {
+                    KingWorth = Genetic.WinningGenome.GetWinningGenomeInstance().KingWorthGene;
+                    PawnWorth = Genetic.WinningGenome.GetWinningGenomeInstance().PawnWorthGene;
+                }
+
                 foreach (CheckersPoint point in GetPointsForColor<IBlackPiece>())
                 {
-                    score += point.Checker is KingCheckerPiece ? settings.KingWorth : settings.PawnWorth;
+                    score += point.Checker is KingCheckerPiece ? KingWorth : PawnWorth;
                 }
 
                 foreach (CheckersPoint point in GetPointsForColor<IRedPiece>())
                 {
-                    score -= point.Checker is KingCheckerPiece ? settings.KingWorth : settings.PawnWorth;
+                    score -= point.Checker is KingCheckerPiece ? KingWorth : PawnWorth;
                 }
             }
 
@@ -305,6 +319,22 @@ namespace CheckersMinimax
         public int ScoreC(PlayerColor rootPlayer)
         {
             int score = 0;
+            int kingDangerValue = settings.KingDangerValue;
+            int pawnDangerValue = settings.PawnDangerValue;
+
+            if (settings.RunningGeneticAlgo)
+            {
+                if (rootPlayer == PlayerColor.Red)
+                {
+                    kingDangerValue = Genetic.RandomGenome.GetRandomGenomeInstance().KingDangerValueGene;
+                    pawnDangerValue = Genetic.RandomGenome.GetRandomGenomeInstance().PawnDangerValueGene;
+                }
+                else
+                {
+                    kingDangerValue = Genetic.WinningGenome.GetWinningGenomeInstance().KingDangerValueGene;
+                    pawnDangerValue = Genetic.WinningGenome.GetWinningGenomeInstance().PawnDangerValueGene;
+                }
+            }
 
             List<CheckersMove> movesForOtherPlayer = GetMovesForPlayer();
 
@@ -318,11 +348,11 @@ namespace CheckersMinimax
                         //A piece is in danger
                         if (moveToCheck.JumpedPoint.Checker is KingCheckerPiece)
                         {
-                            score -= settings.KingDangerValue;
+                            score -= kingDangerValue;
                         }
                         else
                         {
-                            score -= settings.PawnDangerValue;
+                            score -= pawnDangerValue;
                         }
                     }
 

@@ -10,12 +10,13 @@ using System.Xml.Serialization;
 
 namespace CheckersMinimax.Genetic
 {
+    [XmlRoot]
     public class WinningGenome : AbstractGenome
     {
         private static readonly Settings Settings = Settings.Default;
         private static readonly object Lock = new object();
         private static WinningGenome instance;
-        private static string filename = "WinningGenome.XML";
+        private static string filepath = FileNameHelper.GetExecutingDirectory() +  "WinningGenome.XML";
 
         public WinningGenome()
         {
@@ -34,21 +35,31 @@ namespace CheckersMinimax.Genetic
                 {
                     if (instance == null)
                     {
-                        if (File.Exists(filename))
+                        if (File.Exists(filepath))
                         {
-                            instance = XmlSerializationHelper.Deserialize<WinningGenome>(filename);
+                            instance = XmlSerializationHelper.Deserialize<WinningGenome>(filepath);
                         }
                         else
                         {
                             //create new file and save it
                             instance = new WinningGenome();
-                            instance.Serialize();
+                            instance.Serialize(filepath);
                         }
                     }
                 }
             }
 
             return instance;
+        }
+
+        public void SetNewWinningGenome(AbstractGenome newWinner)
+        {
+            this.KingWorthGene = newWinner.KingWorthGene;
+            this.KingDangerValueGene = newWinner.KingDangerValueGene;
+            this.PawnDangerValueGene = newWinner.PawnDangerValueGene;
+            this.PawnWorthGene = newWinner.PawnWorthGene;
+
+            this.Serialize(filepath);
         }
     }
 }

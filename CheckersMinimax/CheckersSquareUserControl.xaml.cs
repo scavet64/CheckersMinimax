@@ -66,9 +66,10 @@ namespace CheckersMinimax
                 {
                     if (checkerImage != null)
                     {
-                        Application.Current.Dispatcher.BeginInvoke(
-                          DispatcherPriority.Background,
-                          new Action(() => checkerImage.Source = CheckersPoint.Checker.BuildCheckerImageSource()));
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            checkerImage.Source = CheckersPoint.Checker.BuildCheckerImageSource();
+                        });
                     }
                 }
                 catch (Exception ex)

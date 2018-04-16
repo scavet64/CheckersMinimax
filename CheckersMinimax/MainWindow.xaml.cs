@@ -1,4 +1,5 @@
 ﻿using CheckersMinimax.AI;
+using CheckersMinimax.Genetic;
 using CheckersMinimax.Pieces;
 using CheckersMinimax.Properties;
 using System;
@@ -28,6 +29,8 @@ namespace CheckersMinimax
         private static readonly Settings Settings = Settings.Default;
         private static readonly SimpleLogger Logger = SimpleLogger.GetSimpleLogger();
 
+        private static readonly int maxTurns = 500;
+
         private CheckersMove currentMove;
         private CheckerBoard checkerBoard;
 
@@ -39,6 +42,19 @@ namespace CheckersMinimax
         {
             InitializeComponent();
             InitializeCheckers();
+
+            if (Settings.RunningGeneticAlgo)
+            {
+                aiThread = new Thread(new ThreadStart(GeneticAlgoLoop));
+                aiThread.SetApartmentState(ApartmentState.STA);
+                aiThread.Start();
+            }
+            else if (Settings.IsAIDuel)
+            {
+                aiThread = new Thread(new ThreadStart(RunAIGame));
+                aiThread.SetApartmentState(ApartmentState.STA);
+                aiThread.Start();
+            }
         }
 
         public void Button_Click(object sender, RoutedEventArgs e)
@@ -50,33 +66,88 @@ namespace CheckersMinimax
 
         private void InitializeCheckers()
         {
-            this.Title = "Checkers! Blacks turn!";
-            currentMove = null;
-            checkerBoard = new CheckerBoard();
-
-            checkerBoard.MakeBoard(new RoutedEventHandler(Button_Click));
-
-            //todo try to use databinding here
-            lst.ItemsSource = checkerBoard.BoardArray;
-
-            DisableAllButtons();
-            EnableButtonsWithMove();
-
-            if (Settings.IsAIDuel)
+            this.Dispatcher.Invoke(() =>
             {
-                aiThread = new Thread(new ThreadStart(RunAIGame));
-                aiThread.SetApartmentState(ApartmentState.STA);
-                aiThread.Start();
+                checkerBoard = new CheckerBoard();
+                checkerBoard.MakeBoard(new RoutedEventHandler(Button_Click));
+
+                lst.ItemsSource = checkerBoard.BoardArray;
+
+                currentMove = null;
+                SetTitle(string.Format("Checkers! {0}'s turn!", checkerBoard.CurrentPlayerTurn));
+
+                DisableAllButtons();
+                EnableButtonsWithMove();
+            });
+        }
+
+        private void GeneticAlgoLoop()
+        {
+            int roundNumber = 0;
+            while (roundNumber < Settings.NumberOfRounds)
+            {
+                DoGeneticAlgo();
+                Logger.Info("Finished Round Number: " + roundNumber++);
             }
+        }
+
+        private void DoGeneticAlgo()
+        {
+            GeneticProgress currentProgress = GeneticProgress.GetGeneticProgressInstance();
+            WinningGenome winningGenome = WinningGenome.GetWinningGenomeInstance();
+            RandomGenome randomGenome = RandomGenome.GetRandomGenomeInstance();
+
+            while (currentProgress.NumberOfGames < Settings.NumberOfSimulations)
+            {
+                try
+                {
+                    RunAIGame();
+                }
+                catch (AIException ex)
+                {
+                    //Dont count this game
+                    Logger.Error("AI Exception was caught: " + ex.Message);
+                    //reset game
+                    InitializeCheckers();
+                    continue;
+                }
+                currentProgress.NumberOfGames++;
+                object winner = checkerBoard.GetWinner();
+                if (winner != null && winner is PlayerColor winningPlayer && winningPlayer == PlayerColor.Red)
+                {
+                    currentProgress.NumberOfRandomGenomeWins++;
+                }
+
+                Logger.Info("AI Game Finished, Winner was " + winner);
+                Logger.Info(string.Format(
+                    "Current Stats -- NumberOfGamesPlayed: {0}, NumberOfRandomGenomeWins {1}",
+                    currentProgress.NumberOfGames,
+                    currentProgress.NumberOfRandomGenomeWins));
+
+                //reset game
+                InitializeCheckers();
+            }
+
+            //Simulations on this genetic variation finished. If more losses than wins, the new random genome was better
+            if (currentProgress.NumberOfRandomGenomeWins > currentProgress.NumberOfGames / 2)
+            {
+                //Random Genome won more than half the games. This means we have a new winner
+                winningGenome.SetNewWinningGenome(randomGenome);
+                randomGenome.MutateGenomeAndSave();
+            }
+
+            //reset progress and game
+            currentProgress.ResetValues();
         }
 
         private void RunAIGame()
         {
+            int numberOfTurns = 0;
             while (checkerBoard.GetWinner() == null)
             {
                 //AI vs AI
                 CheckersMove aiMove = AIController.MinimaxStart(checkerBoard);
-                if (aiMove != null)
+                if (aiMove != null && numberOfTurns++ < maxTurns)
                 {
                     while (aiMove != null)
                     {
@@ -88,7 +159,8 @@ namespace CheckersMinimax
                 else
                 {
                     //AI could not find a valid move. Is the game over? are we in a dead lock?
-                    //Show error to user
+                    //Show error to user?
+                    throw new AIException("The AI could not find any valid moves or the AI are just going back and forth, This must have ended in a tie");
                 }
             }
         }
@@ -190,7 +262,7 @@ namespace CheckersMinimax
 
                 //check for a winner
                 object winner = checkerBoard.GetWinner();
-                if (winner != null && winner is PlayerColor winnerColor)
+                if (winner != null && winner is PlayerColor winnerColor && !Settings.RunningGeneticAlgo)
                 {
                     MessageBox.Show("Winner Winner Chicken Dinner: " + winnerColor);
                 }
@@ -200,7 +272,7 @@ namespace CheckersMinimax
             SetTitle(string.Format("Checkers! {0}'s turn!", checkerBoard.CurrentPlayerTurn));
             EnableButtonsWithMove();
             currentMove = null;
-            
+
             return new MakeMoveReturnModel()
             {
                 IsTurnOver = isTurnOver,
