@@ -161,8 +161,10 @@ namespace CheckersMinimax
             {
                 //Random Genome won more than half the games. This means we have a new winner
                 winningGenome.SetNewWinningGenome(randomGenome);
-                randomGenome.MutateGenomeAndSave();
             }
+
+            //mutate new genome
+            randomGenome.MutateGenomeAndSave();
 
             //reset progress
             currentProgress.ResetValues();

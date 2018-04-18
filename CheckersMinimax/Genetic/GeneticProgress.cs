@@ -104,7 +104,16 @@ namespace CheckersMinimax.Genetic
                     {
                         if (File.Exists(Filepath))
                         {
-                            instance = XmlSerializationHelper.Deserialize<GeneticProgress>(Filepath);
+                            try
+                            {
+                                instance = XmlSerializationHelper.Deserialize<GeneticProgress>(Filepath);
+                            }
+                            catch (Exception ex)
+                            {
+                                //If there is a problem with the progress file, just make a new one
+                                instance = new GeneticProgress();
+                                instance.Serialize(Filepath);
+                            }
                         }
                         else
                         {
