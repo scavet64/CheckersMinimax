@@ -25,7 +25,7 @@ namespace CheckersMinimax.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        [global::System.Configuration.DefaultSettingValueAttribute("32")]
         public int KingWorth {
             get {
                 return ((int)(this["KingWorth"]));
@@ -37,7 +37,7 @@ namespace CheckersMinimax.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        [global::System.Configuration.DefaultSettingValueAttribute("13")]
         public int PawnWorth {
             get {
                 return ((int)(this["PawnWorth"]));
@@ -61,7 +61,7 @@ namespace CheckersMinimax.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public int PawnDangerValue {
             get {
                 return ((int)(this["PawnDangerValue"]));
@@ -73,7 +73,7 @@ namespace CheckersMinimax.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        [global::System.Configuration.DefaultSettingValueAttribute("16")]
         public int KingDangerValue {
             get {
                 return ((int)(this["KingDangerValue"]));
@@ -97,7 +97,7 @@ namespace CheckersMinimax.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool IsAIDuel {
             get {
                 return ((bool)(this["IsAIDuel"]));
@@ -133,7 +133,7 @@ namespace CheckersMinimax.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("black")]
+        [global::System.Configuration.DefaultSettingValueAttribute("red")]
         public string WhosFirst {
             get {
                 return ((string)(this["WhosFirst"]));
@@ -145,7 +145,7 @@ namespace CheckersMinimax.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("00:00:00")]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:00:01")]
         public global::System.TimeSpan TimeToSleeepBetweenMoves {
             get {
                 return ((global::System.TimeSpan)(this["TimeToSleeepBetweenMoves"]));
@@ -157,7 +157,7 @@ namespace CheckersMinimax.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool RunningGeneticAlgo {
             get {
                 return ((bool)(this["RunningGeneticAlgo"]));

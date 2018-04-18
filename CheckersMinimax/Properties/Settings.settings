@@ -3,25 +3,25 @@
   <Profiles />
   <Settings>
     <Setting Name="KingWorth" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">30</Value>
+      <Value Profile="(Default)">32</Value>
     </Setting>
     <Setting Name="PawnWorth" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">15</Value>
+      <Value Profile="(Default)">13</Value>
     </Setting>
     <Setting Name="AIDepth" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">8</Value>
     </Setting>
     <Setting Name="PawnDangerValue" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">10</Value>
+      <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="KingDangerValue" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">15</Value>
+      <Value Profile="(Default)">16</Value>
     </Setting>
     <Setting Name="IsAIGame" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="IsAIDuel" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="Difficulty" Type="System.String" Scope="User">
       <Value Profile="(Default)">hard</Value>
@@ -30,13 +30,13 @@
       <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="WhosFirst" Type="System.String" Scope="User">
-      <Value Profile="(Default)">black</Value>
+      <Value Profile="(Default)">red</Value>
     </Setting>
     <Setting Name="TimeToSleeepBetweenMoves" Type="System.TimeSpan" Scope="User">
-      <Value Profile="(Default)">00:00:00</Value>
+      <Value Profile="(Default)">00:00:01</Value>
     </Setting>
     <Setting Name="RunningGeneticAlgo" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="NumberOfSimulations" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">30</Value>
