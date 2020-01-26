@@ -5,8 +5,8 @@
     <AssociationLine Name="CurrentPlayerTurn" Type="CheckersMinimax.PlayerColor" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="11" Y="4.438" />
-        <Point X="12.5" Y="4.438" />
-        <Point X="12.5" Y="4.75" />
+        <Point X="11.25" Y="4.438" />
+        <Point X="11.25" Y="7.5" />
       </Path>
     </AssociationLine>
     <TypeIdentifier>
@@ -20,7 +20,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="CheckersMinimax.CheckersMove">
-    <Position X="4.5" Y="13.5" Width="2.25" />
+    <Position X="9" Y="9.25" Width="2.25" />
     <AssociationLine Name="NextMove" Type="CheckersMinimax.CheckersMove">
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="0.082" Y="0.349" />
@@ -31,22 +31,20 @@
       <FileName>CheckersMove.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
+      <Property Name="SourcePoint" />
       <Property Name="DestinationPoint" />
       <Property Name="JumpedPoint" />
       <Property Name="NextMove" />
-      <Property Name="SourcePoint" />
     </ShowAsAssociation>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="CheckersMinimax.CheckersPoint">
-    <Position X="8.25" Y="13.25" Width="2.25" />
+    <Position X="13" Y="8.5" Width="2.25" />
     <AssociationLine Name="Checker" Type="CheckersMinimax.Pieces.CheckerPiece" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="10.5" Y="14.188" />
-        <Point X="10.75" Y="14.188" />
-        <Point X="10.75" Y="13" />
-        <Point X="9.75" Y="13" />
-        <Point X="9.75" Y="12.312" />
+        <Point X="15.25" Y="9.438" />
+        <Point X="15.75" Y="9.438" />
+        <Point X="15.75" Y="7.312" />
       </Path>
     </AssociationLine>
     <TypeIdentifier>
@@ -96,8 +94,8 @@
       <FileName>AI\AIController.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Field Name="Logger" />
       <Field Name="Settings" />
+      <Field Name="Logger" />
     </ShowAsAssociation>
   </Class>
   <Class Name="CheckersMinimax.AI.AIException">
@@ -108,7 +106,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="CheckersMinimax.Pieces.CheckerPiece" Collapsed="true">
-    <Position X="9" Y="11.75" Width="1.5" />
+    <Position X="15" Y="6.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAEAAAAAAAAgBUAAAAAAAEAAEAAEAACIQBAAAAAAAAA=</HashCode>
       <FileName>Pieces\CheckerPiece.cs</FileName>
@@ -116,10 +114,10 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="CheckersMinimax.CheckersSquareUserControl">
-    <Position X="10.25" Y="7.75" Width="3" />
+    <Position X="11.75" Y="2.5" Width="3" />
     <AssociationLine Name="CheckersPoint" Type="CheckersMinimax.CheckersPoint">
       <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
-        <Position X="0.196" Y="0.26" Height="0.182" Width="1.26" />
+        <Position X="0.133" Y="1.21" Height="0.182" Width="1.26" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
@@ -129,44 +127,44 @@
     <ShowAsAssociation>
       <Property Name="CheckersPoint" />
     </ShowAsAssociation>
-    <Lollipop Orientation="Left" Position="2.122" />
+    <Lollipop Position="0.258" />
   </Class>
   <Class Name="CheckersMinimax.Properties.Settings">
     <Position X="5.25" Y="2" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>ABAAAAAKAAAABSAAAAAAJACAAAABBAGAAAAAAAAYEAA=</HashCode>
+      <HashCode>ABAAAAAKAAAABSAAAAAAJACCAAABBAGAAAAAAAAYEAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="CheckersMinimax.MainWindow">
     <Position X="5.25" Y="7" Width="2.5" />
+    <AssociationLine Name="currentMove" Type="CheckersMinimax.CheckersMove">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.411" Y="0.123" />
+      </MemberNameLabel>
+    </AssociationLine>
     <AssociationLine Name="checkerBoard" Type="CheckersMinimax.CheckerBoard" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="7.75" Y="8.169" />
-        <Point X="9.811" Y="8.169" />
+        <Point X="7.75" Y="8.273" />
+        <Point X="9.811" Y="8.273" />
         <Point X="9.811" Y="6.74" />
         <Point X="9.812" Y="6.74" />
         <Point X="9.812" Y="6.555" />
       </Path>
     </AssociationLine>
-    <AssociationLine Name="currentMove" Type="CheckersMinimax.CheckersMove">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.123" Y="0.411" />
-      </MemberNameLabel>
-    </AssociationLine>
     <AssociationLine Name="currentAvailableMoves" Type="CheckersMinimax.CheckersMove">
       <MemberNameLabel ManuallyPlaced="true">
-        <Position X="-1.714" Y="0.522" />
+        <Position X="0.348" Y="0.171" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAABEAA4TEAAAACAiDAEAIAAAIgAwgAAEAQCAgAA=</HashCode>
+      <HashCode>AAAAAABkAA4TEAAAgCB6DAECIAAAIgAwgAAEAQCEgBA=</HashCode>
       <FileName>MainWindow.xaml.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Field Name="checkerBoard" />
       <Field Name="Settings" />
       <Field Name="Logger" />
       <Field Name="currentMove" />
+      <Field Name="checkerBoard" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Field Name="currentAvailableMoves" />
@@ -174,14 +172,14 @@
     <Lollipop Orientation="Right" Position="0.461" />
   </Class>
   <Interface Name="CheckersMinimax.Clone.IMinimaxClonable">
-    <Position X="8.25" Y="8.5" Width="1.5" />
+    <Position X="15" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Clone\IMinimaxClonable.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Enum Name="CheckersMinimax.PlayerColor">
-    <Position X="11.75" Y="4.75" Width="1.25" />
+    <Position X="10.5" Y="7.5" Width="1.25" />
     <TypeIdentifier>
       <HashCode>AAAEAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>PlayerColor.cs</FileName>

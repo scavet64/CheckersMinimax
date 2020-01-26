@@ -287,7 +287,7 @@ namespace CheckersMinimax
                             if (squareUC.CheckersPoint.Checker is IRedPiece)
                             {
                                 //Closer to top means red is closer to being king
-                                score -= (squareUC.CheckersPoint.Row - 7) * 1;
+                                score -= (squareUC.CheckersPoint.Row - 7) * -1;
                             }
 
                             if (squareUC.CheckersPoint.Checker is IBlackPiece)
@@ -301,7 +301,7 @@ namespace CheckersMinimax
                             if (squareUC.CheckersPoint.Checker is IRedPiece)
                             {
                                 //Closer to top means red is closer to being king
-                                score += (squareUC.CheckersPoint.Row - 7) * 1;
+                                score += (squareUC.CheckersPoint.Row - 7) * -1;
                             }
 
                             if (squareUC.CheckersPoint.Checker is IBlackPiece)
