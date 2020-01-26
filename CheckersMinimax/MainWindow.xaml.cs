@@ -1,10 +1,13 @@
 ﻿using CheckersMinimax.AI;
 using CheckersMinimax.Genetic;
+using CheckersMinimax.Multiplayer;
 using CheckersMinimax.Pieces;
 using CheckersMinimax.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,6 +31,7 @@ namespace CheckersMinimax
     {
         private static readonly Settings Settings = Settings.Default;
         private static readonly SimpleLogger Logger = SimpleLogger.GetSimpleLogger();
+        private static readonly MultiplayerController multiplayerController = new MultiplayerController();
 
         private static readonly int MaxTurns = 500;
 
@@ -35,6 +39,7 @@ namespace CheckersMinimax
         private CheckerBoard checkerBoard;
 
         private Thread aiThread;
+        private Thread serverThread;
 
         private List<CheckersMove> currentAvailableMoves;
 
@@ -91,6 +96,8 @@ namespace CheckersMinimax
                 EnableButtonsWithMove();
             });
         }
+
+        #region Genetic
 
         /// <summary>
         /// Main loop for the basic genetic algorithm
@@ -171,6 +178,8 @@ namespace CheckersMinimax
             currentProgress.NumberOfRounds++;
         }
 
+        #endregion
+
         /// <summary>
         /// Method for the aiThread. Main loop for running an AI game
         /// </summary>
@@ -236,20 +245,33 @@ namespace CheckersMinimax
                 SetBackgroundColor(checkerSquareUC, Brushes.Green);
 
                 //get move from the list that has this point as its destination
-                MakeMoveReturnModel returnModel = MakeMove(GetMoveFromList(checkerSquareUC.CheckersPoint));
-                if (returnModel.WasMoveMade && returnModel.IsTurnOver && Settings.IsAIGame)
+                CheckersMove playerMove = GetMoveFromList(checkerSquareUC.CheckersPoint);
+                MakeMoveReturnModel returnModel = MakeMove(playerMove);
+                if ((returnModel.WasMoveMade && returnModel.IsTurnOver) && (Settings.IsAIGame || Settings.MultiplayerGame))
                 {
-                    //Disable buttons so the user cant click anything while the AI is thinking
+                    //Disable buttons so the user cant click anything while the AI or other player is thinking
                     DisableAllButtons();
 
-                    //AI needs to make a move now
-                    CheckersMove aiMove = AIController.MinimaxStart(checkerBoard);
-                    if (aiMove != null)
+                    //AI or other player needs to make a move now
+                    CheckersMove otherPlayerMove;
+                    if (Settings.IsAIGame)
                     {
-                        while (aiMove != null)
+                        otherPlayerMove = AIController.MinimaxStart(checkerBoard);
+                    }
+                    else
+                    {
+                        //Send move to opponent
+                        multiplayerController.SendMessage(new TCPMessage(playerMove));
+
+                        //get their move
+                        otherPlayerMove = multiplayerController.GetMultiplayerMove();
+                    }
+                    if (otherPlayerMove != null)
+                    {
+                        while (otherPlayerMove != null)
                         {
-                            MakeMove(aiMove);
-                            aiMove = aiMove.NextMove;
+                            MakeMove(otherPlayerMove);
+                            otherPlayerMove = otherPlayerMove.NextMove;
                             Thread.Sleep(Settings.TimeToSleeepBetweenMoves);
                         }
                     }
@@ -257,6 +279,11 @@ namespace CheckersMinimax
                     {
                         //AI could not find a valid move. Is the game over? are we in a dead lock?
                         //Show error to user
+                        MessageBox.Show(
+                            "Could not get a move from opponent.",
+                            "Could not get a move from opponent.",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                     }
                 }
             }
@@ -491,6 +518,104 @@ namespace CheckersMinimax
         private void ExitGame(object sender, RoutedEventArgs e)
         {
             Environment.Exit(0);
+        }
+
+        private void MultiplayerGame(object sender, RoutedEventArgs e)
+        {
+            InputBox.Visibility = Visibility.Visible;
+            HostOrClient.Visibility = Visibility.Visible;
+        }
+
+        private void MultCancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            InputBox.Visibility = Visibility.Collapsed;
+            HostOrClient.Visibility = Visibility.Collapsed;
+            EnterIp.Visibility = Visibility.Collapsed;
+            WaitingForConnection.Visibility = Visibility.Collapsed;
+            serverThread?.Abort();
+            serverThread = null;
+        }
+
+
+        private void ClientButton_Click(object sender, RoutedEventArgs e)
+        {
+            EnterIp.Visibility = Visibility.Visible;
+            HostOrClient.Visibility = Visibility.Collapsed;
+        }
+
+        private void ClientGoButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                multiplayerController.StartClientConnection(InputTextBox.Text);
+
+                InputBox.Visibility = Visibility.Collapsed;
+                HostOrClient.Visibility = Visibility.Collapsed;
+                EnterIp.Visibility = Visibility.Collapsed;
+                WaitingForConnection.Visibility = Visibility.Collapsed;
+
+                Settings.WhosFirst = "black";
+                InitializeCheckers();
+
+                //get their move
+                CheckersMove otherPlayerMove = multiplayerController.GetMultiplayerMove();
+                if (otherPlayerMove != null)
+                {
+                    while (otherPlayerMove != null)
+                    {
+                        MakeMove(otherPlayerMove);
+                        otherPlayerMove = otherPlayerMove.NextMove;
+                        Thread.Sleep(Settings.TimeToSleeepBetweenMoves);
+                    }
+                }
+                InputBox.Visibility = Visibility.Collapsed;
+            }
+            catch (FormatException fex)
+            {
+                MessageBox.Show("Invalid IP address: " + fex.Message);
+                Logger.Error("Invalid IP address: " + fex.Message);
+                return;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Could not make network connection: " + ex.Message);
+                Logger.Error("Could not make network connection: " + ex.Message);
+                return;
+            }
+        }
+
+        private void HostButton_Click(object sender, RoutedEventArgs e)
+        {
+            InputBox.Visibility = Visibility.Visible;
+            HostOrClient.Visibility = Visibility.Collapsed;
+            WaitingForConnection.Visibility = Visibility.Visible;
+
+            new Thread(new ThreadStart(WaitingForClientThread)).Start();
+        }
+
+        private void WaitingForClientThread()
+        {
+            try
+            {
+                multiplayerController.StartServerConnection();
+            }
+            catch (MultiplayerException mpex)
+            {
+                MessageBox.Show(mpex.Message);
+            }
+            finally
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    InputBox.Visibility = Visibility.Collapsed;
+                    HostOrClient.Visibility = Visibility.Collapsed;
+                    EnterIp.Visibility = Visibility.Collapsed;
+                    WaitingForConnection.Visibility = Visibility.Collapsed;
+                });
+            }
+
+            Settings.WhosFirst = "red";
+            InitializeCheckers();
         }
     }
 }

@@ -80,7 +80,7 @@ namespace CheckersMinimax
             UpdateSquare();
 
             //Debug TODO: Delete this when not needed anymore
-            button.Content = "row: " + checkersPoint.Row + " , col: " + checkersPoint.Column;
+            //button.Content = "row: " + checkersPoint.Row + " , col: " + checkersPoint.Column;
         }
 
         /// <summary>

@@ -64,6 +64,12 @@
     <Compile Include="Genetic\RandomGenome.cs" />
     <Compile Include="MakeMoveReturnModel.cs" />
     <Compile Include="ListExtension.cs" />
+    <Compile Include="Multiplayer\Client.cs" />
+    <Compile Include="Multiplayer\MultiplayerController.cs" />
+    <Compile Include="Multiplayer\MultiplayerException.cs" />
+    <Compile Include="Multiplayer\Server.cs" />
+    <Compile Include="Multiplayer\TCPConnection.cs" />
+    <Compile Include="Multiplayer\TCPMessage.cs" />
     <Compile Include="Pieces\BlackKingCheckerPiece.cs" />
     <Compile Include="Pieces\BlackPawnCheckerPiece.cs" />
     <Compile Include="Pieces\CheckerPieceFactory.cs" />

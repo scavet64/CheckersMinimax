@@ -55,9 +55,65 @@
         <Menu IsMainMenu="True" Height="20" VerticalAlignment="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="_New Game" Click="RestartGame" />
+                <MenuItem Header="_Multiplayer" Click="MultiplayerGame"/>
                 <MenuItem Header="_Exit" Click="ExitGame"/>
             </MenuItem>
         </Menu>
         <ItemsControl x:Name="lst" ItemTemplate="{DynamicResource DataTemplate_Level1}" Margin="0,20,0,0"/>
+        <!-- It's important that this is in the end of the XAML as it needs to be on top of everything else! -->
+        <Grid x:Name="InputBox" Visibility="Collapsed">
+            <Grid Background="Black" Opacity="0.5"/>
+            <Border
+                x:Name="EnterIp"
+                MinWidth="250"
+                Background="#394C7B"
+                CornerRadius="5"
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center"
+                Visibility="Collapsed">
+                <StackPanel>
+                    <TextBlock Margin="5" Text="IP Address of opponent:" FontWeight="Bold" FontFamily="Cambria" Foreground="White" Width="215" />
+                    <TextBox MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="InputTextBox" Background="#69748E" BorderBrush="{x:Null}" Width="220"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,0">
+                        <Button x:Name="YesButton" Margin="5" Content="Go" Background="#102966" Width="45" Click="ClientGoButton_Click" Foreground="White"/>
+                        <Button x:Name="NoButton" Margin="5" Content="Cancel" Background="#102966" Width="45" Click="MultCancelButton_Click" Foreground="White" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border
+                x:Name="HostOrClient"
+                MinWidth="250"
+                Background="#394C7B"
+                CornerRadius="5"
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center"
+                Visibility="Collapsed">
+                <StackPanel>
+                    <TextBlock Margin="5" Text="Host or join a game:" FontWeight="Bold" FontFamily="Cambria" Foreground="White" Width="215" HorizontalAlignment="Center" TextAlignment="Center" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,0">
+                        <Button x:Name="HostButton" Margin="5" Content="Host" Background="#102966" Width="45" Click="HostButton_Click" Foreground="White"/>
+                        <Button x:Name="ClientButton" Margin="5" Content="Client" Background="#102966" Width="45" Click="ClientButton_Click" Foreground="White" />
+                        <Button x:Name="CancelButton" Margin="5" Content="Cancel" Background="#102966" Width="45" Click="MultCancelButton_Click" Foreground="White" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border
+                x:Name="WaitingForConnection"
+                MinWidth="250"
+                Background="#394C7B"
+                CornerRadius="5"
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center"
+                Visibility="Collapsed">
+                <StackPanel>
+                    <TextBlock Margin="5" Text="Waiting for a connection:" FontWeight="Bold" FontFamily="Cambria" Foreground="White" Width="215" HorizontalAlignment="Center" TextAlignment="Center" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,0">
+                        <Button x:Name="CancelWaitingButton" Margin="5" Content="Cancel" Background="#102966" Width="45" Click="MultCancelButton_Click" Foreground="White" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
     </Grid>
 </Window>
