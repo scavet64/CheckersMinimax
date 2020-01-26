@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace CheckersMinimax.Pieces
 {
+    [Serializable]
     public class RedPawnCheckerPiece : CheckerPiece, IRedPiece
     {
         public RedPawnCheckerPiece()

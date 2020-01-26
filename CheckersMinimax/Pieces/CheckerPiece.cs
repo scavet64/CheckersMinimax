@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 
 namespace CheckersMinimax.Pieces
 {
+    [Serializable]
     public abstract class CheckerPiece : IMinimaxClonable
     {
         protected string imageSource;

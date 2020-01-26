@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace CheckersMinimax
 {
+    [Serializable]
     public class CheckersMove : IMinimaxClonable
     {
         /// <summary>

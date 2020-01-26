@@ -8,6 +8,7 @@ using System.Windows.Media.Imaging;
 
 namespace CheckersMinimax.Pieces
 {
+    [Serializable]
     public class NullCheckerPiece : CheckerPiece
     {
         /// <summary>
